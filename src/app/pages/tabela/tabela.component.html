@@ -1,0 +1,37 @@
+<div class="container">
+
+
+	<div class="row">
+		<div class="col-md-4">
+			<h3>Total Pedidos</h3>
+			<span>{{cabecalho.valPedidos | currency:'BRL'}}</span>
+		</div>
+		<div class="col-md-4">
+			<h3>Valor Caixa</h3>
+			<span>{{cabecalho.valCaixa | currency:'BRL'}}</span>
+		</div>
+	</div>
+
+	<table class="table">
+		<colgroup>
+			<col width="15%">
+			<col width="35%">
+			<col width="25%">
+			<col width="25%">
+		</colgroup>
+		<thead>
+			<tr>
+				<th>Data Pedido</th>
+				<th>Cliente</th>
+				<th>Valor</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr *ngFor="let item of tabela" >
+				<th class="text-center">{{item.VEN_DATA | date:'dd/MM/yyyy'}}</th>
+				<th>{{item.VEN_RESPONSAVEL}}</th>
+				<th>{{item.VEN_TOTAL | currency:'BRL'}}</th>
+			</tr>
+		</tbody>
+	</table>
+</div>
