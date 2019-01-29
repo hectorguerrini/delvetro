@@ -1,0 +1,33 @@
+.navbar {
+	background-color: #888888;
+	height: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100px;
+	z-index: 999999;
+	overflow-x: hidden;
+	display: block;
+	padding: 0;
+	h3, span {
+		display: block;
+		padding: 8px 16px;
+		font-size: 20px;
+		width: 100%;
+		color: #fff;
+	}
+	span {
+		font-size: 14px;
+		&:hover{
+			background-color: #bbb;
+			cursor: pointer;
+		}
+	}
+
+}
+
+.main {
+	margin-left: 100px;
+	margin-top: 30px;
+	padding: 0;
+}

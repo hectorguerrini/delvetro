@@ -1,37 +1,60 @@
-<div class="container">
+<div>
 
 
 	<div class="row">
-		<div class="col-md-4">
+		<div class="col-md-4 met1">
 			<h3>Total Pedidos</h3>
 			<span>{{cabecalho.valPedidos | currency:'BRL'}}</span>
 		</div>
-		<div class="col-md-4">
+		<div class="col-md-4 met2">
 			<h3>Valor Caixa</h3>
 			<span>{{cabecalho.valCaixa | currency:'BRL'}}</span>
 		</div>
 	</div>
 
-	<table class="table">
-		<colgroup>
-			<col width="15%">
-			<col width="35%">
-			<col width="25%">
-			<col width="25%">
-		</colgroup>
-		<thead>
-			<tr>
-				<th>Data Pedido</th>
-				<th>Cliente</th>
-				<th>Valor</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr *ngFor="let item of tabela" >
-				<th class="text-center">{{item.VEN_DATA | date:'dd/MM/yyyy'}}</th>
-				<th>{{item.VEN_RESPONSAVEL}}</th>
-				<th>{{item.VEN_TOTAL | currency:'BRL'}}</th>
-			</tr>
-		</tbody>
-	</table>
+	<div class="tabela">
+		<div class="header">
+			<span>Pedidos</span>
+			<span>Caixa</span>
+		</div>
+		<table class="table">
+			<colgroup>
+				<col width="15%">
+				<col width="35%">
+				<col width="25%">
+				<col width="25%">
+			</colgroup>
+			<thead>
+				<tr>
+					<th>
+						<div class="input-group">
+							<input class="form-control dp" (dateSelect)="onDateSelection($event)" [maxDate]="today" placeholder="yyyy-mm-dd"
+							 name="dp1" [(ngModel)]="fromDate" ngbDatepicker #d1="ngbDatepicker" (click)="d1.toggle()">
+							<input class="form-control dp" (dateSelect)="onDateSelection($event)" [maxDate]="today" placeholder="yyyy-mm-dd"
+							 name="dp2" [(ngModel)]="toDate" ngbDatepicker #d2="ngbDatepicker" (click)="d2.toggle()">
+						</div>
+					</th>
+					<th><input class="form-control" type="text"></th>
+					<th>
+						<div class="input-group">
+							<input class="form-control dp" type="number" placeholder="Min">
+							<input class="form-control dp" type="number" placeholder="Max">
+						</div>
+					</th>
+				</tr>
+				<tr>
+					<th>Data Pedido</th>
+					<th>Cliente</th>
+					<th>Valor</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let item of tabela">
+					<td class="text-center">{{item.VEN_DATA | date:'dd/MM/yyyy'}}</td>
+					<td>{{item.VEN_RESPONSAVEL}}</td>
+					<td>{{item.VEN_TOTAL | currency:'BRL'}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 </div>
