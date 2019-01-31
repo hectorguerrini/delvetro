@@ -3,11 +3,13 @@
 
 
 }
+
 .tabela {
-	width: 80%;
-	margin: 30px 10%;
+
+	margin: 30px 5%;
 	box-shadow: 2px -1px 20px #888888;
 	border-top-left-radius: 10px;
+
 	.header {
 		padding: 8px;
 		border: 1px solid #dee2e6;
@@ -15,13 +17,15 @@
 
 		span {
 			margin: 0 10px;
-			&:hover{
+
+			&:hover {
 				cursor: pointer;
 				text-decoration: underline;
 			}
 		}
 	}
 }
+
 .table {
 
 	td,
@@ -31,12 +35,67 @@
 	}
 
 	td {
-		font-size: 0.8em;
+		font-size: 16px;
 	}
 
 
 }
 
+.total td {
+	font-weight: bold;
+}
+
 .dp {
-	font-size: 14px;
+	font-size: 12px;
+}
+
+i {
+	font-size: 20px;
+	vertical-align: middle
+}
+
+.pago {
+	color: #6de000;
+}
+.parcial {
+	color: yellow
+}
+.acc {
+	cursor: pointer;
+
+	&:nth-child(2n+1) {
+		td {
+			background: #eee
+		}
+	}
+
+	table,
+	tbody {
+		width: 100%;
+
+	}
+
+	td {
+		padding: 8px 0;
+	}
+
+	.table2 {
+		td {
+			border: 0;
+			padding: 8px 8px;
+		}
+
+
+	}
+
+	.table3 {
+		display: none;
+
+		&.open {
+			display: table;
+		}
+		td {
+			padding: 8px 8px;
+		}
+	}
 }

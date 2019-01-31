@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import * as moment from 'moment';
+import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
 @Injectable({
   providedIn: 'root'
 })
@@ -10,11 +11,12 @@ export class TabelaService {
 
   constructor(public http: HttpClient) { }
 
-  listVendas() {
-    const url = `${this.url}/listaVendas`;
-    const d = new Date();
+  listVendas(dataMin: String, dataMax: String, cliente: String) {
+    const url = `${this.url}/listaVendas`;    
     var body = { 
-      data: moment().format('MM-DD-YYYY') 
+      dataMin: dataMin,
+      dataMax: dataMax,
+      cliente: cliente
     };
     
     
@@ -25,11 +27,27 @@ export class TabelaService {
       )
     });
   }
-  listCaixa() {
-    const url = `${this.url}/listaCaixa`;
-    const d = new Date();
+  listCaixa(dataMin: String, dataMax: String, cliente: String) {
+    const url = `${this.url}/listaCaixa`;   
     var body = { 
-      data: moment().format('MM-DD-YYYY') 
+      dataMin: dataMin,
+      dataMax: dataMax,
+      cliente: cliente
+    };
+    
+    
+    return this.http.post(url, body, {
+      headers: new HttpHeaders().set(
+        'Content-Type',
+        'application/json'
+      )
+    });
+  }
+  cabecalho(today:NgbDate) {
+    const url = `${this.url}/cabecalho`;   
+    var body = { 
+      dataMin: `0${today.month}-01-2019`,
+      dataMax: `0${today.month}-31-2019`
     };
     
     

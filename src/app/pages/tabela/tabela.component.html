@@ -7,7 +7,7 @@
 			<span>{{cabecalho.valPedidos | currency:'BRL'}}</span>
 		</div>
 		<div class="col-md-4 met2">
-			<h3>Valor Caixa</h3>
+			<h3>Faturamento</h3>
 			<span>{{cabecalho.valCaixa | currency:'BRL'}}</span>
 		</div>
 	</div>
@@ -19,8 +19,8 @@
 		</div>
 		<table class="table">
 			<colgroup>
-				<col width="15%">
-				<col width="35%">
+				<col width="20%">
+				<col width="30%">
 				<col width="25%">
 				<col width="25%">
 			</colgroup>
@@ -34,7 +34,8 @@
 							 name="dp2" [(ngModel)]="toDate" ngbDatepicker #d2="ngbDatepicker" (click)="d2.toggle()">
 						</div>
 					</th>
-					<th><input class="form-control" type="text"></th>
+					<th><input class="form-control" type="text" placeholder="Pesquisa" [(ngModel)]="cliente" (ngModelChange)="getListaVendas()"></th>
+					<th><input class="form-control" type="text" placeholder="Pesquisa"></th>
 					<th>
 						<div class="input-group">
 							<input class="form-control dp" type="number" placeholder="Min">
@@ -45,15 +46,66 @@
 				<tr>
 					<th>Data Pedido</th>
 					<th>Cliente</th>
+					<th>Serviços</th>
 					<th>Valor</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr *ngFor="let item of tabela">
-					<td class="text-center">{{item.VEN_DATA | date:'dd/MM/yyyy'}}</td>
-					<td>{{item.VEN_RESPONSAVEL}}</td>
-					<td>{{item.VEN_TOTAL | currency:'BRL'}}</td>
+				<tr class="total">
+					<td>{{tabelaTotal.coluna1}} Pedido{{tabelaTotal.coluna1 > 1? 's' : ''}}</td>
+					<td>{{tabelaTotal.coluna2}}</td>
+					<td>{{tabelaTotal.coluna3}}</td>
+					<td>{{tabelaTotal.coluna5 | currency:'BRL'}}/{{tabelaTotal.coluna4 | currency:'BRL'}}</td>
 				</tr>
+				<tr class="acc" *ngFor="let item of tabela" (click)="open(item)">
+					<td colspan="4">
+						<div>
+							<table class="table2">
+								<colgroup>
+									<col width="20%">
+									<col width="30%">
+									<col width="25%">
+									<col width="25%">
+								</colgroup>
+								<tbody>
+									<tr>
+										<td class="text-center">{{item.ven_data | date:'dd/MM/yyyy'}}</td>
+										<td>{{item.ven_responsavel}}</td>
+										<td>{{item.ven_status}}</td>
+										<td class="text-center">
+											<span>{{item.ven_total | currency:'BRL'}}
+												<i  placement="top" ngbTooltip="{{item.qtde_pago}}" class="material-icons" [ngClass]="{'pago': item.status_pagamento == 'Pago' ? true : '','parcial': item.status_pagamento == 'Parcial' ? true : ''  }">done</i>
+											</span>										
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<table class="table3" [ngClass]="{'open': openRow == item.ven_codigo}">
+								<tbody>
+									<tr>
+										<th>Produto</th>
+										<th>Categoria</th>
+										<th>Setor</th>
+										<th>Altura</th>
+										<th>Largura</th>
+										<th>Metro</th>
+										<th>Qtde</th>
+									</tr>
+									<tr *ngFor="let produto of item.produtos">
+										<td>{{produto.pro_nome}}</td>
+										<td class="text-center">{{produto.pro_categoria}}</td>
+										<td class="text-center">{{produto.pro_setor}}</td>
+										<td class="text-center">{{produto.altura}}</td>
+										<td class="text-center">{{produto.largura}}</td>
+										<td class="text-center">{{produto.metro}}</td>
+										<td class="text-center">{{produto.qtde}}</td>										
+									</tr>									
+								</tbody>
+							</table>
+						</div>
+					</td>
+				</tr>
+
 			</tbody>
 		</table>
 	</div>
