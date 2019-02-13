@@ -2,12 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import * as moment from 'moment';
 import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
+import { environment } from 'src/environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
 export class TabelaService {
 
-  url = 'http://localhost:3000';
+  url = environment.url;
 
   constructor(public http: HttpClient) { }
 
@@ -46,8 +48,22 @@ export class TabelaService {
   cabecalho(today:NgbDate) {
     const url = `${this.url}/cabecalho`;   
     var body = { 
-      dataMin: `0${today.month}-01-2019`,
-      dataMax: `0${today.month}-31-2019`
+      dataMin: moment().startOf('month').format('MM-DD-YYYY'),
+      dataMax: moment().endOf('month').format('MM-DD-YYYY')
+    };
+    
+    
+    return this.http.post(url, body, {
+      headers: new HttpHeaders().set(
+        'Content-Type',
+        'application/json'
+      )
+    });
+  }
+  grafico(filtro: string) {
+    const url = `${this.url}/grafico/faturamento`;   
+    var body = { 
+      data: moment(filtro, 'MM/YYYY').format('MM-DD-YYYY')
     };
     
     

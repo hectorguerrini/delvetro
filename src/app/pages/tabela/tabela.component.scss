@@ -3,7 +3,12 @@
 
 
 }
-
+.met2 div{
+	
+	width: 250px;
+	height: 140px;
+	
+}
 .tabela {
 
 	margin: 30px 5%;
@@ -62,7 +67,9 @@ i {
 }
 .acc {
 	cursor: pointer;
-
+	&:last-child(){
+		cursor: none;
+	}
 	&:nth-child(2n+1) {
 		td {
 			background: #eee
@@ -98,4 +105,8 @@ i {
 			padding: 8px 8px;
 		}
 	}
+}
+
+.btn-group{
+	width: 100%;
 }

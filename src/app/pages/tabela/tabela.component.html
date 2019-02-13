@@ -8,7 +8,12 @@
 		</div>
 		<div class="col-md-4 met2">
 			<h3>Faturamento</h3>
+			<div class="chart" [chart]="chart"></div>
 			<span>{{cabecalho.valCaixa | currency:'BRL'}}</span>
+			<select class="form-control col-md-6"  [(ngModel)]="mesFiltro" (change)="getGrafico()" >
+				<option *ngFor="let item of comboMes" value="{{item.valor}}">{{item.label}}</option>
+				
+			</select>
 		</div>
 	</div>
 
@@ -37,9 +42,10 @@
 					<th><input class="form-control" type="text" placeholder="Pesquisa" [(ngModel)]="cliente" (ngModelChange)="getListaVendas()"></th>
 					<th><input class="form-control" type="text" placeholder="Pesquisa"></th>
 					<th>
-						<div class="input-group">
-							<input class="form-control dp" type="number" placeholder="Min">
-							<input class="form-control dp" type="number" placeholder="Max">
+						<div class="btn-group">
+							<button type="button" class="btn btn-outline-dark" [class.active]="isActive('NPago')" (click)="setActive('NPago')">Não
+								Pago</button>
+							<button type="button" class="btn btn-outline-dark" [class.active]="isActive('Pago')" (click)="setActive('Pago')">Pago/Parcial</button>
 						</div>
 					</th>
 				</tr>
@@ -57,7 +63,7 @@
 					<td>{{tabelaTotal.coluna3}}</td>
 					<td>{{tabelaTotal.coluna5 | currency:'BRL'}}/{{tabelaTotal.coluna4 | currency:'BRL'}}</td>
 				</tr>
-				<tr class="acc" *ngFor="let item of tabela" (click)="open(item)">
+				<tr class="acc" *ngFor="let item of paginacao.lista" (click)="open(item)">
 					<td colspan="4">
 						<div>
 							<table class="table2">
@@ -74,8 +80,8 @@
 										<td>{{item.ven_status}}</td>
 										<td class="text-center">
 											<span>{{item.ven_total | currency:'BRL'}}
-												<i  placement="top" ngbTooltip="{{item.qtde_pago}}" class="material-icons" [ngClass]="{'pago': item.status_pagamento == 'Pago' ? true : '','parcial': item.status_pagamento == 'Parcial' ? true : ''  }">done</i>
-											</span>										
+												<i placement="top" ngbTooltip="{{item.qtde_pago | currency: 'BRL'}}" class="material-icons" [ngClass]="{'pago': item.status_pagamento == 'Pago' ? true : '','parcial': item.status_pagamento == 'Parcial' ? true : ''  }">done</i>
+											</span>
 										</td>
 									</tr>
 								</tbody>
@@ -98,14 +104,22 @@
 										<td class="text-center">{{produto.altura}}</td>
 										<td class="text-center">{{produto.largura}}</td>
 										<td class="text-center">{{produto.metro}}</td>
-										<td class="text-center">{{produto.qtde}}</td>										
-									</tr>									
+										<td class="text-center">{{produto.qtde}}</td>
+									</tr>
 								</tbody>
 							</table>
 						</div>
 					</td>
 				</tr>
-
+				<tr>
+					<td colspan="4">
+						<mat-paginator *ngIf="paginacao.lista"
+						 
+						 [length]="paginacao.length" [pageSize]="paginacao.pageSize"
+						 [pageSizeOptions]="paginacao.pageSizeOptions" (page)="page($event)">
+						</mat-paginator>
+					</td>
+				</tr>
 			</tbody>
 		</table>
 	</div>
