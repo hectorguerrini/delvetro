@@ -1,0 +1,23 @@
+<div>
+  <div class="row">
+		<!-- <div class="col-md-4 met">
+			<h3>Total Pedidos</h3>
+			<span>{{cabecalho.valPedidos | currency:'BRL'}}</span>
+		</div> -->
+		<div class="col-md-4 met">
+			<h3>Faturamento</h3>
+			<div class="head">
+				<span class="col-md-7">{{cabecalho.valCaixa | currency:'BRL'}}</span>
+				<select class="form-control col-5" [(ngModel)]="mesFiltro" (change)="getGrafico()">
+					<option *ngFor="let item of comboMes" value="{{item.valor}}">{{item.label}}</option>
+				</select>
+			</div>
+
+			<div class="chart" [chart]="chart"></div>
+
+
+		</div>
+	</div>
+
+</div>
+<app-tabela></app-tabela>

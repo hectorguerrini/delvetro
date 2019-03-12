@@ -16,12 +16,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import localePt from '@angular/common/locales/pt';
 import { registerLocaleData } from '@angular/common';
 import { FilterTablePipe } from './pipes/filter-table.pipe';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
 registerLocaleData(localePt);
 @NgModule({
 	declarations: [
 		AppComponent,
 		TabelaComponent,
-		FilterTablePipe
+		FilterTablePipe,
+		DashboardComponent
 	],
 	imports: [
 		AppRoutingModule,

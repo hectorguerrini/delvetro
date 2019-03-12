@@ -6,9 +6,10 @@ import * as moment from 'moment';
 moment.locale('pt-br')
 import { Paginacao } from 'src/app/models/paginacao';
 import { MatPaginator } from '@angular/material/paginator';
-import { Chart } from 'angular-highcharts';
-import * as Highcharts from 'highcharts';
+import { Tabela } from 'src/app/models/tabela';
 
+import * as jspdf from 'jspdf';
+import html2canvas from 'html2canvas';
 
 
 @Component({
@@ -17,7 +18,7 @@ import * as Highcharts from 'highcharts';
 	styleUrls: ['./tabela.component.scss']
 })
 export class TabelaComponent implements OnInit {
-	chart: Chart;
+	
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	tabelaTotal =
 		{
@@ -27,109 +28,153 @@ export class TabelaComponent implements OnInit {
 			coluna4: null,
 			coluna5: null
 		};
+	tabActive: Tabela;
+	
+	tabTabela = new Array<Tabela>();
+
+
 	tabela: Array<any>;
-	cabecalho = {
-		valPedidos: 0,
-		valCaixa: 0
-	};
+	tabelaFilter: Array<any>;
+	// tipoTabela = new String('pedidos');
 	paginacao: Paginacao;	
-	mesFiltro = moment().format('MM/YYYY')
-	fromDate: NgbDate;
-	toDate: NgbDate;
+	// colspan = 4;
+	// filtro = {
+	// 	pedido: {
+	// 		filter: true,
+	// 		fromDate: null,
+	// 		toDate: null
+	// 	},
+	// 	pagamento: {
+	// 		filter: false,
+	// 		fromDate: null,
+	// 		toDate: null
+	// 	},
+	// 	cliente: '',
+	// 	fechamento: {			
+	// 		fromDate: null,
+	// 		toDate: null
+	// 	}
+	// }
+	
 	today: NgbDate;
-	cliente: String;
-	openRow: Number;
+
+	
+	openRow: any;
 	pagamento: String;
-	colors: Array<string> = ['green','blue','red']
-	comboMes: Array<any> = [];
+	
 	constructor(private tableService: TabelaService, calendar: NgbCalendar) {
 		
-		this.fromDate = calendar.getToday();
-		this.toDate = calendar.getToday();
+		// this.filtro.pagamento.fromDate = calendar.getToday();
+		// this.filtro.pagamento.toDate = calendar.getToday();
+		// this.filtro.pedido.fromDate = calendar.getToday();
+		// this.filtro.pedido.toDate = calendar.getToday();
 		this.today = calendar.getToday();
-
-		for(let i=0; i<=12; i++){
-			this.comboMes.push({
-				valor: moment().subtract(i, 'month').format('MM/YYYY'),
-				label: moment().subtract(i, 'month').format('MMM/YYYY')
-			})
-		}
-
-		Highcharts.setOptions({
-			lang: {
-				thousandsSep: '.',
-				decimalPoint: ','
-			},
-		})
-		this.chart = new Chart({
-			chart: {
-				type: 'pie',
-				plotBackgroundColor: null,
-				plotBorderWidth: null,
-				plotShadow: false,
-				width: 240,
-				height: 250
-
-			},
-			title: {
-				text: null,
-				align: 'center',
-				verticalAlign: 'middle',
-				y: 50
-			},
-			exporting: {
-				enabled: false
-			},
-			credits: {
-				enabled: false
-			},
-			plotOptions: {
-				pie: {
-					dataLabels: {
-						enabled: true,
-						distance: -30,
-						format: '<b>{point.percentage:.1f} %',
-						style: {
-							fontWeight: 'bold',
-							color: 'white'
-						}
-					},
-					startAngle: -90,
-					endAngle: 90,
-					center: ['50%', '50%'],
-					size: '100%',
-					innerSize: '50%'
-
-				}
-			},
-			tooltip: {
-				pointFormat: '<b>R$ {point.y:,.2f}</b>'
-				
-			},
-			series: [
-				// <Highcharts.SeriesColumnOptions> {														
-				// 	name:'line 1',
-				// 	data: [
-				// 		{name: 'A', y: 24, color:'red'},
-				// 		{name: 'B', y: 12, color:'green'},
-				// 		{name: 'C', y: 1, color:'blue'},	
-				// 	],
-
-				// }
-			]
-		});
-
+		this.gerarTabs();
 	}
 
-	ngOnInit() {
-		// this.tabela = [)
-		// 	{ VEN_DATA: '2019-01-29', VEN_RESPONSAVEL: 'Mercato Delvetro', VEN_TOTAL: 5594.50 },
-		// 	{ VEN_DATA: '2019-01-29', VEN_RESPONSAVEL: 'Mercato Delvetro', VEN_TOTAL: 5594.50 }
-		// ];
-		this.paginacao = new Paginacao;
+	ngOnInit() {		
+		this.paginacao = new Paginacao;			
+	}
+
+	gerarTabs(): void{
+		
+		let tab = new Tabela('pedidos',4);
+		tab.addCol('d',this.today,this.today,true);
+		tab.addCol('d',this.today,this.today,false);
+		tab.addCol('s');
+		tab.addCol('$');
+		this.tabTabela.push(tab);
+		tab = new Tabela('fechamento',3);
+		tab.addCol('d',this.today,this.today);		
+		tab.addCol('s');
+		tab.addCol('$');
+		this.tabTabela.push(tab);
+		tab = new Tabela('gastos',3);
+		tab.addCol('d',this.today,this.today);		
+		tab.addCol('s');
+		tab.addCol('$');
+		this.tabTabela.push(tab);
+		
+		this.getList(this.tabTabela[0].nome);
+	}
+	getList(tipo: String): void{		
+		if(tipo == 'pedidos'){
+			this.tabActive = this.tabTabela[0];
+			this.getListaVendas();			
+		} else if(tipo == 'fechamento'){
+			this.tabActive = this.tabTabela[1];
+			this.getListaFechamento();			
+		} else if(tipo == 'gastos'){
+			this.tabActive = this.tabTabela[2];
+			this.getListaGastos();			
+		}
+	}
+	getListaGastos(): void{
+		this.tableService.listGastos(this.tabActive.filtros)
+		.subscribe((data: any) => {
+			this.tabelaTotal.coluna1 = data.length;
+			this.tabelaTotal.coluna3 = 0;
+			this.tabelaTotal.coluna4 = 0;			
+			data.map(tab => {
+				this.tabelaTotal.coluna3 += tab.valorCredito;
+				this.tabelaTotal.coluna4 += tab.valorDebito;
+			});
+			this.paginacao.lista = data;
+		})
+
+	}
+	getListaFechamento(): void{
+		this.tableService.listFechamento(this.tabActive.filtros)
+		.subscribe((data: any) => {
+			this.tabelaTotal.coluna1 = data.length;
+			this.tabelaTotal.coluna3 = 0;
+			this.tabelaTotal.coluna4 = 0;			
+			data.map(tab => {
+				this.tabelaTotal.coluna3 += tab.valorCredito;
+				this.tabelaTotal.coluna4 += tab.valorDebito;
+			});
+			this.paginacao.lista = data;
+		})
+
+	}
+	setFilter(tipo: String): void{
+		if(tipo == 'pedido'){
+			this.tabActive.filtros[0].filter = !this.tabActive.filtros[0].filter;
+			this.tabActive.filtros[1].filter = !this.tabActive.filtros[0].filter && !this.tabActive.filtros[1].filter ? true : this.tabActive.filtros[1].filter;			
+		} else {
+			this.tabActive.filtros[1].filter = !this.tabActive.filtros[1].filter;
+			this.tabActive.filtros[0].filter = !this.tabActive.filtros[0].filter && !this.tabActive.filtros[1].filter ? true : this.tabActive.filtros[0].filter;			
+		}
 		this.getListaVendas();
-		this.getCabecalho();
-		this.getGrafico();
+	}
+
+	exportPDF(index): void {
+		this.openRow = this.paginacao.lista[index];
+		setTimeout(() => {
+			var data = document.getElementById(`linha${index}`);
+			html2canvas(data).then(canvas => {
+				var imgWidth = 208;
+				var pageHeight = 295;
+				var imgHeight = canvas.height * imgWidth / canvas.width;
+				var heightLeft = imgHeight;
+				const contentDataURL = canvas.toDataURL('image/png')
+				let pdf = new jspdf('p', 'mm', 'a4');
+
+				var position = 0;
+				console.log(`Height ${imgHeight} - Width ${imgWidth}`)
+				
+				pdf.setFontSize(12);
+				pdf.setFont("helvetica");
+				pdf.setFontStyle("normal");
+				
+				pdf.text(`Relatório extraído em ${moment().format('LLLL')}`, 10 , 10 )
+
+				pdf.addImage(contentDataURL, 'PNG', 1, 15, imgWidth, imgHeight)
+				
+				pdf.save(`${this.openRow.formaPagamento}.pdf`)
+			});
+		}, 500);
+
 	}
 
 	convertNgbMoment(data: NgbDate): String {
@@ -141,17 +186,36 @@ export class TabelaComponent implements OnInit {
 		data.month++;
 		return newMoment.format('MM-DD-YYYY');
 	}
-	onDateSelection(date: NgbDate) {
+	onDateSelection(date: NgbDate, tipo: String) {
 
-		if (date.equals(this.fromDate) && date.after(this.toDate)) {
-			this.toDate = this.fromDate;
-		} else if (date.equals(this.toDate) && date.before(this.fromDate)) {
-			this.fromDate = this.toDate;
+		if(tipo == 'coluna1'){
+			if (date.equals(this.tabActive.filtros[0].valorMin) && date.after(this.tabActive.filtros[0].valorMax)) {
+				this.tabActive.filtros[0].valorMax = this.tabActive.filtros[0].valorMin;
+			} else if (date.equals(this.tabActive.filtros[0].valorMax) && date.before(this.tabActive.filtros[0].valorMin)) {
+				this.tabActive.filtros[0].valorMin = this.tabActive.filtros[0].valorMax;
+			}
+			if(this.tabActive.nome === 'pedidos' && this.tabActive.filtros[0].filter){
+				this.getListaVendas();
+			} else if(this.tabActive.nome === 'fechamento'){
+				this.getListaFechamento();
+			} else if(this.tabActive.nome === 'gastos'){
+				this.getListaGastos();
+			}
+		} else {
+			if (date.equals(this.tabActive.filtros[1].valorMin) && date.after(this.tabActive.filtros[1].valorMax)) {
+				this.tabActive.filtros[1].valorMax = this.tabActive.filtros[1].valorMin;
+			} else if (date.equals(this.tabActive.filtros[1].valorMax) && date.before(this.tabActive.filtros[1].valorMin)) {
+				this.tabActive.filtros[1].valorMin = this.tabActive.filtros[1].valorMax;
+			}
+			if(this.tabActive.filtros[1].filter){
+				this.getListaVendas();
+			}
 		}
-		this.getListaVendas();
+		
 	}
 	open(item: any): void {
-		this.openRow = this.openRow == item.ven_codigo ? 0 : item.ven_codigo;
+		// this.openRow = this.openRow == item.ven_codigo ? 0 : item.ven_codigo;
+		this.openRow = this.openRow == item ? false : item ;	
 	}
 
 	isActive(btn: String): boolean {
@@ -163,65 +227,55 @@ export class TabelaComponent implements OnInit {
 		} else {
 			this.pagamento = btn;
 		}
-		let saida = [];
+		this.tabelaFilter = [];
 		if (this.pagamento === 'NPago') {
-			saida = this.tabela.filter(el => { return el.status_pagamento === 'Ñ Pago' });
+			this.tabelaFilter = this.tabela.filter(el => { return el.status_pagamento === 'Ñ Pago' });
 		} else if (this.pagamento === 'Pago') {
-			saida = this.tabela.filter(el => { return el.status_pagamento === 'Pago' || el.status_pagamento === 'Parcial' });
+			this.tabelaFilter = this.tabela.filter(el => { return el.status_pagamento === 'Pago' || el.status_pagamento === 'Parcial' });
 		} else {
-			saida = this.tabela;
+			this.tabelaFilter = this.tabela;
 		}
 		this.paginator.pageIndex = 0;
 		this.paginacao.index = 0;
-		this.paginacao.length = saida.length;
-		this.paginacao.lista = saida.slice(
+		this.paginacao.length = this.tabelaFilter.length;
+		this.paginacao.lista = this.tabelaFilter.slice(
 			this.paginacao.index * this.paginacao.pageSize,
 			(this.paginacao.index * this.paginacao.pageSize) + this.paginacao.pageSize
 		);
 	}
 
 	page(event) {
+		this.tabelaFilter = this.tabelaFilter ? this.tabelaFilter : this.tabela;
 		this.paginacao.pageSize = event.pageSize;
 		this.paginacao.index = event.pageIndex;
-		this.paginacao.lista = this.tabela.slice(
+		this.paginacao.lista = this.tabelaFilter.slice(
 			this.paginacao.index * this.paginacao.pageSize,
 			(this.paginacao.index * this.paginacao.pageSize) + this.paginacao.pageSize
 		);
 	}
-
-	getCabecalho(): void {
-
-		this.tableService.cabecalho(this.today)
-			.subscribe((data: Array<any>) => {
-				this.cabecalho.valPedidos = data[0].VALOR;
-				this.cabecalho.valCaixa = data[1].VALOR;
-
-			});
-	}
-
-	getListaVendas(): void {
-		let min = this.convertNgbMoment(this.fromDate);
-		let max = this.convertNgbMoment(this.toDate);
-		this.tableService.listVendas(min, max, this.cliente)
+	
+	getListaVendas(): void {		
+		this.tableService.listVendas(this.tabActive.filtros)
 			.subscribe((data: Array<any>) => {
 
 				this.tabelaTotal.coluna1 = data.length;
+				this.tabelaTotal.coluna3 = null;
 				this.tabelaTotal.coluna4 = 0;
 				this.tabelaTotal.coluna5 = 0;
 				data.map(tab => {
 					this.tabelaTotal.coluna4 += tab.ven_total;
 				});
 				this.tabela = data;
-				this.getListaCaixa(min, max);
+				this.getListaCaixa();
 			});
 	}
-	getListaCaixa(min: String, max: String): void {
-		this.tableService.listCaixa(min, max, this.cliente)
+	getListaCaixa(): void {
+		this.tableService.listCaixa(this.tabActive.filtros)
 			.subscribe((data: any) => {
 
 				const caixa = data;
 				caixa.forEach(tab => {
-					this.tabelaTotal.coluna5 += tab.CAI_PAGAMENTO != null ? (tab.CAI_CREDITO + tab.CAI_DEBITO) : 0;
+					this.tabelaTotal.coluna5 += tab.CAI_PAGAMENTO != null ? (tab.CAI_CREDITO) : 0;
 
 					let index = this.tabela.findIndex(el => { return el.ven_codigo == tab.CAI_ID * 1 });
 					if (index != -1) {
@@ -238,7 +292,7 @@ export class TabelaComponent implements OnInit {
 						let caixas = this.tabela[index].caixa.length;
 						let pago = 0;
 						pagos.map((a) => {
-							pago += (a.credito + a.debito);
+							pago += (a.credito);
 						})
 						this.tabela[index].qtde_pago = pago;
 						if (pagos.length == caixas) {
@@ -253,30 +307,9 @@ export class TabelaComponent implements OnInit {
 					this.paginacao.index * this.paginacao.pageSize,
 					(this.paginacao.index * this.paginacao.pageSize) + this.paginacao.pageSize
 				);
-				console.log(this.paginacao);
+				console.log(this.tabela);
 			});
 
 
 	}
-
-	getGrafico(): void {
-		this.chart.removeSeries(0);
-		this.tableService.grafico(this.mesFiltro)
-			.subscribe((data: any) => {
-				let serie = <Highcharts.SeriesColumnOptions>{
-					name: 'Faturamento',
-					data: []
-				}
-				data.map((el, i) => {
-					serie.data.push({
-						name: el.LABEL,
-						y: el.VALOR,
-						color: this.colors[i]
-					})
-				})
-				
-				this.chart.addSeries(serie, true, false);
-			})
-	}
-
 }

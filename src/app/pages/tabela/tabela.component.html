@@ -1,93 +1,141 @@
 <div>
-
-
-	<div class="row">
-		<div class="col-md-4 met1">
-			<h3>Total Pedidos</h3>
-			<span>{{cabecalho.valPedidos | currency:'BRL'}}</span>
-		</div>
-		<div class="col-md-4 met2">
-			<h3>Faturamento</h3>
-			<div class="chart" [chart]="chart"></div>
-			<span>{{cabecalho.valCaixa | currency:'BRL'}}</span>
-			<select class="form-control col-md-6"  [(ngModel)]="mesFiltro" (change)="getGrafico()" >
-				<option *ngFor="let item of comboMes" value="{{item.valor}}">{{item.label}}</option>
-				
-			</select>
-		</div>
-	</div>
-
 	<div class="tabela">
 		<div class="header">
-			<span>Pedidos</span>
-			<span>Caixa</span>
+			<span (click)="getList('pedidos')">Pedidos</span>
+			<span (click)="getList('fechamento')">Fechamento</span>
+			<span (click)="getList('gastos')">Gastos</span>
 		</div>
 		<table class="table">
-			<colgroup>
-				<col width="20%">
-				<col width="30%">
-				<col width="25%">
-				<col width="25%">
-			</colgroup>
+				<colgroup *ngIf="tabActive.nome == 'pedidos'">
+					<col width="20%">
+					<col width="20%">
+					<col width="35%">
+					<col width="25%">
+				</colgroup>
+				<colgroup *ngIf="tabActive.nome == 'fechamento' || tabActive.nome == 'gastos' ">
+					<col width="30%">
+					<col width="40%">
+					<col width="30%">									
+				</colgroup>
 			<thead>
 				<tr>
-					<th>
-						<div class="input-group">
-							<input class="form-control dp" (dateSelect)="onDateSelection($event)" [maxDate]="today" placeholder="yyyy-mm-dd"
-							 name="dp1" [(ngModel)]="fromDate" ngbDatepicker #d1="ngbDatepicker" (click)="d1.toggle()">
-							<input class="form-control dp" (dateSelect)="onDateSelection($event)" [maxDate]="today" placeholder="yyyy-mm-dd"
-							 name="dp2" [(ngModel)]="toDate" ngbDatepicker #d2="ngbDatepicker" (click)="d2.toggle()">
-						</div>
+					<th style="position: relative;" > 
+						<div *ngIf="tabActive.filtros[0].tipo == 'd'">
+							<i  class="material-icons fil" *ngIf="tabActive.filtros[0].filter != undefined"	 (click)="setFilter('pedido')" [ngClass]="{'select': tabActive.filtros[0].filter }">
+								check_circle_outline
+							</i>	
+							<div class="input-group data">
+								<input class="form-control dp" [ngClass]="{'select': tabActive.filtros[0].filter }" (dateSelect)="onDateSelection($event,'coluna1')" [maxDate]="today" placeholder="yyyy-mm-dd"
+								 name="dp1" [(ngModel)]="tabActive.filtros[0].valorMin" ngbDatepicker #d1="ngbDatepicker" (click)="d1.toggle()">
+								<input class="form-control dp" [ngClass]="{'select': tabActive.filtros[0].filter }" (dateSelect)="onDateSelection($event,'coluna1')" [maxDate]="today" placeholder="yyyy-mm-dd"
+								 name="dp2" [(ngModel)]="tabActive.filtros[0].valorMax" ngbDatepicker #d2="ngbDatepicker" (click)="d2.toggle()">
+							</div>						
+						</div>						
 					</th>
-					<th><input class="form-control" type="text" placeholder="Pesquisa" [(ngModel)]="cliente" (ngModelChange)="getListaVendas()"></th>
-					<th><input class="form-control" type="text" placeholder="Pesquisa"></th>
-					<th>
+					<th style="position: relative;">
+						<div *ngIf="tabActive.filtros[1].tipo == 'd'">
+							<i class="material-icons fil" (click)="setFilter('pagamento')" [ngClass]="{'select': tabActive.filtros[1].filter }">
+								check_circle_outline
+							</i>
+							<div class="input-group data">
+								<input class="form-control dp" [ngClass]="{'select': tabActive.filtros[1].filter }" (dateSelect)="onDateSelection($event,'coluna2')" [maxDate]="today" placeholder="yyyy-mm-dd"
+								 name="dp3" [(ngModel)]="tabActive.filtros[1].valorMin" ngbDatepicker #d3="ngbDatepicker" (click)="d3.toggle()">
+								<input class="form-control dp" [ngClass]="{'select': tabActive.filtros[1].filter }" (dateSelect)="onDateSelection($event,'coluna2')" [maxDate]="today" placeholder="yyyy-mm-dd"
+								 name="dp4" [(ngModel)]="tabActive.filtros[1].valorMax" ngbDatepicker #d4="ngbDatepicker" (click)="d4.toggle()">
+							</div>
+						</div>
+						
+					</th>
+					<th *ngIf="tabActive.nome == 'pedidos'">
+						<input class="form-control" type="text" placeholder="Pesquisa" [(ngModel)]="tabActive.filtros[2].valor" (ngModelChange)="getListaVendas()">
+					</th>					
+					<th *ngIf="tabActive.nome == 'pedidos'">
 						<div class="btn-group">
 							<button type="button" class="btn btn-outline-dark" [class.active]="isActive('NPago')" (click)="setActive('NPago')">Não
 								Pago</button>
 							<button type="button" class="btn btn-outline-dark" [class.active]="isActive('Pago')" (click)="setActive('Pago')">Pago/Parcial</button>
 						</div>
 					</th>
+					
 				</tr>
 				<tr>
-					<th>Data Pedido</th>
-					<th>Cliente</th>
-					<th>Serviços</th>
-					<th>Valor</th>
+					<th>
+						{{ tabActive.nome == 'pedidos' ? 'Data Pedido' : ''}}
+						{{ tabActive.nome == 'fechamento' ? 'Data Pagamento' : ''}}
+						{{ tabActive.nome == 'gastos' ? 'Data Pagamento' : ''}}
+					</th>
+					<th>
+						{{ tabActive.nome == 'pedidos' ? 'Ultima Data Pagamento': ''}}
+						{{ tabActive.nome == 'fechamento' ? 'Conta Pagamento' : ''}}
+						{{ tabActive.nome == 'gastos' ? 'Conta Pagamento' : ''}}
+					</th>
+					<th>
+						{{ tabActive.nome == 'pedidos' ? 'Cliente' : ''}}						
+						{{ tabActive.nome == 'fechamento' ? 'Valor' : ''}}
+						{{ tabActive.nome == 'gastos' ? 'Valor' : ''}}
+					</th>
+					<th *ngIf="tabActive.nome == 'pedidos'" >{{ tabActive.nome == 'pedidos' ? 'Valor' : ''}}</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr class="total">
 					<td>{{tabelaTotal.coluna1}} Pedido{{tabelaTotal.coluna1 > 1? 's' : ''}}</td>
 					<td>{{tabelaTotal.coluna2}}</td>
-					<td>{{tabelaTotal.coluna3}}</td>
-					<td>{{tabelaTotal.coluna5 | currency:'BRL'}}/{{tabelaTotal.coluna4 | currency:'BRL'}}</td>
+					<td *ngIf="tabActive.nome == 'fechamento' || tabActive.nome == 'gastos' ">
+						{{tabActive.nome == 'fechamento' || tabActive.nome == 'gastos' ? (tabelaTotal.coluna3 | currency:'BRL') : ''}}/{{tabActive.nome == 'fechamento' || tabActive.nome == 'gastos' ? (tabelaTotal.coluna4 | currency:'BRL') : ''}}
+					</td>
+					<td *ngIf="tabActive.nome == 'pedidos'">{{tabelaTotal.coluna3}}</td>
+					<td *ngIf="tabActive.nome == 'pedidos'">
+						{{tabelaTotal.coluna5 | currency:'BRL'}}/{{tabelaTotal.coluna4 | currency:'BRL'}}
+					</td>
 				</tr>
-				<tr class="acc" *ngFor="let item of paginacao.lista" (click)="open(item)">
-					<td colspan="4">
-						<div>
-							<table class="table2">
-								<colgroup>
+				<tr class="acc" *ngFor="let item of paginacao.lista; index as i" >
+					<td [attr.colspan]="tabActive.colspan" [attr.id]="'linha'+i">
+						<div >
+							<table class="table2" >
+								<colgroup *ngIf="tabActive.nome == 'pedidos'">
 									<col width="20%">
+									<col width="20%">
+									<col width="35%">
+									<col width="25%">
+								</colgroup>
+								<colgroup *ngIf="tabActive.nome == 'fechamento' || tabActive.nome == 'gastos'">
 									<col width="30%">
-									<col width="25%">
-									<col width="25%">
+									<col width="40%">
+									<col width="30%">									
 								</colgroup>
 								<tbody>
 									<tr>
-										<td class="text-center">{{item.ven_data | date:'dd/MM/yyyy'}}</td>
-										<td>{{item.ven_responsavel}}</td>
-										<td>{{item.ven_status}}</td>
-										<td class="text-center">
-											<span>{{item.ven_total | currency:'BRL'}}
+
+										<td class="text-center" (click)="open(item)">  
+											{{ tabActive.nome == 'pedidos' ? (item.ven_data | date:'dd/MM/yyyy') : ''}}
+											{{ tabActive.nome == 'fechamento' ? (item.clientes[0].dataPagamento | date:'dd/MM/yyyy') : ''}}
+											{{ tabActive.nome == 'gastos' ? (item.gastos[0].dataPagamento | date:'dd/MM/yyyy') : ''}}
+										</td>
+										<td [ngClass]="{'text-center': tabActive.nome == 'pedidos' }" (click)="open(item)">
+											{{ tabActive.nome == 'pedidos' ? (item.cai_pagamento  ? (item.cai_pagamento | date:'dd/MM/yyyy') : '-') : ''}}
+											{{ tabActive.nome == 'fechamento' ? item.formaPagamento : ''}}
+											{{ tabActive.nome == 'gastos' ? item.formaPagamento : ''}}
+										</td>
+										<td>
+											{{ tabActive.nome == 'pedidos' ? item.ven_responsavel : ''}}
+											{{ tabActive.nome == 'fechamento' ? ((item.formaPagamento !== 'DEBITO DE CONSUMO' ? item.valorCredito : item.valorDebito)  | currency:'BRL') : ''}}
+											{{ tabActive.nome == 'gastos' ? ((item.valorDebito == 0 ? item.valorCredito : item.valorDebito ) | currency:'BRL') : ''}}
+											<button *ngIf="tabActive.nome == 'fechamento' || tabActive.nome == 'gastos'" class="btn btn-default" style="z-index: 9999999;" (click)="exportPDF(i)">
+												<i class="material-icons">print</i>
+											</button>
+										</td>										
+										<td class="text-center" *ngIf="tabActive.nome == 'pedidos'" (click)="open(item)">
+											<span>
+												{{item.ven_total | currency:'BRL'}}
 												<i placement="top" ngbTooltip="{{item.qtde_pago | currency: 'BRL'}}" class="material-icons" [ngClass]="{'pago': item.status_pagamento == 'Pago' ? true : '','parcial': item.status_pagamento == 'Parcial' ? true : ''  }">done</i>
 											</span>
-										</td>
+										</td>																														
 									</tr>
 								</tbody>
 							</table>
-							<table class="table3" [ngClass]="{'open': openRow == item.ven_codigo}">
-								<tbody>
+							<table class="table3"  [ngClass]="{'open': openRow == item  }">
+								<tbody *ngIf="tabActive.nome === 'pedidos'">
 									<tr>
 										<th>Produto</th>
 										<th>Categoria</th>
@@ -107,15 +155,49 @@
 										<td class="text-center">{{produto.qtde}}</td>
 									</tr>
 								</tbody>
+								<tbody *ngIf="tabActive.nome === 'fechamento'">
+									<tr>
+										<th>Data Pedido</th>
+										<th>Data Pagamento</th>
+										<th>Cliente</th>
+										<th>Valor Credito</th>
+										<th>Valor Debito</th>										
+									</tr>
+									<tr *ngFor="let cliente of item.clientes">
+										<td class="text-center">{{cliente.dataPedido | date: 'dd/MM/yyyy'}}</td>
+										<td class="text-center">{{cliente.dataPagamento | date: 'dd/MM/yyyy'}}</td>
+										<td >{{cliente.cliente}}</td>
+										<td >{{cliente.credito | currency: 'BRL'}}</td>
+										<td >{{cliente.debito | currency: 'BRL'}}</td>										
+									</tr>
+								</tbody>
+								<tbody *ngIf="tabActive.nome === 'gastos'">
+										<tr>
+											<th>Data Pedido</th>
+											<th>Data Pagamento</th>
+											<th>Categoria</th>
+											<th>Forma Pagamento</th>
+											<th>Descricao</th>
+											<th>Valor Credito</th>
+											<th>Valor Debito</th>										
+										</tr>
+										<tr *ngFor="let gasto of item.gastos">
+											<td class="text-center">{{gasto.dataPedido | date: 'dd/MM/yyyy'}}</td>
+											<td class="text-center">{{gasto.dataPagamento | date: 'dd/MM/yyyy'}}</td>
+											<td >{{gasto.categoria}}</td>
+											<td >{{gasto.modoPagamento}}</td>
+											<td >{{gasto.descricao}}</td>
+											<td >{{gasto.credito | currency: 'BRL'}}</td>
+											<td >{{gasto.debito | currency: 'BRL'}}</td>										
+										</tr>
+									</tbody>
 							</table>
 						</div>
 					</td>
 				</tr>
-				<tr>
-					<td colspan="4">
-						<mat-paginator *ngIf="paginacao.lista"
-						 
-						 [length]="paginacao.length" [pageSize]="paginacao.pageSize"
+				<tr *ngIf="tabActive.nome == 'pedidos'">
+					<td [attr.colspan]="tabActive.colspan">
+						<mat-paginator *ngIf="paginacao.lista" [length]="paginacao.length" [pageSize]="paginacao.pageSize"
 						 [pageSizeOptions]="paginacao.pageSizeOptions" (page)="page($event)">
 						</mat-paginator>
 					</td>
