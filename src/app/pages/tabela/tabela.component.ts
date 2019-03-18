@@ -57,8 +57,13 @@ export class TabelaComponent implements OnInit {
 	// }
 
 	today: NgbDate;
+<<<<<<< HEAD
 
 
+=======
+	startMonth: NgbDate;
+	
+>>>>>>> f807d37bb4a2e5e498df8a54325f67f73872e372
 	openRow: any;
 	pagamento: String;
 
@@ -69,6 +74,8 @@ export class TabelaComponent implements OnInit {
 		// this.filtro.pedido.fromDate = calendar.getToday();
 		// this.filtro.pedido.toDate = calendar.getToday();
 		this.today = calendar.getToday();
+		this.startMonth = calendar.getToday();
+		this.startMonth.day = 1;
 		this.gerarTabs();
 	}
 
@@ -94,7 +101,16 @@ export class TabelaComponent implements OnInit {
 		tab.addCol('s');
 		tab.addCol('$');
 		this.tabTabela.push(tab);
+<<<<<<< HEAD
 
+=======
+		tab = new Tabela('clientes',3);		
+		tab.addCol('d',this.startMonth,this.today);		
+		tab.addCol('s');
+		tab.addCol('$');
+		this.tabTabela.push(tab);
+		
+>>>>>>> f807d37bb4a2e5e498df8a54325f67f73872e372
 		this.getList(this.tabTabela[0].nome);
 	}
 	getList(tipo: String): void {
@@ -106,10 +122,39 @@ export class TabelaComponent implements OnInit {
 			this.getListaFechamento();
 		} else if (tipo === 'gastos') {
 			this.tabActive = this.tabTabela[2];
+<<<<<<< HEAD
 			this.getListaGastos();
 		}
 	}
 	getListaGastos(): void {
+=======
+			this.getListaGastos();			
+		} else if(tipo == 'clientes'){
+			this.tabActive = this.tabTabela[3];
+			this.getListaClientes();			
+		}
+	}
+	getListaClientes(): void{
+		this.tableService.listClientes(this.tabActive.filtros)
+		.subscribe((data: any) => {
+			this.tabelaTotal.coluna1 = data.length;
+			this.tabelaTotal.coluna3 = 0;			
+			data.map(tab => {
+				this.tabelaTotal.coluna3 += tab.valorCredito;				
+			});
+			this.tabela = data;
+			this.paginator.pageIndex = 0;
+			this.paginacao.index = 0;
+			this.paginacao.length = this.tabela.length;
+			this.paginacao.lista = this.tabela.slice(
+				this.paginacao.index * this.paginacao.pageSize,
+				(this.paginacao.index * this.paginacao.pageSize) + this.paginacao.pageSize
+			);
+		})
+
+	}
+	getListaGastos(): void{
+>>>>>>> f807d37bb4a2e5e498df8a54325f67f73872e372
 		this.tableService.listGastos(this.tabActive.filtros)
 		.subscribe((data: any) => {
 			this.tabelaTotal.coluna1 = data.length;
@@ -210,6 +255,8 @@ export class TabelaComponent implements OnInit {
 				this.getListaFechamento();
 			} else if (this.tabActive.nome === 'gastos') {
 				this.getListaGastos();
+			} else if(this.tabActive.nome === 'clientes'){
+				this.getListaClientes();
 			}
 		} else {
 			if (date.equals(this.tabActive.filtros[1].valorMin) && date.after(this.tabActive.filtros[1].valorMax)) {

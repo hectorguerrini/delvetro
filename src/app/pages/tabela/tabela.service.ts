@@ -21,6 +21,24 @@ export class TabelaService {
     data.month++;
     return newMoment.format('MM-DD-YYYY');
   }
+  listClientes(filtro: any) {
+    
+    let min = this.convertNgbMoment(filtro[0].valorMin);
+    let max = this.convertNgbMoment(filtro[0].valorMax);
+    const url = `${this.url}/clientes`;
+    var body = {
+      dataMin: min,
+      dataMax: max,
+      clientes: filtro[1].valor
+    }
+    
+    return this.http.post(url, body, {
+      headers: new HttpHeaders().set(
+        'Content-Type',
+        'application/json'
+      )
+    });
+  }
   listGastos(filtro: any) {
     let min = this.convertNgbMoment(filtro[0].valorMin);
     let max = this.convertNgbMoment(filtro[0].valorMax);

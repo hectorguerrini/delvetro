@@ -4,6 +4,7 @@
 			<span (click)="getList('pedidos')">Pedidos</span>
 			<span (click)="getList('fechamento')">Fechamento</span>
 			<span (click)="getList('gastos')">Gastos</span>
+			<span (click)="getList('clientes')">Clientes</span>
 		</div>
 		<table class="table">
 				<colgroup *ngIf="tabActive.nome == 'pedidos'">
@@ -12,7 +13,7 @@
 					<col width="35%">
 					<col width="25%">
 				</colgroup>
-				<colgroup *ngIf="tabActive.nome == 'fechamento' || tabActive.nome == 'gastos' ">
+				<colgroup *ngIf="['fechamento', 'gastos' ,'clientes'].indexOf(tabActive.nome) != -1 ">
 					<col width="30%">
 					<col width="40%">
 					<col width="30%">									
@@ -44,7 +45,7 @@
 								 name="dp4" [(ngModel)]="tabActive.filtros[1].valorMax" ngbDatepicker #d4="ngbDatepicker" (click)="d4.toggle()">
 							</div>
 						</div>
-						
+						<input *ngIf="tabActive.filtros[1].tipo == 's'" class="form-control" type="text" placeholder="Pesquisa" [(ngModel)]="tabActive.filtros[1].valor" (ngModelChange)="getListaClientes()">
 					</th>
 					<th *ngIf="tabActive.nome == 'pedidos'">
 						<input class="form-control" type="text" placeholder="Pesquisa" [(ngModel)]="tabActive.filtros[2].valor" (ngModelChange)="getListaVendas()">
@@ -63,16 +64,19 @@
 						{{ tabActive.nome == 'pedidos' ? 'Data Pedido' : ''}}
 						{{ tabActive.nome == 'fechamento' ? 'Data Pagamento' : ''}}
 						{{ tabActive.nome == 'gastos' ? 'Data Pagamento' : ''}}
+						{{ tabActive.nome == 'clientes' ? 'Periodo' : ''}}
 					</th>
 					<th>
 						{{ tabActive.nome == 'pedidos' ? 'Ultima Data Pagamento': ''}}
 						{{ tabActive.nome == 'fechamento' ? 'Conta Pagamento' : ''}}
 						{{ tabActive.nome == 'gastos' ? 'Conta Pagamento' : ''}}
+						{{ tabActive.nome == 'clientes' ? 'Cliente' : ''}}
 					</th>
 					<th>
 						{{ tabActive.nome == 'pedidos' ? 'Cliente' : ''}}						
 						{{ tabActive.nome == 'fechamento' ? 'Valor' : ''}}
 						{{ tabActive.nome == 'gastos' ? 'Valor' : ''}}
+						{{ tabActive.nome == 'clientes' ? 'Valor' : ''}}
 					</th>
 					<th *ngIf="tabActive.nome == 'pedidos'" >{{ tabActive.nome == 'pedidos' ? 'Valor' : ''}}</th>
 				</tr>
@@ -84,13 +88,16 @@
 					<td *ngIf="tabActive.nome == 'fechamento' || tabActive.nome == 'gastos' ">
 						{{tabActive.nome == 'fechamento' || tabActive.nome == 'gastos' ? (tabelaTotal.coluna3 | currency:'BRL') : ''}}/{{tabActive.nome == 'fechamento' || tabActive.nome == 'gastos' ? (tabelaTotal.coluna4 | currency:'BRL') : ''}}
 					</td>
-					<td *ngIf="tabActive.nome == 'pedidos'">{{tabelaTotal.coluna3}}</td>
+					<td *ngIf="['pedidos' ,'clientes'].indexOf(tabActive.nome) != -1 ">
+						{{ tabActive.nome == 'pedidos' ? tabelaTotal.coluna3 : ''}}
+						{{ tabActive.nome == 'clientes' ? (tabelaTotal.coluna3 | currency: 'BRL') : ''}}
+					</td>
 					<td *ngIf="tabActive.nome == 'pedidos'">
 						{{tabelaTotal.coluna5 | currency:'BRL'}}/{{tabelaTotal.coluna4 | currency:'BRL'}}
 					</td>
 				</tr>
 				<tr class="acc" *ngFor="let item of paginacao.lista; index as i" >
-					<td [attr.colspan]="tabActive.colspan" [attr.id]="'linha'+i">
+					<td *ngIf="paginacao.lista.length > 0" [attr.colspan]="tabActive.colspan" [attr.id]="'linha'+i">
 						<div >
 							<table class="table2" >
 								<colgroup *ngIf="tabActive.nome == 'pedidos'">
@@ -99,7 +106,7 @@
 									<col width="35%">
 									<col width="25%">
 								</colgroup>
-								<colgroup *ngIf="tabActive.nome == 'fechamento' || tabActive.nome == 'gastos'">
+								<colgroup *ngIf="['fechamento', 'gastos' ,'clientes'].indexOf(tabActive.nome) != -1 ">
 									<col width="30%">
 									<col width="40%">
 									<col width="30%">									
@@ -111,16 +118,19 @@
 											{{ tabActive.nome == 'pedidos' ? (item.ven_data | date:'dd/MM/yyyy') : ''}}
 											{{ tabActive.nome == 'fechamento' ? (item.clientes[0].dataPagamento | date:'dd/MM/yyyy') : ''}}
 											{{ tabActive.nome == 'gastos' ? (item.gastos[0].dataPagamento | date:'dd/MM/yyyy') : ''}}
+											{{ tabActive.nome == 'clientes' ? item.periodo : ''}}
 										</td>
 										<td [ngClass]="{'text-center': tabActive.nome == 'pedidos' }" (click)="open(item)">
 											{{ tabActive.nome == 'pedidos' ? (item.cai_pagamento  ? (item.cai_pagamento | date:'dd/MM/yyyy') : '-') : ''}}
 											{{ tabActive.nome == 'fechamento' ? item.formaPagamento : ''}}
 											{{ tabActive.nome == 'gastos' ? item.formaPagamento : ''}}
+											{{ tabActive.nome == 'clientes' ? item.nome : ''}}
 										</td>
 										<td>
 											{{ tabActive.nome == 'pedidos' ? item.ven_responsavel : ''}}
 											{{ tabActive.nome == 'fechamento' ? ((item.formaPagamento !== 'DEBITO DE CONSUMO' ? item.valorCredito : item.valorDebito)  | currency:'BRL') : ''}}
 											{{ tabActive.nome == 'gastos' ? ((item.valorDebito == 0 ? item.valorCredito : item.valorDebito ) | currency:'BRL') : ''}}
+											{{ tabActive.nome == 'clientes' ? (item.valorCredito | currency: 'BRL') : ''}}
 											<button *ngIf="tabActive.nome == 'fechamento' || tabActive.nome == 'gastos'" class="btn btn-default" style="z-index: 9999999;" (click)="exportPDF(i)">
 												<i class="material-icons">print</i>
 											</button>
@@ -195,7 +205,7 @@
 						</div>
 					</td>
 				</tr>
-				<tr *ngIf="tabActive.nome == 'pedidos'">
+				<tr *ngIf="['pedidos' ,'clientes'].indexOf(tabActive.nome) != -1 ">
 					<td [attr.colspan]="tabActive.colspan">
 						<mat-paginator *ngIf="paginacao.lista" [length]="paginacao.length" [pageSize]="paginacao.pageSize"
 						 [pageSizeOptions]="paginacao.pageSizeOptions" (page)="page($event)">
