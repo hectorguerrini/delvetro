@@ -57,7 +57,7 @@ export class TabelaComponent implements OnInit {
 	// }
 	
 	today: NgbDate;
-
+	startMonth: NgbDate;
 	
 	openRow: any;
 	pagamento: String;
@@ -69,6 +69,8 @@ export class TabelaComponent implements OnInit {
 		// this.filtro.pedido.fromDate = calendar.getToday();
 		// this.filtro.pedido.toDate = calendar.getToday();
 		this.today = calendar.getToday();
+		this.startMonth = calendar.getToday();
+		this.startMonth.day = 1;
 		this.gerarTabs();
 	}
 
@@ -94,6 +96,11 @@ export class TabelaComponent implements OnInit {
 		tab.addCol('s');
 		tab.addCol('$');
 		this.tabTabela.push(tab);
+		tab = new Tabela('clientes',3);		
+		tab.addCol('d',this.startMonth,this.today);		
+		tab.addCol('s');
+		tab.addCol('$');
+		this.tabTabela.push(tab);
 		
 		this.getList(this.tabTabela[0].nome);
 	}
@@ -107,7 +114,29 @@ export class TabelaComponent implements OnInit {
 		} else if(tipo == 'gastos'){
 			this.tabActive = this.tabTabela[2];
 			this.getListaGastos();			
+		} else if(tipo == 'clientes'){
+			this.tabActive = this.tabTabela[3];
+			this.getListaClientes();			
 		}
+	}
+	getListaClientes(): void{
+		this.tableService.listClientes(this.tabActive.filtros)
+		.subscribe((data: any) => {
+			this.tabelaTotal.coluna1 = data.length;
+			this.tabelaTotal.coluna3 = 0;			
+			data.map(tab => {
+				this.tabelaTotal.coluna3 += tab.valorCredito;				
+			});
+			this.tabela = data;
+			this.paginator.pageIndex = 0;
+			this.paginacao.index = 0;
+			this.paginacao.length = this.tabela.length;
+			this.paginacao.lista = this.tabela.slice(
+				this.paginacao.index * this.paginacao.pageSize,
+				(this.paginacao.index * this.paginacao.pageSize) + this.paginacao.pageSize
+			);
+		})
+
 	}
 	getListaGastos(): void{
 		this.tableService.listGastos(this.tabActive.filtros)
@@ -200,6 +229,8 @@ export class TabelaComponent implements OnInit {
 				this.getListaFechamento();
 			} else if(this.tabActive.nome === 'gastos'){
 				this.getListaGastos();
+			} else if(this.tabActive.nome === 'clientes'){
+				this.getListaClientes();
 			}
 		} else {
 			if (date.equals(this.tabActive.filtros[1].valorMin) && date.after(this.tabActive.filtros[1].valorMax)) {
