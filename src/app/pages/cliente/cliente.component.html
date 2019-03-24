@@ -1,0 +1,26 @@
+<div *ngIf="id_cliente != null" class="container">
+	<div class="row ">
+		<div class="col-md-12 head">
+			<h3>{{cabecalho.nome}}</h3>
+			<div class="row indicadores">
+				<div class="col-md-6">
+					<span>{{cabecalho.valorPago | currency: 'BRL'}}</span>
+					<label><strong>Pagamento</strong></label>
+				</div>
+				<div class="col-md-6">
+					<span>{{cabecalho.valorPedido | currency: 'BRL'}}</span>
+					<label><strong>Pedidos</strong></label>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6 graph">
+			<div class="chart" [chart]="chartLineMes"></div>
+		</div>
+	</div>
+</div>
+<div class="pesquisar" [hidden]="id_cliente != null">
+  <input type="text" class="form-control" placeholder="Pesquisar" [(ngModel)]="cliente" [ngbTypeahead]="search">
+</div>

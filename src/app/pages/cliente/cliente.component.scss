@@ -1,0 +1,45 @@
+.row{
+    margin-top: 20px;
+    margin-bottom: 20px;
+
+}
+.container{}
+.graph{
+    box-shadow: 2px -1px 20px #888888;	
+}
+.head{
+    box-shadow: 2px -1px 20px #888888;	
+    border-radius: 5px;
+    text-align: center;
+    h3{
+        margin: auto;
+        padding: 5px;
+    }
+}
+
+.indicadores {
+    margin: auto;
+    padding: 5px;
+    div{
+       display: grid; 
+    }
+    span{
+        font-size: 24px;
+    }
+    label{
+        font-size: 18px;
+    }
+}
+
+.pesquisar{
+    display: flex;
+    justify-content: center;
+    align-items: center;    
+    height: 100%;
+    
+    input{
+        max-width: 400px;
+        width: 100%    
+    }
+
+}

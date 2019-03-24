@@ -17,13 +17,15 @@ import localePt from '@angular/common/locales/pt';
 import { registerLocaleData } from '@angular/common';
 import { FilterTablePipe } from './pipes/filter-table.pipe';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { ClienteComponent } from './pages/cliente/cliente.component';
 registerLocaleData(localePt);
 @NgModule({
 	declarations: [
 		AppComponent,
 		TabelaComponent,
 		FilterTablePipe,
-		DashboardComponent
+		DashboardComponent,
+		ClienteComponent
 	],
 	imports: [
 		AppRoutingModule,
