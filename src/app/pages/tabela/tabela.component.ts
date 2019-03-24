@@ -57,13 +57,8 @@ export class TabelaComponent implements OnInit {
 	// }
 
 	today: NgbDate;
-<<<<<<< HEAD
-
-
-=======
 	startMonth: NgbDate;
-	
->>>>>>> f807d37bb4a2e5e498df8a54325f67f73872e372
+
 	openRow: any;
 	pagamento: String;
 
@@ -101,16 +96,11 @@ export class TabelaComponent implements OnInit {
 		tab.addCol('s');
 		tab.addCol('$');
 		this.tabTabela.push(tab);
-<<<<<<< HEAD
-
-=======
-		tab = new Tabela('clientes',3);		
-		tab.addCol('d',this.startMonth,this.today);		
+		tab = new Tabela('clientes', 3);
+		tab.addCol('d', this.startMonth, this.today);
 		tab.addCol('s');
 		tab.addCol('$');
 		this.tabTabela.push(tab);
-		
->>>>>>> f807d37bb4a2e5e498df8a54325f67f73872e372
 		this.getList(this.tabTabela[0].nome);
 	}
 	getList(tipo: String): void {
@@ -122,25 +112,19 @@ export class TabelaComponent implements OnInit {
 			this.getListaFechamento();
 		} else if (tipo === 'gastos') {
 			this.tabActive = this.tabTabela[2];
-<<<<<<< HEAD
 			this.getListaGastos();
-		}
-	}
-	getListaGastos(): void {
-=======
-			this.getListaGastos();			
-		} else if(tipo == 'clientes'){
+		} else if (tipo === 'clientes') {
 			this.tabActive = this.tabTabela[3];
-			this.getListaClientes();			
+			this.getListaClientes();
 		}
 	}
-	getListaClientes(): void{
+	getListaClientes(): void {
 		this.tableService.listClientes(this.tabActive.filtros)
 		.subscribe((data: any) => {
 			this.tabelaTotal.coluna1 = data.length;
-			this.tabelaTotal.coluna3 = 0;			
+			this.tabelaTotal.coluna3 = 0;
 			data.map(tab => {
-				this.tabelaTotal.coluna3 += tab.valorCredito;				
+				this.tabelaTotal.coluna3 += tab.valorCredito;
 			});
 			this.tabela = data;
 			this.paginator.pageIndex = 0;
@@ -150,11 +134,10 @@ export class TabelaComponent implements OnInit {
 				this.paginacao.index * this.paginacao.pageSize,
 				(this.paginacao.index * this.paginacao.pageSize) + this.paginacao.pageSize
 			);
-		})
+		});
 
 	}
-	getListaGastos(): void{
->>>>>>> f807d37bb4a2e5e498df8a54325f67f73872e372
+	getListaGastos(): void {
 		this.tableService.listGastos(this.tabActive.filtros)
 		.subscribe((data: any) => {
 			this.tabelaTotal.coluna1 = data.length;
@@ -206,16 +189,16 @@ export class TabelaComponent implements OnInit {
 	exportPDF(index): void {
 		this.openRow = this.paginacao.lista[index];
 		setTimeout(() => {
-			let data = document.getElementById(`linha${index}`);
+			const data = document.getElementById(`linha${index}`);
 			html2canvas(data).then(canvas => {
-				var imgWidth = 208;
-				var pageHeight = 295;
-				var imgHeight = canvas.height * imgWidth / canvas.width;
-				var heightLeft = imgHeight;
+				let imgWidth = 208;
+				let pageHeight = 295;
+				let imgHeight = canvas.height * imgWidth / canvas.width;
+				let heightLeft = imgHeight;
 				const contentDataURL = canvas.toDataURL('image/png');
-				let pdf = new jspdf('p', 'mm', 'a4');
+				const pdf = new jspdf('p', 'mm', 'a4');
 
-				var position = 0;
+				let position = 0;
 				console.log(`Height ${imgHeight} - Width ${imgWidth}`);
 
 				pdf.setFontSize(12);
@@ -233,7 +216,7 @@ export class TabelaComponent implements OnInit {
 	}
 
 	convertNgbMoment(data: NgbDate): String {
-		let newMoment = moment();
+		const newMoment = moment();
 		data.month--;
 		newMoment.month(data.month);
 		newMoment.dates(data.day);
@@ -255,7 +238,7 @@ export class TabelaComponent implements OnInit {
 				this.getListaFechamento();
 			} else if (this.tabActive.nome === 'gastos') {
 				this.getListaGastos();
-			} else if(this.tabActive.nome === 'clientes'){
+			} else if (this.tabActive.nome === 'clientes') {
 				this.getListaClientes();
 			}
 		} else {
@@ -286,9 +269,9 @@ export class TabelaComponent implements OnInit {
 		}
 		this.tabelaFilter = [];
 		if (this.pagamento === 'NPago') {
-			this.tabelaFilter = this.tabela.filter(el => { return el.status_pagamento === 'Ñ Pago'; });
+			this.tabelaFilter = this.tabela.filter(el => el.status_pagamento === 'Ñ Pago');
 		} else if (this.pagamento === 'Pago') {
-			this.tabelaFilter = this.tabela.filter(el => { return el.status_pagamento === 'Pago' || el.status_pagamento === 'Parcial'; });
+			this.tabelaFilter = this.tabela.filter(el => el.status_pagamento === 'Pago' || el.status_pagamento === 'Parcial');
 		} else {
 			this.tabelaFilter = this.tabela;
 		}
@@ -334,7 +317,7 @@ export class TabelaComponent implements OnInit {
 				caixa.forEach(tab => {
 					this.tabelaTotal.coluna5 += tab.CAI_PAGAMENTO != null ? (tab.CAI_CREDITO) : 0;
 
-					let index = this.tabela.findIndex(el => { return el.ven_codigo === tab.CAI_ID * 1; });
+					const index = this.tabela.findIndex(el => el.ven_codigo === tab.CAI_ID * 1);
 					if (index !== -1) {
 						const json = {
 							codigo: tab.CAI_CODIGO,
@@ -345,8 +328,8 @@ export class TabelaComponent implements OnInit {
 							categoria: tab.CAI_CATEGORIA
 						};
 						this.tabela[index].caixa.push(json);
-						let pagos = this.tabela[index].caixa.filter(el => { return el.dt_pagamento != null; });
-						let caixas = this.tabela[index].caixa.length;
+						const pagos = this.tabela[index].caixa.filter(el => el.dt_pagamento != null);
+						const caixas = this.tabela[index].caixa.length;
 						let pago = 0;
 						pagos.map((a) => {
 							pago += (a.credito);
