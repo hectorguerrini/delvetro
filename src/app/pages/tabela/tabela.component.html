@@ -126,7 +126,7 @@
 											{{ tabActive.nome == 'gastos' ? item.formaPagamento : ''}}
 											{{ tabActive.nome == 'clientes' ? item.nome : ''}}
 										</td>
-										<td>
+										<td (click)="open(item)">
 											{{ tabActive.nome == 'pedidos' ? item.ven_responsavel : ''}}
 											{{ tabActive.nome == 'fechamento' ? ((item.formaPagamento !== 'DEBITO DE CONSUMO' ? item.valorCredito : item.valorDebito)  | currency:'BRL') : ''}}
 											{{ tabActive.nome == 'gastos' ? ((item.valorDebito == 0 ? item.valorCredito : item.valorDebito ) | currency:'BRL') : ''}}

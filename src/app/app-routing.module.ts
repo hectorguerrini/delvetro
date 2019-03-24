@@ -2,9 +2,12 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { ClienteComponent } from './pages/cliente/cliente.component';
 const routes: Routes = [
-	{ path: '**', redirectTo: '/dashboard', pathMatch: 'full' },
 	{ path: 'dashboard', component: DashboardComponent },
+	{ path: 'cliente', component: ClienteComponent},
+	{ path: 'cliente/:id', component: ClienteComponent},
+	{ path: '**', redirectTo: '/dashboard', pathMatch: 'full' }
 ];
 
 @NgModule({
