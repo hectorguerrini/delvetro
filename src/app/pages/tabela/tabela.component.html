@@ -16,22 +16,22 @@
 				<colgroup *ngIf="['fechamento', 'gastos' ,'clientes'].indexOf(tabActive.nome) != -1 ">
 					<col width="30%">
 					<col width="40%">
-					<col width="30%">									
+					<col width="30%">
 				</colgroup>
 			<thead>
 				<tr>
-					<th style="position: relative;" > 
+					<th style="position: relative;" >
 						<div *ngIf="tabActive.filtros[0].tipo == 'd'">
 							<i  class="material-icons fil" *ngIf="tabActive.filtros[0].filter != undefined"	 (click)="setFilter('pedido')" [ngClass]="{'select': tabActive.filtros[0].filter }">
 								check_circle_outline
-							</i>	
+							</i>
 							<div class="input-group data">
 								<input class="form-control dp" [ngClass]="{'select': tabActive.filtros[0].filter }" (dateSelect)="onDateSelection($event,'coluna1')" [maxDate]="today" placeholder="yyyy-mm-dd"
 								 name="dp1" [(ngModel)]="tabActive.filtros[0].valorMin" ngbDatepicker #d1="ngbDatepicker" (click)="d1.toggle()">
 								<input class="form-control dp" [ngClass]="{'select': tabActive.filtros[0].filter }" (dateSelect)="onDateSelection($event,'coluna1')" [maxDate]="today" placeholder="yyyy-mm-dd"
 								 name="dp2" [(ngModel)]="tabActive.filtros[0].valorMax" ngbDatepicker #d2="ngbDatepicker" (click)="d2.toggle()">
-							</div>						
-						</div>						
+							</div>
+						</div>
 					</th>
 					<th style="position: relative;">
 						<div *ngIf="tabActive.filtros[1].tipo == 'd'">
@@ -49,7 +49,7 @@
 					</th>
 					<th *ngIf="tabActive.nome == 'pedidos'">
 						<input class="form-control" type="text" placeholder="Pesquisa" [(ngModel)]="tabActive.filtros[2].valor" (ngModelChange)="getListaVendas()">
-					</th>					
+					</th>
 					<th *ngIf="tabActive.nome == 'pedidos'">
 						<div class="btn-group">
 							<button type="button" class="btn btn-outline-dark" [class.active]="isActive('NPago')" (click)="setActive('NPago')">Não
@@ -57,7 +57,7 @@
 							<button type="button" class="btn btn-outline-dark" [class.active]="isActive('Pago')" (click)="setActive('Pago')">Pago/Parcial</button>
 						</div>
 					</th>
-					
+
 				</tr>
 				<tr>
 					<th>
@@ -73,7 +73,7 @@
 						{{ tabActive.nome == 'clientes' ? 'Cliente' : ''}}
 					</th>
 					<th>
-						{{ tabActive.nome == 'pedidos' ? 'Cliente' : ''}}						
+						{{ tabActive.nome == 'pedidos' ? 'Cliente' : ''}}
 						{{ tabActive.nome == 'fechamento' ? 'Valor' : ''}}
 						{{ tabActive.nome == 'gastos' ? 'Valor' : ''}}
 						{{ tabActive.nome == 'clientes' ? 'Valor' : ''}}
@@ -109,12 +109,12 @@
 								<colgroup *ngIf="['fechamento', 'gastos' ,'clientes'].indexOf(tabActive.nome) != -1 ">
 									<col width="30%">
 									<col width="40%">
-									<col width="30%">									
+									<col width="30%">
 								</colgroup>
 								<tbody>
 									<tr>
 
-										<td class="text-center" (click)="open(item)">  
+										<td class="text-center" (click)="open(item)">
 											{{ tabActive.nome == 'pedidos' ? (item.ven_data | date:'dd/MM/yyyy') : ''}}
 											{{ tabActive.nome == 'fechamento' ? (item.clientes[0].dataPagamento | date:'dd/MM/yyyy') : ''}}
 											{{ tabActive.nome == 'gastos' ? (item.gastos[0].dataPagamento | date:'dd/MM/yyyy') : ''}}
@@ -134,13 +134,13 @@
 											<button *ngIf="tabActive.nome == 'fechamento' || tabActive.nome == 'gastos'" class="btn btn-default" style="z-index: 9999999;" (click)="exportPDF(i)">
 												<i class="material-icons">print</i>
 											</button>
-										</td>										
+										</td>
 										<td class="text-center" *ngIf="tabActive.nome == 'pedidos'" (click)="open(item)">
 											<span>
 												{{item.ven_total | currency:'BRL'}}
 												<i placement="top" ngbTooltip="{{item.qtde_pago | currency: 'BRL'}}" class="material-icons" [ngClass]="{'pago': item.status_pagamento == 'Pago' ? true : '','parcial': item.status_pagamento == 'Parcial' ? true : ''  }">done</i>
 											</span>
-										</td>																														
+										</td>
 									</tr>
 								</tbody>
 							</table>
@@ -171,14 +171,14 @@
 										<th>Data Pagamento</th>
 										<th>Cliente</th>
 										<th>Valor Credito</th>
-										<th>Valor Debito</th>										
+										<th>Valor Debito</th>
 									</tr>
 									<tr *ngFor="let cliente of item.clientes">
 										<td class="text-center">{{cliente.dataPedido | date: 'dd/MM/yyyy'}}</td>
 										<td class="text-center">{{cliente.dataPagamento | date: 'dd/MM/yyyy'}}</td>
 										<td >{{cliente.cliente}}</td>
 										<td >{{cliente.credito | currency: 'BRL'}}</td>
-										<td >{{cliente.debito | currency: 'BRL'}}</td>										
+										<td >{{cliente.debito | currency: 'BRL'}}</td>
 									</tr>
 								</tbody>
 								<tbody *ngIf="tabActive.nome === 'gastos'">
@@ -189,7 +189,7 @@
 											<th>Forma Pagamento</th>
 											<th>Descricao</th>
 											<th>Valor Credito</th>
-											<th>Valor Debito</th>										
+											<th>Valor Debito</th>
 										</tr>
 										<tr *ngFor="let gasto of item.gastos">
 											<td class="text-center">{{gasto.dataPedido | date: 'dd/MM/yyyy'}}</td>
@@ -198,7 +198,7 @@
 											<td >{{gasto.modoPagamento}}</td>
 											<td >{{gasto.descricao}}</td>
 											<td >{{gasto.credito | currency: 'BRL'}}</td>
-											<td >{{gasto.debito | currency: 'BRL'}}</td>										
+											<td >{{gasto.debito | currency: 'BRL'}}</td>
 										</tr>
 									</tbody>
 							</table>

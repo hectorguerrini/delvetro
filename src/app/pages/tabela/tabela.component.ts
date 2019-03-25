@@ -35,26 +35,7 @@ export class TabelaComponent implements OnInit {
 
 	tabela: Array<any>;
 	tabelaFilter: Array<any>;
-	// tipoTabela = new String('pedidos');
 	paginacao: Paginacao;
-	// colspan = 4;
-	// filtro = {
-	// 	pedido: {
-	// 		filter: true,
-	// 		fromDate: null,
-	// 		toDate: null
-	// 	},
-	// 	pagamento: {
-	// 		filter: false,
-	// 		fromDate: null,
-	// 		toDate: null
-	// 	},
-	// 	cliente: '',
-	// 	fechamento: {
-	// 		fromDate: null,
-	// 		toDate: null
-	// 	}
-	// }
 
 	today: NgbDate;
 	startMonth: NgbDate;
@@ -64,10 +45,6 @@ export class TabelaComponent implements OnInit {
 
 	constructor(private tableService: TabelaService, calendar: NgbCalendar) {
 
-		// this.filtro.pagamento.fromDate = calendar.getToday();
-		// this.filtro.pagamento.toDate = calendar.getToday();
-		// this.filtro.pedido.fromDate = calendar.getToday();
-		// this.filtro.pedido.toDate = calendar.getToday();
 		this.today = calendar.getToday();
 		this.startMonth = calendar.getToday();
 		this.startMonth.day = 1;
@@ -215,15 +192,6 @@ export class TabelaComponent implements OnInit {
 
 	}
 
-	convertNgbMoment(data: NgbDate): String {
-		const newMoment = moment();
-		data.month--;
-		newMoment.month(data.month);
-		newMoment.dates(data.day);
-		newMoment.year(data.year);
-		data.month++;
-		return newMoment.format('MM-DD-YYYY');
-	}
 	onDateSelection(date: NgbDate, tipo: String) {
 
 		if (tipo === 'coluna1') {

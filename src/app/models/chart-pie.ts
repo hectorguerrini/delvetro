@@ -1,10 +1,10 @@
 import { Chart } from 'angular-highcharts';
 
 export class ChartPie {
-    graficoPie: Chart;
+	graficoPie: Chart;
 
-    constructor(){
-        this.graficoPie = new Chart({
+	constructor() {
+		this.graficoPie = new Chart({
 			chart: {
 				type: 'pie',
 				plotBackgroundColor: null,
@@ -47,19 +47,19 @@ export class ChartPie {
 			},
 			tooltip: {
 				pointFormat: '<b>R$ {point.y:,.2f}</b>'
-				
+
 			},
 			series: [
-				// <Highcharts.SeriesColumnOptions> {														
+				// <Highcharts.SeriesColumnOptions> {
 				// 	name:'line 1',
 				// 	data: [
 				// 		{name: 'A', y: 24, color:'red'},
 				// 		{name: 'B', y: 12, color:'green'},
-				// 		{name: 'C', y: 1, color:'blue'},	
+				// 		{name: 'C', y: 1, color:'blue'},
 				// 	],
 
 				// }
 			]
 		});
-    }
+	}
 }

@@ -1,45 +1,45 @@
 import { Chart } from 'angular-highcharts';
 
 export class ChartLine {
-    graficoLinha: Chart;
+	graficoLinha: Chart;
 
-    constructor() {
-        this.graficoLinha = new Chart({
+	constructor() {
+		this.graficoLinha = new Chart({
 			chart: {
-                type: 'line',                
-				height: 250			                
+				type: 'line',
+				height: 250
 			},
 			title: {
-				text:'Faturamento Cliente Mês'
-            },
-            
+				text: 'Faturamento Cliente Mês'
+			},
+
 			exporting: {
 				enabled: false
-            },
-            yAxis:{
-                title: null
-            },
-            xAxis: {
-                categories: []
-            },
+			},
+			yAxis: {
+				title: null
+			},
+			xAxis: {
+				categories: []
+			},
 			credits: {
 				enabled: false
-            },
-            legend:{
-                enabled: false
-            },
+			},
+			legend: {
+				enabled: false
+			},
 			plotOptions: {
-			
+
 			},
 			tooltip: {
-				pointFormat: '<b>R$ {point.y:,.2f}</b>'				
+				pointFormat: '<b>R$ {point.y:,.2f}</b>'
 			},
-			series: [ 
-                // <Highcharts.SeriesColumnOptions> {
-                // name: 'Installation',
-                // data: [43934, 52503, 57177, 69658, 97031, 119931, 137133, 154175]
-                // }				
+			series: [
+				// <Highcharts.SeriesColumnOptions> {
+				// name: 'Installation',
+				// data: [43934, 52503, 57177, 69658, 97031, 119931, 137133, 154175]
+				// }
 			]
 		});
-    }
+	}
 }
