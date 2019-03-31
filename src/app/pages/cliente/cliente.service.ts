@@ -11,11 +11,9 @@ export class ClienteService {
 
   getCombo(tipo: String) {
     const url = `${this.url}/combo/${tipo}`;   
-    var body = {       
-    };
     
     
-    return this.http.post(url, body, {
+    return this.http.get(url,  {
       headers: new HttpHeaders().set(
         'Content-Type',
         'application/json'

@@ -81,7 +81,7 @@
 					<th *ngIf="tabActive.nome == 'pedidos'" >{{ tabActive.nome == 'pedidos' ? 'Valor' : ''}}</th>
 				</tr>
 			</thead>
-			<tbody>
+			<tbody >
 				<tr class="total">
 					<td>{{tabelaTotal.coluna1}} Pedido{{tabelaTotal.coluna1 > 1? 's' : ''}}</td>
 					<td>{{tabelaTotal.coluna2}}</td>
@@ -96,8 +96,8 @@
 						{{tabelaTotal.coluna5 | currency:'BRL'}}/{{tabelaTotal.coluna4 | currency:'BRL'}}
 					</td>
 				</tr>
-				<tr class="acc" *ngFor="let item of paginacao.lista; index as i" >
-					<td *ngIf="paginacao.lista.length > 0" [attr.colspan]="tabActive.colspan" [attr.id]="'linha'+i">
+				<tr class="acc" [hidden]="paginacao.lista.length == 0" *ngFor="let item of paginacao.lista; index as i" >
+					<td  [attr.colspan]="tabActive.colspan" [attr.id]="'linha'+i">
 						<div >
 							<table class="table2" >
 								<colgroup *ngIf="tabActive.nome == 'pedidos'">
@@ -126,12 +126,12 @@
 											{{ tabActive.nome == 'gastos' ? item.formaPagamento : ''}}
 											{{ tabActive.nome == 'clientes' ? item.nome : ''}}
 										</td>
-										<td (click)="open(item)">
+										<td>
 											{{ tabActive.nome == 'pedidos' ? item.ven_responsavel : ''}}
 											{{ tabActive.nome == 'fechamento' ? ((item.formaPagamento !== 'DEBITO DE CONSUMO' ? item.valorCredito : item.valorDebito)  | currency:'BRL') : ''}}
 											{{ tabActive.nome == 'gastos' ? ((item.valorDebito == 0 ? item.valorCredito : item.valorDebito ) | currency:'BRL') : ''}}
 											{{ tabActive.nome == 'clientes' ? (item.valorCredito | currency: 'BRL') : ''}}
-											<button *ngIf="tabActive.nome == 'fechamento' || tabActive.nome == 'gastos'" class="btn btn-default" style="z-index: 9999999;" (click)="exportPDF(i)">
+											<button *ngIf="['gastos' ,'fechamento'].indexOf(tabActive.nome) != -1 " class="btn btn-default" style="z-index: 9999999;" (click)="exportPDF(i)">
 												<i class="material-icons">print</i>
 											</button>
 										</td>
@@ -144,7 +144,7 @@
 									</tr>
 								</tbody>
 							</table>
-							<table class="table3"  [ngClass]="{'open': openRow == item  }">
+							<table class="table3"  [ngClass]="{'open': openRow == item  }" [hidden]="paginacao.lista.length == 0" >
 								<tbody *ngIf="tabActive.nome === 'pedidos'">
 									<tr>
 										<th>Produto</th>

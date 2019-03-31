@@ -3,7 +3,7 @@ import { Chart } from 'angular-highcharts';
 import { ChartLine } from 'src/app/models/chart-line';
 import { ClienteService } from './cliente.service';
 import * as moment from 'moment';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
 @Component({
@@ -21,8 +21,8 @@ export class ClienteComponent implements OnInit {
   }
   cliente: any;
   
-  constructor(private clienteService: ClienteService,private acRoute: ActivatedRoute) {
-    clienteService.getCombo('cliente')
+  constructor(private clienteService: ClienteService,private acRoute: ActivatedRoute, private router: Router) {
+    clienteService.getCombo('clientes')
     .subscribe((data: any) => {
       this.combo.cliente = data;
     })
@@ -42,16 +42,22 @@ export class ClienteComponent implements OnInit {
     })
   }
 
+  selectCliente(event: {item: {VALOR: number}}): void {
+    this.router.navigate([`/cliente/${event.item.VALOR}`]);
+  }
+
+
+  formatter = (x: {LABEL: string}) => x.LABEL;
   search = (text$: Observable<string>) =>
     text$.pipe(
       debounceTime(200),
       distinctUntilChanged(),
-      map(term => term === '' ? this.combo.cliente.map(el => el.LABEL)
-        : this.combo.cliente.filter(v => v.LABEL.toLowerCase().indexOf(term.toLowerCase()) > -1)
-          .map(el => el.LABEL)
+      map(term => term === '' ? []
+        : this.combo.cliente.filter(v => v.LABEL.toLowerCase().indexOf(term.toLowerCase()) > -1)                    
           .slice(0, 10)
         )
     )
+    
   getCabecalho(): void{
     this.clienteService.cabecalho(this.id_cliente)
     .subscribe((data: any) => {

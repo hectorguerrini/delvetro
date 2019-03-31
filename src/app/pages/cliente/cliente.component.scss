@@ -3,7 +3,7 @@
     margin-bottom: 20px;
 
 }
-.container{}
+
 .graph{
     box-shadow: 2px -1px 20px #888888;	
 }
@@ -36,10 +36,11 @@
     justify-content: center;
     align-items: center;    
     height: 100%;
-    
+    padding-bottom: 100px;
     input{
         max-width: 400px;
-        width: 100%    
+        width: 100%;
+            
     }
 
 }

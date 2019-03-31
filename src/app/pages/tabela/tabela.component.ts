@@ -10,6 +10,7 @@ import { Tabela } from 'src/app/models/tabela';
 
 import * as jspdf from 'jspdf';
 import html2canvas from 'html2canvas';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -43,7 +44,7 @@ export class TabelaComponent implements OnInit {
 	openRow: any;
 	pagamento: String;
 
-	constructor(private tableService: TabelaService, calendar: NgbCalendar) {
+	constructor(private tableService: TabelaService, calendar: NgbCalendar,private router: Router) {
 
 		this.today = calendar.getToday();
 		this.startMonth = calendar.getToday();
@@ -166,7 +167,7 @@ export class TabelaComponent implements OnInit {
 	exportPDF(index): void {
 		this.openRow = this.paginacao.lista[index];
 		setTimeout(() => {
-			const data = document.getElementById(`linha${index}`);
+			let data = document.getElementById(`linha${index}`);
 			html2canvas(data).then(canvas => {
 				let imgWidth = 208;
 				let pageHeight = 295;
@@ -224,6 +225,9 @@ export class TabelaComponent implements OnInit {
 	open(item: any): void {
 		// this.openRow = this.openRow == item.ven_codigo ? 0 : item.ven_codigo;
 		this.openRow = this.openRow === item ? false : item ;
+		if(this.tabActive.nome === 'clientes'){
+			this.router.navigate([`/cliente/${item.id_contato}`])
+		}
 	}
 
 	isActive(btn: String): boolean {
