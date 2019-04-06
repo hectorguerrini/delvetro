@@ -25,6 +25,9 @@ import { ClienteComponent } from './pages/cliente/cliente.component';
 import { CadastroClienteComponent } from './pages/cadastro-cliente/cadastro-cliente.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MessageComponent } from './dialogs/message/message.component';
+import { CadastroEstoqueComponent } from './pages/cadastro-estoque/cadastro-estoque.component';
+import { CadastroServicosComponent } from './pages/cadastro-servicos/cadastro-servicos.component';
+
 registerLocaleData(localePt);
 @NgModule({
 	declarations: [
@@ -34,7 +37,9 @@ registerLocaleData(localePt);
 		DashboardComponent,
 		ClienteComponent,
 		CadastroClienteComponent,
-		MessageComponent
+		MessageComponent,
+		CadastroEstoqueComponent,
+		CadastroServicosComponent
 	],
 	imports: [
 		AppRoutingModule,

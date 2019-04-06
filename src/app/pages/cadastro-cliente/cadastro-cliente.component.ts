@@ -6,11 +6,8 @@ import { debounceTime, map } from 'rxjs/operators';
 import { Cliente } from 'src/app/models/cliente';
 import { MatDialogConfig, MatDialog } from '@angular/material';
 import { MessageComponent } from 'src/app/dialogs/message/message.component';
+import { Combo } from '../../models/combo';
 
-interface Combo {
-  VALOR:number;
-  LABEL:string;
-}
 @Component({
   selector: 'app-cadastro-cliente',
   templateUrl: './cadastro-cliente.component.html',
@@ -68,6 +65,7 @@ export class CadastroClienteComponent implements OnInit {
         this.clienteForm.patchValue(data.json[0]); 
         this.clienteForm.value['NM_CLIENTE'] = data.json[0].NM_CLIENTE; 
         this.clienteForm.value['ID_CLIENTE'] = data.json[0].ID_CLIENTE;
+        this.clienteForm.controls['NM_CLIENTE'].disable();
         console.log(this.clienteForm)
       }
 
