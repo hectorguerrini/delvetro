@@ -7,6 +7,7 @@ import { Cliente } from 'src/app/models/cliente';
 import { MatDialogConfig, MatDialog } from '@angular/material';
 import { MessageComponent } from 'src/app/dialogs/message/message.component';
 import { Combo } from '../../models/combo';
+import { AppService } from 'src/app/app.service';
 
 @Component({
   selector: 'app-cadastro-cliente',
@@ -36,8 +37,11 @@ export class CadastroClienteComponent implements OnInit {
     COMPLEMENTO: [''],
   });
   comboClientes: Array<Combo> = [];
-  constructor(private fb: FormBuilder,private cadastroService: CadastroClienteService, private dialog: MatDialog) { 
-    this.getCombo('clientes');
+  constructor(private fb: FormBuilder,private cadastroService: CadastroClienteService,private appService: AppService, private dialog: MatDialog) { 
+    appService.getCombo('clientes')
+    .subscribe((data: {query:string, json:Array<Combo>}) => {
+      this.comboClientes = data.json;
+    });
   }
 
   ngOnInit() {
@@ -58,17 +62,15 @@ export class CadastroClienteComponent implements OnInit {
       }
     })
   }
-  selectCliente(item: {VALOR: number}): void{
-    this.cadastroService.getCliente(item.VALOR)
+  selectCliente(item: string): void{
+    const obj =  this.comboClientes.find(el => {return el.LABEL === item});
+    this.clienteForm.get('ID_CLIENTE').setValue(obj.VALOR);
+    this.cadastroService.getCliente(obj.VALOR)
     .subscribe((data: {query:string, json:Array<Cliente>}) => {
       if(data.json.length > 0){
-        this.clienteForm.patchValue(data.json[0]); 
-        this.clienteForm.value['NM_CLIENTE'] = data.json[0].NM_CLIENTE; 
-        this.clienteForm.value['ID_CLIENTE'] = data.json[0].ID_CLIENTE;
-        this.clienteForm.controls['NM_CLIENTE'].disable();
-        console.log(this.clienteForm)
+        this.clienteForm.patchValue(data.json[0]);         
+        this.clienteForm.controls['NM_CLIENTE'].disable();        
       }
-
     })
   }
 
@@ -107,26 +109,16 @@ export class CadastroClienteComponent implements OnInit {
     })
 
   }
-  
-  getCombo(tipo: string): void{
-    this.cadastroService.getCombo(tipo)
-    .subscribe((data: {query:string, json:Array<Combo>}) => {
-      if(tipo === 'clientes'){
-        this.comboClientes = data.json;
-      }
-      
-    });    
-  }
 
   search = (text$: Observable<string>) =>
     text$.pipe(
       debounceTime(200),
       map(term => term === '' ? []
         : this.comboClientes.filter(v => v.LABEL.toLowerCase().indexOf(term.toLowerCase()) > -1)
-          .slice(0, 5)
+          .slice(0, 5).map(s => s.LABEL)
       )
     )
 
-  formatter = (x: { LABEL: string }) => x.LABEL;
+  formatter = (LABEL: string) => LABEL;
 
 }

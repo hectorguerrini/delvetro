@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators , FormGroup, FormBuilder } from '@angular/forms';
-import { distinctUntilChanged } from 'rxjs/operators';
+import { distinctUntilChanged, debounceTime, map } from 'rxjs/operators';
 import { Combo } from 'src/app/models/combo';
 import { CadastroEstoqueService } from './cadastro-estoque.service';
 import { Estoque } from 'src/app/models/estoque';
 import { MatDialogConfig, MatDialog } from '@angular/material';
 import { MessageComponent } from 'src/app/dialogs/message/message.component';
+import { Observable } from 'rxjs';
+import { AppService } from 'src/app/app.service';
 @Component({
   selector: 'app-cadastro-estoque',
   templateUrl: './cadastro-estoque.component.html',
@@ -26,11 +28,19 @@ export class CadastroEstoqueComponent implements OnInit {
     CUSTO_ULTIMO_RECEBIMENTO: ['0,00']
     
   });
-  comboTiposEstoque: Array<Combo> = [];
-  constructor(private fb: FormBuilder, private estoqueService: CadastroEstoqueService,private dialog: MatDialog) { 
-    this.getCombo('tipo_estoque');
+  comboTiposEstoque: Array<Combo>;
+  comboEstoque: Array<Combo>;
+  constructor(private fb: FormBuilder, private estoqueService: CadastroEstoqueService,private dialog: MatDialog, private appService: AppService) { 
+    this.appService.getCombo('tipo_estoque')
+    .subscribe((data: {query:string, json:Array<Combo>}) => {
+      this.comboTiposEstoque = data.json;
+    });    
+    this.appService.getCombo('estoque')
+    .subscribe((data: {query:string, json:Array<Combo>}) => {
+      this.comboEstoque = data.json;
+    });    
   }
-
+  
   ngOnInit() {
     this.onChanges();
   }
@@ -55,20 +65,12 @@ export class CadastroEstoqueComponent implements OnInit {
         this.estoqueForm.get('CUSTO_ULTIMO_RECEBIMENTO').updateValueAndValidity()
       })
   }
-  getCombo(tipo: string): void{
-    this.estoqueService.getCombo(tipo)
-    .subscribe((data: {query:string, json:Array<Combo>}) => {
-      if(tipo === 'tipo_estoque'){
-        this.comboTiposEstoque = data.json;
-      }
-      
-    });    
-  }
   submitEstoque(): void{
     this.submitted = true;
     if(this.estoqueForm.invalid){
       return
     }
+    
     const estoque = new Estoque();  
     let json = Object.assign(estoque, this.estoqueForm.value);
     json.CUSTO_ULTIMO_RECEBIMENTO = json.CUSTO_ULTIMO_RECEBIMENTO.replace(',','.');
@@ -99,4 +101,28 @@ export class CadastroEstoqueComponent implements OnInit {
     });
 
   }
+
+  selectCliente(item: string): void{
+    const obj =  this.comboEstoque.find(el => {return el.LABEL === item});
+    this.estoqueForm.get('ID_ESTOQUE').setValue(obj.VALOR);
+    this.estoqueService.getServico(obj.VALOR)
+    .subscribe((data: {query:string, json:Array<Estoque>}) => {
+      if(data.json.length > 0){
+        this.estoqueForm.patchValue(data.json[0]); 
+        this.estoqueForm.controls['DESCRICAO'].disable();
+        
+      }
+
+    })
+  }
+  search = (text$: Observable<string>) =>
+    text$.pipe(
+      debounceTime(200),
+      map(term => term === '' ? []
+        : this.comboEstoque.filter(v => v.LABEL.toLowerCase().indexOf(term.toLowerCase()) > -1)
+          .slice(0, 5).map(s => s.LABEL)
+      )
+    )
+
+  formatter = (LABEL: string) => LABEL;
 }

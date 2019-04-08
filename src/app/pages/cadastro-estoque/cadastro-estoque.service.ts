@@ -9,21 +9,21 @@ import { Estoque } from 'src/app/models/estoque';
 })
 export class CadastroEstoqueService {
   url = environment.url;
-  constructor(private http: HttpClient) { }
-  getCombo(tipo: String) {
-    const url = `${this.url}/combo/${tipo}`;       
+  constructor(private http: HttpClient) { }  
+  cadastroEstoque(estoque: Estoque) {
+    const url = `${this.url}/cadastro/estoque`;       
     
-    return this.http.get(url, {
+    return this.http.post(url, estoque ,{
       headers: new HttpHeaders().set(
         'Content-Type',
         'application/json'
       )
     });
   }
-  cadastroEstoque(estoque: Estoque) {
-    const url = `${this.url}/cadastro/estoque`;       
+  getServico(id_estoque: number) {
+    const url = `${this.url}/cadastro/estoque/${id_estoque}`;       
     
-    return this.http.post(url, estoque ,{
+    return this.http.get(url, {
       headers: new HttpHeaders().set(
         'Content-Type',
         'application/json'

@@ -1,5 +1,5 @@
 <ng-template #rt let-r="result" let-t="term">
-	<ngb-highlight [result]="r.LABEL" [term]="t"></ngb-highlight>
+	<ngb-highlight [result]="r" [term]="t"></ngb-highlight>
 </ng-template>
 <div class="cadastro styleCadastro">
 	<div>
@@ -10,11 +10,8 @@
 		<form class="form col-md-12" [formGroup]="clienteForm">
 			<div class="row">
 				<div class="col-md-4 form-group">
-					<label>Nome</label>
-					
-					<input *ngIf="clienteForm.value.ID_CLIENTE" formControlName="NM_CLIENTE" [disabled]="true" type="text" class="form-control">
-					
-					<input type="text" [hidden]="clienteForm.value.ID_CLIENTE"
+					<label>Nome</label>					
+					<input type="text" 
 						[ngClass]="{'error': submitted && clienteForm.controls['NM_CLIENTE'].errors}" class="form-control"
 						formControlName="NM_CLIENTE" [ngbTypeahead]="search" [resultTemplate]="rt" [inputFormatter]="formatter"
 						(selectItem)="selectCliente($event.item)">
@@ -103,7 +100,6 @@
 		</form>
 		<div class="actions col-md-12">
 			<button mat-button color="primary" class="btn" (click)="submitCliente()">Salvar <mat-icon>save</mat-icon></button>
-
 		</div>
 	</div>
 </div>

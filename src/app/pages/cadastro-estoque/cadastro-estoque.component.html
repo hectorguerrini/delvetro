@@ -1,18 +1,23 @@
+<ng-template #rt let-r="result" let-t="term">
+	<ngb-highlight [result]="r" [term]="t"></ngb-highlight>
+</ng-template>
 <div class="estoque styleCadastro">
 	<div class="col-md-12 title">
 		<h2>Cadastro de Estoque</h2>
 	</div>
 	<form class="form col-md-12" [formGroup]="estoqueForm">
 		<div class="row">
-			<div class="col-md-4 form-group">
+      <div class="col-md-4 form-group">
+        <label>Descrição</label>
+        
+        <input  type="text" [ngClass]="{'error': submitted && estoqueForm.controls['DESCRICAO'].errors}" class="form-control" formControlName="DESCRICAO"
+        [ngbTypeahead]="search" [resultTemplate]="rt" [inputFormatter]="formatter" (selectItem)="selectCliente($event.item)">
+			</div>			
+      <div class="col-md-4 form-group">
 				<label>Tipo</label>
 				<select formControlName="ID_TIPO" class="form-control" [ngClass]="{'error': submitted && estoqueForm.controls['ID_TIPO'].errors}" >
           <option *ngFor="let item of comboTiposEstoque" [ngValue]="item.VALOR" >{{item.LABEL}}</option>
 				</select>
-			</div>
-			<div class="col-md-4 form-group">
-				<label>Descrição</label>
-        <input type="text" [ngClass]="{'error': submitted && estoqueForm.controls['DESCRICAO'].errors}" class="form-control" formControlName="DESCRICAO">
 			</div>			
       <div class="col-md-4 form-group">
         <label>Localização</label>
