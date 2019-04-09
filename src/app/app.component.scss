@@ -1,10 +1,10 @@
 .navbar {
-	background-color: #888888;
+	background-color: var(--delvetro-primary);
 	height: 100%;
 	position: fixed;
 	top: 0;
 	left: 0;
-	width: 200px;
+	width: 10vw;
 	z-index: 999999;
 	overflow-x: hidden;
 	display: block;
@@ -18,26 +18,53 @@
 	}
 	span {
 		font-size: 20px;
-		&:hover{
-			background-color: #bbb;
-			cursor: pointer;
+		padding: 8px;
+		display: inline-grid;
+		text-align: center;
+		i {
+			font-size: 46px;
 		}
+		&:hover{
+			background-color: var(--delvetro-primary-dark);
+			cursor: pointer;
+
+		}
+
 	}
 
 }
 
 .main {
-	margin-left: 200px;
-	
+	margin-left: 10vw;
 	padding: 0;
 	height: 100%;
 }
 
 .cadastros{
-	background-color: #888888;	
+
 	ul{
+		overflow: hidden;
 		list-style-type: none;
+		max-height: 0;
+		transition: 0.3s ease-in-out;
+		margin-left: 10vw;
+		margin-top: -92px;
+		margin-bottom: 0;
+		margin-right: 0;
+		position: fixed;
 	}
+	&:hover {
+
+		ul{
+			max-height: 300px;
+			transition: 0.7s ease-in-out;
+			background-color: var(--delvetro-primary);
+			border-top-right-radius: 5px;
+			border-bottom-right-radius: 5px;
+		}
+	}
+
+
 	li{
 		cursor: pointer;
 		display: block;

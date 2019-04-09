@@ -1,17 +1,20 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <div class="navbar">
 	<h3>Delvetro</h3>
-	<span>Cadastros</span>
+
 	<div class="cadastros">
+		<span ><i class="fa fa-address-card"></i>Cadastros</span>
+
 		<ul>
 			<li [routerLink]="'cadastro/cliente'">Cliente</li>
 			<li [routerLink]="'cadastro/estoque'">Estoque</li>
 			<li [routerLink]="'cadastro/servicos'">Serviços</li>
 		</ul>
+
 	</div>
-	<span [routerLink]="'dashboard'">Dashboard</span>
-	<span [routerLink]="'cliente'">Cliente</span>
-	
+	<span [routerLink]="'dashboard'"><i class="fa fa-bar-chart"></i>Dashboard</span>
+	<span [routerLink]="'cliente'"><i class="fa fa-user-circle-o"></i>Cliente</span>
+
 </div>
 
 <div class="main">

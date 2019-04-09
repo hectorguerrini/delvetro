@@ -2,7 +2,8 @@
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 @import '~@angular/material/theming';
 :root{
-    --delvetro-primary: mat-palette($mat-blue)
+	--delvetro-primary: #1976d2;
+	--delvetro-primary-dark: #0958a7;
 }
 *{
     margin: 0;
@@ -12,18 +13,18 @@
 }
 
 html, body {
-    height: 100%;    
+    height: 100%;
 }
 body{
     font-family: Arial, Helvetica, sans-serif;
-    text-rendering: optimizeLegibility;    
+    text-rendering: optimizeLegibility;
 }
 .styleCadastro {
-    margin: auto;    
+    margin: auto;
     max-width: 80vw;
-    box-shadow: 2px -1px 20px #888888;	
+    box-shadow: 2px -1px 20px #888888;
     border: 1px solid transparent;
-    border-radius: 10px;   
+    border-radius: 10px;
     .form-control:disabled{
         cursor: no-drop;
     }
