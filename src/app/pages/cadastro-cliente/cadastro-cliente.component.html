@@ -10,11 +10,10 @@
 		<form class="form col-md-12" [formGroup]="clienteForm">
 			<div class="row">
 				<div class="col-md-4 form-group">
-					<label>Nome</label>					
-					<input type="text" 
-						[ngClass]="{'error': submitted && clienteForm.controls['NM_CLIENTE'].errors}" class="form-control"
-						formControlName="NM_CLIENTE" [ngbTypeahead]="search" [resultTemplate]="rt" [inputFormatter]="formatter"
-						(selectItem)="selectCliente($event.item)">
+					<label>Nome</label>
+					<input type="text" [ngClass]="{'error': submitted && clienteForm.controls['NM_CLIENTE'].errors}"
+						class="form-control" formControlName="NM_CLIENTE" [ngbTypeahead]="search" [resultTemplate]="rt"
+						[inputFormatter]="formatter" (selectItem)="selectCliente($event.item)">
 				</div>
 				<div class="col-md-4 form-group">
 					<label>Razao Social</label>
@@ -23,8 +22,8 @@
 				</div>
 				<div class="col-md-4 form-group">
 					<label>CNPJ / CPF</label>
-					<input type="text" [ngClass]="{'error': submitted && clienteForm.controls['CPF'].errors}" class="form-control"
-						formControlName="CPF">
+					<input type="text" [ngClass]="{'error': submitted && clienteForm.controls['CPF'].errors}"
+						class="form-control" formControlName="CPF">
 				</div>
 				<div class="col-md-3 form-group">
 					<label>Email</label>
@@ -51,8 +50,8 @@
 				</div>
 				<div class="col-md-4 form-group">
 					<label>RG Contato</label>
-					<input type="text" [ngClass]="{'error': submitted && clienteForm.controls['RG'].errors}" class="form-control"
-						formControlName="RG">
+					<input type="text" [ngClass]="{'error': submitted && clienteForm.controls['RG'].errors}"
+						class="form-control" formControlName="RG">
 				</div>
 				<div class="col-md-4 form-group">
 					<label>Lojista</label>
@@ -64,8 +63,8 @@
 				</div>
 				<div class="col-md-4 form-group">
 					<label>CEP</label>
-					<input type="text" [ngClass]="{'error': submitted && clienteForm.controls['CEP'].errors}" class="form-control"
-						formControlName="CEP">
+					<input type="text" [ngClass]="{'error': submitted && clienteForm.controls['CEP'].errors}"
+						class="form-control" formControlName="CEP">
 				</div>
 				<div class="col-md-4 form-group">
 					<label>Endereço</label>
@@ -99,7 +98,8 @@
 			</div>
 		</form>
 		<div class="actions col-md-12">
-			<button mat-button color="primary" class="btn" (click)="submitCliente()">Salvar <mat-icon>save</mat-icon></button>
+			<button mat-button color="primary" class="btn" (click)="submitCliente()">Salvar <mat-icon>save</mat-icon>
+				</button>
 		</div>
 	</div>
 </div>

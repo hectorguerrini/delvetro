@@ -21,11 +21,10 @@
 		</div>
 	</div>
 </div>
-<ng-template #rt let-r="result" let-t="term">		
+<ng-template #rt let-r="result" let-t="term">
 	<ngb-highlight [result]="r.LABEL" [term]="t"></ngb-highlight>
 </ng-template>
 <div class="pesquisar" [hidden]="id_cliente != null">
-<input type="text" class="form-control" [inputFormatter]="formatter" (selectItem)="selectCliente($event)" placeholder="Pesquisar"
- [(ngModel)]="cliente" [ngbTypeahead]="search" [resultTemplate]="rt">
+	<input type="text" class="form-control" [inputFormatter]="formatter" (selectItem)="selectCliente($event)"
+		placeholder="Pesquisar" [(ngModel)]="cliente" [ngbTypeahead]="search" [resultTemplate]="rt">
 </div>
-

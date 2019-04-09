@@ -12,7 +12,6 @@ export class ChartPie {
 				plotShadow: false,
 				width: 240,
 				height: 250
-
 			},
 			title: {
 				text: null,
@@ -42,12 +41,10 @@ export class ChartPie {
 					center: ['50%', '50%'],
 					size: '100%',
 					innerSize: '50%'
-
 				}
 			},
 			tooltip: {
 				pointFormat: '<b>R$ {point.y:,.2f}</b>'
-
 			},
 			series: [
 				// <Highcharts.SeriesColumnOptions> {
@@ -57,7 +54,6 @@ export class ChartPie {
 				// 		{name: 'B', y: 12, color:'green'},
 				// 		{name: 'C', y: 1, color:'blue'},
 				// 	],
-
 				// }
 			]
 		});

@@ -44,7 +44,7 @@ export class TabelaComponent implements OnInit {
 	openRow: any;
 	pagamento: String;
 
-	constructor(private tableService: TabelaService, calendar: NgbCalendar,private router: Router) {
+	constructor(private tableService: TabelaService, calendar: NgbCalendar, private router: Router) {
 
 		this.today = calendar.getToday();
 		this.startMonth = calendar.getToday();
@@ -98,49 +98,49 @@ export class TabelaComponent implements OnInit {
 	}
 	getListaClientes(): void {
 		this.tableService.listClientes(this.tabActive.filtros)
-		.subscribe((data: any) => {
-			this.tabelaTotal.coluna1 = data.length;
-			this.tabelaTotal.coluna3 = 0;
-			data.map(tab => {
-				this.tabelaTotal.coluna3 += tab.valorCredito;
+			.subscribe((data: any) => {
+				this.tabelaTotal.coluna1 = data.length;
+				this.tabelaTotal.coluna3 = 0;
+				data.map(tab => {
+					this.tabelaTotal.coluna3 += tab.valorCredito;
+				});
+				this.tabela = data;
+				this.paginator.pageIndex = 0;
+				this.paginacao.index = 0;
+				this.paginacao.length = this.tabela.length;
+				this.paginacao.lista = this.tabela.slice(
+					this.paginacao.index * this.paginacao.pageSize,
+					(this.paginacao.index * this.paginacao.pageSize) + this.paginacao.pageSize
+				);
 			});
-			this.tabela = data;
-			this.paginator.pageIndex = 0;
-			this.paginacao.index = 0;
-			this.paginacao.length = this.tabela.length;
-			this.paginacao.lista = this.tabela.slice(
-				this.paginacao.index * this.paginacao.pageSize,
-				(this.paginacao.index * this.paginacao.pageSize) + this.paginacao.pageSize
-			);
-		});
 
 	}
 	getListaGastos(): void {
 		this.tableService.listGastos(this.tabActive.filtros)
-		.subscribe((data: any) => {
-			this.tabelaTotal.coluna1 = data.length;
-			this.tabelaTotal.coluna3 = 0;
-			this.tabelaTotal.coluna4 = 0;
-			data.map(tab => {
-				this.tabelaTotal.coluna3 += tab.valorCredito;
-				this.tabelaTotal.coluna4 += tab.valorDebito;
+			.subscribe((data: any) => {
+				this.tabelaTotal.coluna1 = data.length;
+				this.tabelaTotal.coluna3 = 0;
+				this.tabelaTotal.coluna4 = 0;
+				data.map(tab => {
+					this.tabelaTotal.coluna3 += tab.valorCredito;
+					this.tabelaTotal.coluna4 += tab.valorDebito;
+				});
+				this.paginacao.lista = data;
 			});
-			this.paginacao.lista = data;
-		});
 
 	}
 	getListaFechamento(): void {
 		this.tableService.listFechamento(this.tabActive.filtros)
-		.subscribe((data: any) => {
-			this.tabelaTotal.coluna1 = data.length;
-			this.tabelaTotal.coluna3 = 0;
-			this.tabelaTotal.coluna4 = 0;
-			data.map(tab => {
-				this.tabelaTotal.coluna3 += tab.valorCredito;
-				this.tabelaTotal.coluna4 += tab.valorDebito;
+			.subscribe((data: any) => {
+				this.tabelaTotal.coluna1 = data.length;
+				this.tabelaTotal.coluna3 = 0;
+				this.tabelaTotal.coluna4 = 0;
+				data.map(tab => {
+					this.tabelaTotal.coluna3 += tab.valorCredito;
+					this.tabelaTotal.coluna4 += tab.valorDebito;
+				});
+				this.paginacao.lista = data;
 			});
-			this.paginacao.lista = data;
-		});
 
 	}
 	setFilter(tipo: String): void {
@@ -149,7 +149,7 @@ export class TabelaComponent implements OnInit {
 				.filtros[0].filter;
 			this.tabActive.filtros[1].filter =
 				!this.tabActive.filtros[0].filter &&
-				!this.tabActive.filtros[1].filter
+					!this.tabActive.filtros[1].filter
 					? true
 					: this.tabActive.filtros[1].filter;
 		} else {
@@ -157,7 +157,7 @@ export class TabelaComponent implements OnInit {
 				.filtros[1].filter;
 			this.tabActive.filtros[0].filter =
 				!this.tabActive.filtros[0].filter &&
-				!this.tabActive.filtros[1].filter
+					!this.tabActive.filtros[1].filter
 					? true
 					: this.tabActive.filtros[0].filter;
 		}
@@ -167,23 +167,23 @@ export class TabelaComponent implements OnInit {
 	exportPDF(index): void {
 		this.openRow = this.paginacao.lista[index];
 		setTimeout(() => {
-			let data = document.getElementById(`linha${index}`);
+			const data = document.getElementById(`linha${index}`);
 			html2canvas(data).then(canvas => {
-				let imgWidth = 208;
-				let pageHeight = 295;
-				let imgHeight = canvas.height * imgWidth / canvas.width;
-				let heightLeft = imgHeight;
+				const imgWidth = 208;
+				const pageHeight = 295;
+				const imgHeight = canvas.height * imgWidth / canvas.width;
+				const heightLeft = imgHeight;
 				const contentDataURL = canvas.toDataURL('image/png');
 				const pdf = new jspdf('p', 'mm', 'a4');
 
-				let position = 0;
+				const position = 0;
 				console.log(`Height ${imgHeight} - Width ${imgWidth}`);
 
 				pdf.setFontSize(12);
 				pdf.setFont('helvetica');
 				pdf.setFontStyle('normal');
 
-				pdf.text(`Relatório extraído em ${moment().format('LLLL')}`, 10 , 10 );
+				pdf.text(`Relatório extraído em ${moment().format('LLLL')}`, 10, 10);
 
 				pdf.addImage(contentDataURL, 'PNG', 1, 15, imgWidth, imgHeight);
 
@@ -224,9 +224,9 @@ export class TabelaComponent implements OnInit {
 	}
 	open(item: any): void {
 		// this.openRow = this.openRow == item.ven_codigo ? 0 : item.ven_codigo;
-		this.openRow = this.openRow === item ? false : item ;
-		if(this.tabActive.nome === 'clientes'){
-			this.router.navigate([`/cliente/${item.id_contato}`])
+		this.openRow = this.openRow === item ? false : item;
+		if (this.tabActive.nome === 'clientes') {
+			this.router.navigate([`/cliente/${item.id_contato}`]);
 		}
 	}
 

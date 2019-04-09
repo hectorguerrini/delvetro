@@ -1,4 +1,4 @@
 export interface Dialogdata {
-    status: string;
-    message: string;
-  }
+	status: string;
+	message: string;
+}

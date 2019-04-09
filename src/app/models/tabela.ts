@@ -3,7 +3,6 @@ export interface ColunaTipoData {
 	valorMin: null;
 	valorMax: null;
 	filter?: boolean;
-
 }
 export interface ColunaTipoString {
 	tipo: String;
@@ -14,7 +13,6 @@ export interface ColunaTipoDinheiro {
 	valor: String;
 }
 
-
 export class Tabela {
 	public nome: string;
 	public colspan: Number;
@@ -24,8 +22,12 @@ export class Tabela {
 		this.colspan = size;
 		this.filtros = [];
 	}
-	addCol(tipo: String, valorMin?: any, valorMax?: any, filter?: boolean): void {
-
+	addCol(
+		tipo: String,
+		valorMin?: any,
+		valorMax?: any,
+		filter?: boolean
+	): void {
 		if (tipo === 's') {
 			const obj = <ColunaTipoString>{};
 			obj.tipo = tipo;

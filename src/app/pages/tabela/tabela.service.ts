@@ -8,7 +8,6 @@ import { environment } from 'src/environments/environment';
 	providedIn: 'root'
 })
 export class TabelaService {
-
 	url = environment.url;
 
 	constructor(public http: HttpClient) { }
@@ -22,7 +21,6 @@ export class TabelaService {
 		return newMoment.format('MM-DD-YYYY');
 	}
 	listClientes(filtro: any) {
-
 		const min = this.convertNgbMoment(filtro[0].valorMin);
 		const max = this.convertNgbMoment(filtro[0].valorMax);
 		const url = `${this.url}/clientes`;
@@ -33,10 +31,7 @@ export class TabelaService {
 		};
 
 		return this.http.post(url, body, {
-			headers: new HttpHeaders().set(
-				'Content-Type',
-				'application/json'
-			)
+			headers: new HttpHeaders().set('Content-Type', 'application/json')
 		});
 	}
 	listGastos(filtro: any) {
@@ -45,14 +40,11 @@ export class TabelaService {
 		const url = `${this.url}/gastos`;
 		const body = {
 			dataMin: min,
-			dataMax: max,
+			dataMax: max
 		};
 
 		return this.http.post(url, body, {
-			headers: new HttpHeaders().set(
-				'Content-Type',
-				'application/json'
-			)
+			headers: new HttpHeaders().set('Content-Type', 'application/json')
 		});
 	}
 	listFechamento(filtro: any) {
@@ -61,14 +53,11 @@ export class TabelaService {
 		const url = `${this.url}/fechamento`;
 		const body = {
 			dataMin: min,
-			dataMax: max,
+			dataMax: max
 		};
 
 		return this.http.post(url, body, {
-			headers: new HttpHeaders().set(
-				'Content-Type',
-				'application/json'
-			)
+			headers: new HttpHeaders().set('Content-Type', 'application/json')
 		});
 	}
 	listVendas(filtro: any) {
@@ -82,22 +71,18 @@ export class TabelaService {
 			pedido: {
 				filter: filtro[0].filter,
 				dataMin: minPed,
-				dataMax: maxPed,
+				dataMax: maxPed
 			},
 			pagamento: {
 				filter: filtro[1].filter,
 				dataMin: minPag,
-				dataMax: maxPag,
+				dataMax: maxPag
 			},
 			cliente: filtro[2].valor
 		};
 
-
 		return this.http.post(url, body, {
-			headers: new HttpHeaders().set(
-				'Content-Type',
-				'application/json'
-			)
+			headers: new HttpHeaders().set('Content-Type', 'application/json')
 		});
 	}
 	listCaixa(filtro: any) {
@@ -111,39 +96,33 @@ export class TabelaService {
 			pedido: {
 				filter: filtro[0].filter,
 				dataMin: minPed,
-				dataMax: maxPed,
+				dataMax: maxPed
 			},
 			pagamento: {
 				filter: filtro[1].filter,
 				dataMin: minPag,
-				dataMax: maxPag,
+				dataMax: maxPag
 			},
 			cliente: filtro[2].valor
 		};
 
-
 		return this.http.post(url, body, {
-			headers: new HttpHeaders().set(
-				'Content-Type',
-				'application/json'
-			)
+			headers: new HttpHeaders().set('Content-Type', 'application/json')
 		});
 	}
 	cabecalho(today: NgbDate) {
-
 		const url = `${this.url}/cabecalho`;
 		const body = {
-			dataMin: moment().startOf('month').format('MM-DD-YYYY'),
-			dataMax: moment().endOf('month').format('MM-DD-YYYY')
+			dataMin: moment()
+				.startOf('month')
+				.format('MM-DD-YYYY'),
+			dataMax: moment()
+				.endOf('month')
+				.format('MM-DD-YYYY')
 		};
 
-
 		return this.http.post(url, body, {
-			headers: new HttpHeaders().set(
-				'Content-Type',
-				'application/json'
-			)
+			headers: new HttpHeaders().set('Content-Type', 'application/json')
 		});
 	}
-
 }

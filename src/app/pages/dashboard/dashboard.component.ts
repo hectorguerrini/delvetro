@@ -6,29 +6,29 @@ import { DashboardService } from './dashboard.service';
 import { ChartPie } from 'src/app/models/chart-pie';
 
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+	selector: 'app-dashboard',
+	templateUrl: './dashboard.component.html',
+	styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
-  chart: Chart;
-  cabecalho = {
+	chart: Chart;
+	cabecalho = {
 		valPedidos: 0,
 		valCaixa: 0
-  };
-  
-  colors: Array<string> = ['green','blue','red']
-  comboMes: Array<any> = [];
-  mesFiltro = moment().format('MM/YYYY');
-  
-  constructor(private dashboardService: DashboardService) { }
+	};
 
-  ngOnInit() {
-    for(let i=0; i<=12; i++){
+	colors: Array<string> = ['green', 'blue', 'red'];
+	comboMes: Array<any> = [];
+	mesFiltro = moment().format('MM/YYYY');
+
+	constructor(private dashboardService: DashboardService) { }
+
+	ngOnInit() {
+		for (let i = 0; i <= 12; i++) {
 			this.comboMes.push({
 				valor: moment().subtract(i, 'month').format('MM/YYYY'),
 				label: moment().subtract(i, 'month').format('MMM/YYYY')
-			})
+			});
 		}
 
 		Highcharts.setOptions({
@@ -36,30 +36,30 @@ export class DashboardComponent implements OnInit {
 				thousandsSep: '.',
 				decimalPoint: ','
 			},
-		})
+		});
 		this.chart = new ChartPie().graficoPie;
 		this.getGrafico();
-  }
-  getGrafico(): void {
+	}
+	getGrafico(): void {
 		this.chart.removeSeries(0);
 		this.dashboardService.grafico(this.mesFiltro)
 			.subscribe((data: any) => {
-				let serie = <Highcharts.SeriesColumnOptions>{
+				const serie = <Highcharts.SeriesColumnOptions>{
 					name: 'Faturamento',
 					data: []
-				}
+				};
 				this.cabecalho.valCaixa = 0;
 				data.map((el, i) => {
 					serie.data.push({
 						name: el.LABEL,
 						y: el.VALOR,
 						color: this.colors[i]
-					})
+					});
 					this.cabecalho.valCaixa += el.VALOR;
-				})
-				
+				});
+
 				this.chart.addSeries(serie, true, false);
-			})
+			});
 	}
 
 }
