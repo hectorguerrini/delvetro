@@ -27,6 +27,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MessageComponent } from './dialogs/message/message.component';
 import { CadastroEstoqueComponent } from './pages/cadastro-estoque/cadastro-estoque.component';
 import { CadastroServicosComponent } from './pages/cadastro-servicos/cadastro-servicos.component';
+import { CadastroProdutosComponent } from './pages/cadastro-produtos/cadastro-produtos.component';
 
 registerLocaleData(localePt);
 @NgModule({
@@ -39,7 +40,8 @@ registerLocaleData(localePt);
 		CadastroClienteComponent,
 		MessageComponent,
 		CadastroEstoqueComponent,
-		CadastroServicosComponent
+		CadastroServicosComponent,
+		CadastroProdutosComponent
 	],
 	imports: [
 		AppRoutingModule,

@@ -8,21 +8,4 @@
         width: 100%;
 
     }
-    .btn{
-		background-color: var(--delvetro-primary);
-		color:#fff;
-		padding-bottom: 0;
-		padding-top: 0;
-		.btn-label{
-			position: relative;
-    		left: -12px;
-    		display: inline-block;
-    		padding: 6px 12px;
-    		background: var(--delvetro-primary-dark);
-
-		}
-    }
-    .error{
-        border-color: red;
-    }
 }

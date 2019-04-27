@@ -1,0 +1,99 @@
+<ng-template #rt let-r="result" let-t="term">
+	<ngb-highlight [result]="r" [term]="t"></ngb-highlight>
+</ng-template>
+<div class="produtos styleCadastro">
+	<div class="col-md-12 title">
+		<h2>Cadastro de Produtos</h2>
+	</div>
+	<form class="form col-md-12" [formGroup]="produtosForm">
+		<div class="row">
+			<div class="col-md-4 form-group">
+				<label>Descrição</label>
+				<input type="text" class="form-control" formControlName="DESCRICAO" [ngbTypeahead]="search"
+					[resultTemplate]="rt" [inputFormatter]="formatter"
+					[ngClass]="{'error-label': submitted && produtosForm.controls['DESCRICAO'].errors}">
+			</div>
+			<div class="col-md-3 form-group">
+				<label>Unidade</label>
+				<select class="form-control" formControlName="UNIDADE_VENDA"
+					[ngClass]="{'error-label': submitted && produtosForm.controls['UNIDADE_VENDA'].errors}">
+					<option value="Unitario">Unitário (Un.)</option>
+					<option value="Metro Quadrado">Metro Quadrado (m²)</option>
+					<option value="Linear">Metro Linear (m)</option>
+					<option value="areaXespessura">Área x Espessura (m²*mm)</option>
+				</select>
+			</div>
+			<div class="col-md-3 form-group">
+				<label>Preço Unitario</label>
+				<input type="text" class="form-control"
+					[ngClass]="{'error-label': submitted && produtosForm.controls['PRECO_UNITARIO'].errors}"
+					formControlName="PRECO_UNITARIO">
+			</div>
+			<div class="col-md-2 form-group">
+				<label>Prazo Entrega</label>
+				<input type="text" class="form-control" formControlName="PRZ_ENTREGA">
+			</div>
+			<div class="col-md-12 ">
+				<label>Composição</label>
+				<table class="table">
+					<colgroup>
+						<col width="20%">
+						<col width="35%">
+						<col width="20%">
+						<col width="15%">
+						<col width="10%">
+					</colgroup>
+					<thead>
+						<tr>
+							<th>Tipo</th>
+							<th>Descrição</th>
+							<th>Quantidade</th>
+							<th>Custo</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr *ngFor="let item of produtosForm.get('COMPOSICAO').value; let i = index">
+							<td>{{item.TIPO}}</td>
+							<td>{{item.DESCRICAO}}</td>
+							<td>{{item.QTDE_UTILIZADA}}</td>
+							<td>{{item.CUSTO | currency: 'BRL'}}</td>
+							<td><button class="btn btn-danger" (click)="rmComposicao(i)"><i class="fa fa-minus"></i></button></td>
+						</tr>
+						<tr [formGroup]="composicaoForm">
+							<td>
+								<select class="form-control" formControlName="TIPO">
+									<option>Serviço</option>
+									<option>Estoque</option>
+								</select>
+							</td>
+							<td><input type="text" class="form-control" formControlName="DESCRICAO" [ngbTypeahead]="searchComposicao"
+								[resultTemplate]="rt" [inputFormatter]="formatter" (selectItem)="selectComposicao($event.item)"
+								[ngClass]="{'error-label': submitted2 && composicaoForm.controls['DESCRICAO'].errors}">
+							</td>
+							<td><input type="text" class="form-control"
+								[ngClass]="{'error-label': submitted2 && composicaoForm.controls['QTDE_UTILIZADA'].errors}"
+								formControlName="QTDE_UTILIZADA">
+							</td>
+							<td>{{composicaoForm.get('CUSTO').value | currency: 'BRL'}}</td>
+							<td><button class="btn btn-success" (click)="addComposicao()"><i class="fa fa-plus"></i></button></td>
+						</tr>
+						<tr>
+							<td>Total:</td>
+							<td></td>
+							<td></td>
+							<td>{{produtosForm.get('CUSTO').value | currency: 'BRL'}}</td>
+							<td></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</form>
+	<div class="col-md-12">
+		<button class="btn btn-delvetro">
+			<span class="btn-label"><i class="fa fa-check"></i>
+			</span>Salvar
+		</button>
+	</div>
+</div>

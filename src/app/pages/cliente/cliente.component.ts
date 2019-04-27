@@ -34,7 +34,7 @@ export class ClienteComponent implements OnInit {
 		this.chartLineMes = new ChartLine().graficoLinha;
 		this.acRoute.paramMap.subscribe(params => {
 			if (params.get('id') != null) {
-				this.id_cliente = parseInt(params.get('id'));
+				this.id_cliente = parseInt(params.get('id'), 10);
 				this.getCabecalho();
 				this.getGraficoLinha();
 			} else {
