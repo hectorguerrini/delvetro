@@ -9,30 +9,30 @@
 		<div class="row">
 			<div class="col-md-4 form-group">
 				<label>Descrição</label>
-				
+
 				<input type="text" class="form-control" formControlName="DESCRICAO" [ngbTypeahead]="search" [resultTemplate]="rt" [inputFormatter]="formatter"
-				(selectItem)="selectCliente($event.item)" [ngClass]="{'error': submitted && servicosForm.controls['DESCRICAO'].errors}">
+				(selectItem)="selectCliente($event.item)" [ngClass]="{'error-label': submitted && servicosForm.controls['DESCRICAO'].errors}">
 			</div>
 			<div class="col-md-2 form-group">
 				<label>Tipo</label>
 				<select class="form-control" formControlName="ID_TIPO"
-					[ngClass]="{'error': submitted && servicosForm.controls['ID_TIPO'].errors}">
+					[ngClass]="{'error-label': submitted && servicosForm.controls['ID_TIPO'].errors}">
 					<option *ngFor="let item of comboTipo" [ngValue]="item.VALOR">{{item.LABEL}}</option>
 				</select>
 			</div>
 			<div class="col-md-2 form-group">
 				<label>Externo</label>
 				<select class="form-control" formControlName="EXTERNO"
-					[ngClass]="{'error': submitted && servicosForm.controls['EXTERNO'].errors}">
+					[ngClass]="{'error-label': submitted && servicosForm.controls['EXTERNO'].errors}">
 					<option value="1">Sim</option>
 					<option value="0">Não</option>
 				</select>
 			</div>
-			
+
 			<div class="col-md-2 form-group">
 				<label>Unidade Cobrança</label>
 				<select class="form-control" formControlName="UNIDADE_CUSTO"
-					[ngClass]="{'error': submitted && servicosForm.controls['UNIDADE_CUSTO'].errors}">
+					[ngClass]="{'error-label': submitted && servicosForm.controls['UNIDADE_CUSTO'].errors}">
 					<option value="Unitario">Unitário (Un.)</option>
 					<option value="Metro Quadrado">Metro Quadrado (m²)</option>
 					<option value="Linear">Metro Linear (m)</option>
@@ -41,7 +41,7 @@
 			</div>
 			<div class="col-md-2 form-group">
 				<label>Custo</label>
-				<input type="text" class="form-control" [ngClass]="{'error': submitted && servicosForm.controls['CUSTO_POR_UNIDADE'].errors}" formControlName="CUSTO_POR_UNIDADE">
+				<input type="text" class="form-control" [ngClass]="{'error-label': submitted && servicosForm.controls['CUSTO_POR_UNIDADE'].errors}" formControlName="CUSTO_POR_UNIDADE">
 			</div>
 			<div class="col-md-2 form-group">
 				<label>Prazo Conclusão</label>
@@ -49,10 +49,10 @@
 			</div>
 			<div class="col-md-2 form-group">
 				<label>Beneficiario</label>
-				<select class="form-control" formControlName="ID_BENEFICIADO" [ngClass]="{'error': submitted && servicosForm.controls['ID_BENEFICIADO'].errors}">
+				<select class="form-control" formControlName="ID_BENEFICIADO" [ngClass]="{'error-label': submitted && servicosForm.controls['ID_BENEFICIADO'].errors}">
 					<option *ngFor="let item of comboBeneficiados" [ngValue]="item.VALOR">{{item.LABEL}}</option>
 				</select>
-			</div>		
+			</div>
 			<div class="col-md-8 form-group">
 				<label>Observação</label>
 				<textarea type="text" class="form-control" formControlName="OBS" rows="1"></textarea>
@@ -60,7 +60,10 @@
 		</div>
 
 	</form>
-	<div class="actions col-md-12">
-		<button mat-button color="primary" class="btn" (click)="submitServicos()">Salvar <mat-icon>save</mat-icon></button>
+	<div class="col-md-12">
+		<button class="btn btn-delvetro" (click)="submitServicos()">
+			<span class="btn-label"><i class="fa fa-check"></i>
+			</span>Salvar
+		</button>
 	</div>
 </div>
