@@ -111,6 +111,19 @@ export class CadastroProdutosComponent implements OnInit {
 
 
 	}
+
+	selectCliente(item: string): void {
+		const obj = this.comboEstoque.find(el => el.LABEL === item);
+		this.produtosForm.get('ID_PRODUTO').setValue(obj.VALOR);
+		this.estoqueService
+			.getServico(obj.VALOR)
+			.subscribe((data: { query: string; json: Array<Estoque> }) => {
+				if (data.json.length > 0) {
+					this.produtosForm.patchValue(data.json[0]);
+					this.produtosForm.controls['DESCRICAO'].disable();
+				}
+			});
+	}
 	rmComposicao(i: number): void {
 		const composicao = this.produtosForm.get('COMPOSICAO') as FormArray;
 		composicao.removeAt(i);
@@ -131,7 +144,7 @@ export class CadastroProdutosComponent implements OnInit {
 			TIPO: [obj.TIPO],
 			ID: [obj.ID],
 			DESCRICAO: [obj.DESCRICAO, Validators.required],
-			QTDE_UTILIZADA: [obj.QTDE_UTILIZADA, Validators.required],
+			QTDE_UTILIZADA: [obj.QTDE_UTILIZADA],
 			CUSTO: [obj.CUSTO]
 		}));
 		let total = 0;
@@ -257,7 +270,7 @@ export class CadastroProdutosComponent implements OnInit {
 		text$.pipe(
 			debounceTime(200),
 			map(term =>
-				term === ''
+				term === '' 
 					? []
 					: this.comboProdutos
 						.filter(
@@ -267,7 +280,7 @@ export class CadastroProdutosComponent implements OnInit {
 								) > -1
 						)
 						.slice(0, 5)
-						.map(s => s.LABEL)
+						.map(s => s.LABEL)				
 			)
 		)
 	formatter = (LABEL: string) => LABEL;
