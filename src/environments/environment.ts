@@ -4,7 +4,7 @@
 
 export const environment = {
 	production: false,
-	url: 'http://198.168.15.29:3000/delvetroapi'
+	url: 'http://192.168.15.29:3000/delvetroapi'
 };
 
 /*

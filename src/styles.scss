@@ -4,6 +4,7 @@
 :root{
 	--delvetro-primary: #1976d2;
 	--delvetro-primary-dark: #0958a7;
+	--delvetro-success: #28a745;
 }
 *{
     margin: 0;
@@ -24,7 +25,8 @@ body{
     max-width: 80vw;
     box-shadow: 2px -1px 20px #888888;
     border: 1px solid transparent;
-    border-radius: 10px;
+	border-radius: 10px;
+	background-color: transparent;
     .form-control:disabled{
         cursor: no-drop;
     }
@@ -35,8 +37,8 @@ body{
 	color:#fff;
 	padding-bottom: 0;
 	padding-top: 0;
-	transition: 0.7s ease-in-out;
-	&:hover{
+	
+	&:hover, &:focus{
 		color:#fff;
 		background-color: var(--delvetro-primary-dark);
 		border-color: var(--delvetro-primary-dark);
@@ -46,9 +48,21 @@ body{
 		left: -12px;
 		display: inline-block;
 		padding: 6px 12px;
-		background: var(--delvetro-primary-dark);
+		
+	}
+	&.success{
+		background-color: var(--delvetro-success);
+		border-color: var(--delvetro-success);
 	}
 }
 .error-label{
 	border-color: red;
+}
+.model-cadastro .mat-dialog-container{
+	padding: 0;
+	margin-left: 10vw;
+	.styleCadastro{
+		margin-top: 0;
+	}
+	
 }

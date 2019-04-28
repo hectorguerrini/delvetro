@@ -9,11 +9,21 @@
 		<div class="row">
 			<div class="col-md-4 form-group">
 				<label>Descrição</label>
-				<input type="text" class="form-control" formControlName="DESCRICAO" [ngbTypeahead]="search"
+				<input type="text" class="form-control" formControlName="NM_PRODUTO" [ngbTypeahead]="search"
 					[resultTemplate]="rt" [inputFormatter]="formatter"
-					[ngClass]="{'error-label': submitted && produtosForm.controls['DESCRICAO'].errors}">
+					[ngClass]="{'error-label': submitted && produtosForm.controls['NM_PRODUTO'].errors}">
 			</div>
-			<div class="col-md-3 form-group">
+			<div class="col-md-2 form-group">
+				<label>Tipo</label>
+				<select class="form-control" formControlName="TIPO"
+					[ngClass]="{'error-label': submitted && produtosForm.controls['TIPO'].errors}">
+					<option value="Chaparia">Chaparia</option>
+					<option value="Revenda">Revenda</option>
+					<option value="Produto Pronto">Produto Pronto</option>
+					<option value="Produto Estoque">Produto P/ Estoque</option>
+				</select>
+			</div>
+			<div class="col-md-2 form-group">
 				<label>Unidade</label>
 				<select class="form-control" formControlName="UNIDADE_VENDA"
 					[ngClass]="{'error-label': submitted && produtosForm.controls['UNIDADE_VENDA'].errors}">
@@ -23,7 +33,7 @@
 					<option value="areaXespessura">Área x Espessura (m²*mm)</option>
 				</select>
 			</div>
-			<div class="col-md-3 form-group">
+			<div class="col-md-2 form-group">
 				<label>Preço Unitario</label>
 				<input type="text" class="form-control"
 					[ngClass]="{'error-label': submitted && produtosForm.controls['PRECO_UNITARIO'].errors}"
@@ -71,7 +81,7 @@
 								[resultTemplate]="rt" [inputFormatter]="formatter" (selectItem)="selectComposicao($event.item)"
 								[ngClass]="{'error-label': submitted2 && composicaoForm.controls['DESCRICAO'].errors}">
 							</td>
-							<td><input type="text" class="form-control"
+							<td><input type="text" class="form-control" *ngIf="composicaoForm.get('TIPO').value === 'Estoque'"
 								[ngClass]="{'error-label': submitted2 && composicaoForm.controls['QTDE_UTILIZADA'].errors}"
 								formControlName="QTDE_UTILIZADA">
 							</td>
@@ -91,7 +101,7 @@
 		</div>
 	</form>
 	<div class="col-md-12">
-		<button class="btn btn-delvetro">
+		<button class="btn btn-delvetro" (click)="submitProdutos()">
 			<span class="btn-label"><i class="fa fa-check"></i>
 			</span>Salvar
 		</button>

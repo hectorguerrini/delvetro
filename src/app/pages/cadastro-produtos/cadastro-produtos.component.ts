@@ -5,9 +5,16 @@ import { Combo } from 'src/app/models/combo';
 import { Observable } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
 import { CadastroServicosService } from '../cadastro-servicos/cadastro-servicos.service';
-import { Servico } from 'src/app/models/servico';
 import { CadastroEstoqueService } from '../cadastro-estoque/cadastro-estoque.service';
+import { CadastroProdutosService } from './cadastro-produtos.service';
+import { Produto } from 'src/app/models/produto';
 import { Estoque } from 'src/app/models/estoque';
+import { Servico } from 'src/app/models/servico';
+import { MessageComponent } from 'src/app/dialogs/message/message.component';
+import { MatDialogConfig, MatDialog } from '@angular/material';
+import { ComposicaoProdutoEstoque } from 'src/app/models/composicao-produto-estoque';
+import { ComposicaoProdutoSevico } from 'src/app/models/composicao-produto-servico';
+
 
 @Component({
 	selector: 'app-cadastro-produtos',
@@ -20,18 +27,19 @@ export class CadastroProdutosComponent implements OnInit {
 
 	produtosForm: FormGroup = this.fb.group({
 		ID_PRODUTO: [null],
-		DESCRICAO: ['', Validators.required],
+		NM_PRODUTO: ['', Validators.required],
 		UNIDADE_VENDA: ['', Validators.required],
 		PRECO_UNITARIO: ['0,00', Validators.required],
 		PRZ_ENTREGA: [''],
 		CUSTO: [''],
+		TIPO: ['', Validators.required],
 		COMPOSICAO: this.fb.array([])
 	});
 	composicaoForm: FormGroup = this.fb.group({
 		TIPO: ['Serviço'],
 		ID: [null],
 		DESCRICAO: [null, Validators.required],
-		QTDE_UTILIZADA: [null, Validators.required],
+		QTDE_UTILIZADA: [null],
 		CUSTO: ['']
 	});
 	comboServicos: Array<Combo> = [];
@@ -43,7 +51,9 @@ export class CadastroProdutosComponent implements OnInit {
 		private fb: FormBuilder,
 		private appService: AppService,
 		private servicoService: CadastroServicosService,
-		private estoqueService: CadastroEstoqueService
+		private estoqueService: CadastroEstoqueService,
+		private produtoService: CadastroProdutosService,
+		private dialog: MatDialog
 	) {
 		appService
 			.getCombo('servicos')
@@ -79,6 +89,12 @@ export class CadastroProdutosComponent implements OnInit {
 				this.composicaoForm
 					.get('ID')
 					.updateValueAndValidity();
+				if(this.composicaoForm.get('TIPO').value === 'Estoque'){
+					this.composicaoForm.get('QTDE_UTILIZADA').setValidators([Validators.required]);
+				} else {
+					this.composicaoForm.get('QTDE_UTILIZADA').setValidators(null);
+				}				
+				this.composicaoForm.get('QTDE_UTILIZADA').updateValueAndValidity();
 
 			});
 		this.composicaoForm
@@ -90,6 +106,7 @@ export class CadastroProdutosComponent implements OnInit {
 				this.composicaoForm
 					.get('CUSTO')
 					.updateValueAndValidity();
+				
 			});
 
 
@@ -128,6 +145,69 @@ export class CadastroProdutosComponent implements OnInit {
 		this.submitted2 = false;
 		this.composicao = {};
 	}
+	submitProdutos(): void {
+		this.submitted = true;
+		if (this.produtosForm.invalid) {
+			return;
+		}
+
+		const produto = new Produto();
+		const json = Object.assign(produto, this.produtosForm.value);
+		json.PRECO_UNITARIO = json.PRECO_UNITARIO.replace(
+			',',
+			'.'
+		);
+		json.NM_PRODUTO = json.NM_PRODUTO.toUpperCase();
+		this.produtoService
+			.cadastroProdutos(json)
+			.subscribe((data: { query: string; json: Array<Produto> }) => {
+				if (data.json.length > 0) {
+					const composicao = this.produtosForm.get('COMPOSICAO') as FormArray;
+					composicao.value.forEach(el => {
+						if(el.TIPO === 'Estoque'){
+							const estoque = new ComposicaoProdutoEstoque();
+							estoque.ID_ESTOQUE = el.ID;
+							estoque.CUSTO = el.CUSTO;
+							estoque.QTDE_UTILIZADA = el.QTDE_UTILIZADA;
+							estoque.ID_PRODUTO = data.json[0].ID_PRODUTO;
+							this.produtoService.cadastroComposicaoEstoque(estoque)
+							.subscribe((data: { query: string; json: Array<ComposicaoProdutoEstoque> } ) => {
+								console.log(data.json)
+
+							})
+						} else if(el.TIPO === 'Serviço' ) {
+							const servico = new ComposicaoProdutoSevico();
+							servico.ID_SERVICO = el.ID;
+							servico.ID_PRODUTO = data.json[0].ID_PRODUTO;
+							this.produtoService.cadastroComposicaoServico(servico)
+							.subscribe((data: { query: string; json: Array<ComposicaoProdutoSevico> } ) => {
+								console.log(data.json)
+							})
+						}
+
+					})
+
+				} else {
+					this.popup('erro', 'Error no cadastro');
+				}
+			});
+	}
+	popup(status, message) {
+		const dialogConfig = new MatDialogConfig();
+
+		dialogConfig.disableClose = false;
+		dialogConfig.hasBackdrop = true;
+		dialogConfig.autoFocus = true;
+		dialogConfig.width = '260px';
+		dialogConfig.data = { status: status, message: message };
+		const dialogRef = this.dialog.open(MessageComponent, dialogConfig);
+
+		dialogRef.afterClosed().subscribe(result => {
+			this.submitted = false;
+			
+		});
+	}
+
 	selectComposicao(item: string): void {
 
 		if ( this.composicaoForm.get('TIPO').value === 'Serviço' ) {

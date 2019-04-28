@@ -66,6 +66,6 @@ registerLocaleData(localePt);
 		{ provide: HIGHCHARTS_MODULES, useFactory: () => [more, exporting] }
 	],
 	bootstrap: [AppComponent],
-	entryComponents: [MessageComponent]
+	entryComponents: [MessageComponent, CadastroClienteComponent]
 })
 export class AppModule { }

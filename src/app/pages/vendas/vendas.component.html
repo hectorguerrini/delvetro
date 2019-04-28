@@ -1,3 +1,103 @@
-<p>
-  vendas works!
-</p>
+<ng-template #rt let-r="result" let-t="term">
+	<ngb-highlight [result]="r" [term]="t"></ngb-highlight>
+</ng-template>
+<div class="vendas styleCadastro">
+	<div class="row">
+		<div class="col-md-6 form-group">
+			<input type="text" class="form-control" formControlName="NM_CLIENTE" [ngbTypeahead]="search"
+				[resultTemplate]="rt" [inputFormatter]="formatter" (selectItem)="selectCliente($event.item)"
+				placeholder="Selecione um cliente">
+		</div>
+		<div class="col-md-3 form-group" [hidden]="vendaForm.controls['ID_CLIENTE'].value">
+			<button class="btn btn-delvetro form-control" (click)="novoCliente()">
+				<span class="btn-label"><i class="fa fa-user-plus"></i>
+				</span>Cadastrar Novo Cliente</button>
+		</div>
+		<div class="col-md-3 form-group" *ngIf="vendaForm.controls['ID_CLIENTE'].value">
+			<button class="btn btn-delvetro success form-control" (click)="novaVenda = true">
+				<span class="btn-label"><i class="fa fa-cart-plus"></i>
+				</span>Nova Venda/Orçamento</button>
+		</div>
+	</div>
+	<div class="row" *ngIf="vendasLista.length > 0 && !novaVenda">
+		<div class="col-md-12">
+			<table class="table">
+				<colgroup>
+					<col width="20%">
+					<col width="25%">
+					<col width="20%">
+					<col width="20%">
+					<col width="15%">
+				</colgroup>
+				<thead>
+					<tr>
+						<th>Data Venda</th>
+						<th>Funcionário</th>
+						<th>Valor</th>
+						<th>Status</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngFor="let item of vendasLista">
+						<td>{{item.DT_VENDA | date:'dd/MM/yyyy'}}</td>
+						<td>{{item.NM_FUNCIONARIO}}</td>
+						<td>{{item.VL_TOTAL | currency: 'BRL'}}</td>
+						<td>{{item.STATUS_VENDA}}</td>
+						<td><i class="fa fa-pencil"></i></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="row" *ngIf="novaVenda">
+		<div class="col-md-12 title">
+			<h3>Lista de Produtos</h3>
+		</div>
+		<div class="col-md-12">
+        <table class="table">
+            <colgroup>
+              <col width="30%">
+              <col width="20%">
+              <col width="25%">              
+              <col width="25%">              
+            </colgroup>
+            <thead>
+              <tr>
+                <th>Produto</th>
+                <th>Quantidade</th>                                
+                <th>Custo</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of vendaForm.get('ITENS').value; let i = index">
+                <td>{{item.NM_PRODUTO}}</td>
+                <td>{{item.QTDE}}</td>                
+                <td>{{item.CUSTO | currency: 'BRL'}}</td>
+                <td><button class="btn btn-danger" (click)="rmComposicao(i)"><i class="fa fa-minus"></i></button></td>
+              </tr>
+              <tr [formGroup]="itensForm">                
+                <td><input type="text" class="form-control" formControlName="NM_PRODUTO" [ngbTypeahead]="searchItens"
+                  [resultTemplate]="rt" [inputFormatter]="formatter" 
+                  [ngClass]="{'error-label': submitted2 && itensForm.controls['DESCRICAO'].errors}">
+                </td>
+                <td><input type="text" class="form-control"
+                  [ngClass]="{'error-label': submitted2 && itensForm.controls['QTDE'].errors}"
+                  formControlName="QTDE">
+                </td>
+                <td>{{itensForm.get('CUSTO').value | currency: 'BRL'}}</td>
+                <td><button class="btn btn-success" (click)="addComposicao()"><i class="fa fa-plus"></i></button></td>
+              </tr>
+              <tr>
+                <td>Total:</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+		</div>
+	</div>
+</div>
