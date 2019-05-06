@@ -10,7 +10,7 @@
 			<div class="col-md-4 form-group">
 				<label>Descrição</label>
 				<input type="text" class="form-control" formControlName="NM_PRODUTO"
-				 	[ngbTypeahead]="search" (selectItem)="selectCliente($event.item)"
+				 	[ngbTypeahead]="search" (selectItem)="selectProduto($event.item)"
 					[resultTemplate]="rt" [inputFormatter]="formatter"
 					[ngClass]="{'error-label': submitted && produtosForm.controls['NM_PRODUTO'].errors}">
 			</div>

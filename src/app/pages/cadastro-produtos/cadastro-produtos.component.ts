@@ -3,7 +3,7 @@ import { FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { AppService } from 'src/app/app.service';
 import { Combo } from 'src/app/models/combo';
 import { Observable } from 'rxjs';
-import { debounceTime, map } from 'rxjs/operators';
+import { debounceTime, map, distinctUntilChanged } from 'rxjs/operators';
 import { CadastroServicosService } from '../cadastro-servicos/cadastro-servicos.service';
 import { CadastroEstoqueService } from '../cadastro-estoque/cadastro-estoque.service';
 import { CadastroProdutosService } from './cadastro-produtos.service';
@@ -89,11 +89,11 @@ export class CadastroProdutosComponent implements OnInit {
 				this.composicaoForm
 					.get('ID')
 					.updateValueAndValidity();
-				if(this.composicaoForm.get('TIPO').value === 'Estoque'){
+				if (this.composicaoForm.get('TIPO').value === 'Estoque') {
 					this.composicaoForm.get('QTDE_UTILIZADA').setValidators([Validators.required]);
 				} else {
 					this.composicaoForm.get('QTDE_UTILIZADA').setValidators(null);
-				}				
+				}
 				this.composicaoForm.get('QTDE_UTILIZADA').updateValueAndValidity();
 
 			});
@@ -106,21 +106,40 @@ export class CadastroProdutosComponent implements OnInit {
 				this.composicaoForm
 					.get('CUSTO')
 					.updateValueAndValidity();
-				
+
+			});
+		this.produtosForm
+			.get('PRECO_UNITARIO')
+			.valueChanges.pipe(distinctUntilChanged())
+			.subscribe(custo => {
+				let valor = custo
+					.replace(/\D/g, '')
+					.replace(/((\d{1,2})$)/g, ',$2')
+					.replace(/(^(0)+)/g, '');
+				valor = `${valor.replace(/^(\D)/g, '0$1')}`;
+				this.produtosForm
+					.get('PRECO_UNITARIO')
+					.setValue(valor);
+				this.produtosForm
+					.get('PRECO_UNITARIO')
+					.updateValueAndValidity();
 			});
 
 
 	}
 
-	selectCliente(item: string): void {
-		const obj = this.comboEstoque.find(el => el.LABEL === item);
+	selectProduto(item: string): void {
+		const obj = this.comboProdutos.find(el => el.LABEL === item);
 		this.produtosForm.get('ID_PRODUTO').setValue(obj.VALOR);
-		this.estoqueService
-			.getServico(obj.VALOR)
-			.subscribe((data: { query: string; json: Array<Estoque> }) => {
+		this.produtoService
+			.getProduto(obj.VALOR)
+			.subscribe((data: { query: string; json: Array<Produto> }) => {
 				if (data.json.length > 0) {
-					this.produtosForm.patchValue(data.json[0]);
-					this.produtosForm.controls['DESCRICAO'].disable();
+					const json = data.json[0];
+					this.produtosForm.patchValue(json);
+
+					// const composicao = this.produtosForm.get('COMPOSICAO') as FormArray;
+					// this.produtosForm.controls['DESCRICAO'].disable();
 				}
 			});
 	}
@@ -177,31 +196,34 @@ export class CadastroProdutosComponent implements OnInit {
 				if (data.json.length > 0) {
 					const composicao = this.produtosForm.get('COMPOSICAO') as FormArray;
 					composicao.value.forEach(el => {
-						if(el.TIPO === 'Estoque'){
+						if (el.TIPO === 'Estoque') {
 							const estoque = new ComposicaoProdutoEstoque();
 							estoque.ID_ESTOQUE = el.ID;
 							estoque.CUSTO = el.CUSTO;
 							estoque.QTDE_UTILIZADA = el.QTDE_UTILIZADA;
 							estoque.ID_PRODUTO = data.json[0].ID_PRODUTO;
 							this.produtoService.cadastroComposicaoEstoque(estoque)
-							.subscribe((data: { query: string; json: Array<ComposicaoProdutoEstoque> } ) => {
-								console.log(data.json)
+							.subscribe((data2: { query: string; json: Array<ComposicaoProdutoEstoque> } ) => {
+								if (data2.json.length > 0) {
+									this.popup('success', 'Cadastro Efetuado com sucesso');
+								}
 
-							})
-						} else if(el.TIPO === 'Serviço' ) {
+							});
+						} else if (el.TIPO === 'Serviço' ) {
 							const servico = new ComposicaoProdutoSevico();
 							servico.ID_SERVICO = el.ID;
 							servico.ID_PRODUTO = data.json[0].ID_PRODUTO;
 							this.produtoService.cadastroComposicaoServico(servico)
-							.subscribe((data: { query: string; json: Array<ComposicaoProdutoSevico> } ) => {
-								console.log(data.json)
-							})
+							.subscribe((data2: { query: string; json: Array<ComposicaoProdutoSevico> } ) => {
+								if (data2.json.length > 0) {
+									this.popup('success', 'Cadastro Efetuado com sucesso');
+								}
+							});
 						}
 
-					})
-
+					});
 				} else {
-					this.popup('erro', 'Error no cadastro');
+					this.popup('erro', 'Error no cadastro do produto');
 				}
 			});
 	}
@@ -217,7 +239,7 @@ export class CadastroProdutosComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe(result => {
 			this.submitted = false;
-			
+
 		});
 	}
 
@@ -270,7 +292,7 @@ export class CadastroProdutosComponent implements OnInit {
 		text$.pipe(
 			debounceTime(200),
 			map(term =>
-				term === '' 
+				term === ''
 					? []
 					: this.comboProdutos
 						.filter(
@@ -280,7 +302,7 @@ export class CadastroProdutosComponent implements OnInit {
 								) > -1
 						)
 						.slice(0, 5)
-						.map(s => s.LABEL)				
+						.map(s => s.LABEL)
 			)
 		)
 	formatter = (LABEL: string) => LABEL;
