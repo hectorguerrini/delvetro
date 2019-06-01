@@ -1,0 +1,185 @@
+<ng-template #rt let-r="result" let-t="term">
+	<ngb-highlight [result]="r" [term]="t"></ngb-highlight>
+</ng-template>
+<div class="cadastroVendas styleCadastro">
+	<div>
+		<div class="col-md-12 title">
+			<h2>{{data.nome}}</h2>
+		</div>
+		
+		<form class="form col-md-12" >
+			<div class="row">
+				<div class="col-md-12">
+					<h4>Produtos</h4>
+					<mat-divider></mat-divider>
+				</div>
+				<table class="table">
+					<colgroup>
+						<col width="30%">
+						<col width="15%">
+						<col width="15%">
+						<col width="15%">
+						<col width="15%">
+						<col width="10%">	
+											
+					</colgroup>
+					<thead>
+						<tr>
+							<th>Descrição</th>
+							<th>Quantidade</th>							
+							<th>Largura</th>
+							<th>Altura</th>
+							<th>Preço</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<ng-template ngFor let-item [ngForOf]="vendaForm.get('ITENS').value" let-i="index" class="template">
+							<tr>
+								<td class="colExtra">{{item.NM_PRODUTO}} <i class="fa fa-plus iconExtras" (click)="openExtra = i"></i></td>
+								<td>{{item.QTDE}}</td>
+								<td>{{item.LARGURA}}</td>
+								<td>{{item.ALTURA}}</td>
+								<td>{{item.CUSTO | currency: 'BRL'}}</td>
+								{{item.EXTRAS}}
+								<td><button class="btn btn-danger" (click)="rmProduto(i)"><i class="fa fa-minus"></i></button></td>
+							</tr>					
+							<tr *ngFor="let extra of item.EXTRAS; let j = index">
+								<td></td>
+								<td>{{extra.DESCRICAO}}</td>
+								<td>{{extra.QUANTIDADE}}</td>
+								<td><button class="btn btn-danger"><i class="fa fa-minus" (click)="rmProduto(j)"></i></button></td>
+							</tr>
+							<tr *ngIf="openExtra == i" >								
+								<td colspan="6">
+									<form class="form-inline formExtras" [formGroup]="extraForm">										
+										<div class="form-group">
+											<label for="servico">Serviço: </label>
+											<input type="text" class="form-control" [ngbTypeahead]="searchServicos" formControlName="DESCRICAO"
+												[resultTemplate]="rt" [inputFormatter]="formatter">
+										</div>
+										<div class="form-group">
+											<label>Quantidade: </label>
+											<input type="text" class="form-control"
+												formControlName="QUANTIDADE">
+										</div>	
+										<button class="btn btn-success"><i class="fa fa-plus" (click)="addServicosExtras(i)"></i></button>
+									</form>
+								</td>
+							</tr>
+						</ng-template>						
+						<tr [formGroup]="itensForm">
+							<td><input type="text" class="form-control" formControlName="NM_PRODUTO" [ngbTypeahead]="searchProdutos"
+									[resultTemplate]="rt" [inputFormatter]="formatter"
+									[ngClass]="{'error-label': submittedProduto && itensForm.controls['NM_PRODUTO'].errors}">
+							</td>
+							<td><input type="text" class="form-control"
+									[ngClass]="{'error-label': submittedProduto && itensForm.controls['QTDE'].errors}" formControlName="QTDE">
+							</td>
+							<td><input type="text" class="form-control"
+								[ngClass]="{'error-label': submittedProduto && itensForm.controls['LARGURA'].errors}" formControlName="LARGURA">
+							</td>
+							<td><input type="text" class="form-control"
+								[ngClass]="{'error-label': submittedProduto && itensForm.controls['ALTURA'].errors}" formControlName="ALTURA">
+							</td>
+							<td>{{itensForm.get('CUSTO').value | currency: 'BRL'}}</td>
+							<td><button class="btn btn-success" (click)="addProduto()"><i class="fa fa-plus"></i></button></td>
+						</tr>						
+					</tbody>
+				</table>								
+			</div>
+		</form>		
+		<form class="col-md-12">
+			<div class="row">
+				<div class="col-md-12">
+					<h4>Pagamento</h4>
+					<mat-divider></mat-divider>
+				</div>
+				<table class="table">
+					<colgroup>
+						<col width="30%">
+						<col width="20%">
+						<col width="25%">
+						<col width="25%">
+					</colgroup>
+					<thead>
+						<tr>
+							<th>Forma de Pagamento</th>
+							<th>Data</th>
+							<th>Valor</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- <tr *ngFor="let item of vendaForm.get('ITENS').value; let i = index">
+							<td>{{item.NM_PRODUTO}}</td>
+							<td>{{item.QTDE}}</td>
+							<td>{{item.CUSTO | currency: 'BRL'}}</td>
+							<td><button class="btn btn-danger" (click)="rmComposicao(i)"><i class="fa fa-minus"></i></button></td>
+						</tr> -->
+						<tr [formGroup]="pagamentoForm">
+							<td><select name="" id="" class="form-control"></select>
+							</td>
+							<td><input type="text" class="form-control"
+									[ngClass]="{'error-label': submitted2 && pagamentoForm.controls['DT_PGTO'].errors}" formControlName="DT_PGTO">
+							</td>
+							<td><input type="text" class="form-control"
+								[ngClass]="{'error-label': submitted2 && pagamentoForm.controls['VL_PGTO'].errors}" formControlName="VL_PGTO"></td>
+							<td><button class="btn btn-success" (click)="addComposicao()"><i class="fa fa-plus"></i></button></td>
+						</tr>						
+					</tbody>
+				</table>				
+			</div>
+		</form>
+	</div>
+</div>
+<!-- <div class="row">
+  <div class="col-md-12 title">
+	<h3>Lista de Produtos</h3>
+  </div>
+  <div class="col-md-12">
+	  <table class="table">
+		  <colgroup>
+			<col width="30%">
+			<col width="20%">
+			<col width="25%">              
+			<col width="25%">              
+		  </colgroup>
+		  <thead>
+			<tr>
+			  <th>Produto</th>
+			  <th>Quantidade</th>                                
+			  <th>Custo</th>
+			  <th></th>
+			</tr>
+		  </thead>
+		  <tbody>
+			<tr *ngFor="let item of vendaForm.get('ITENS').value; let i = index">
+			  <td>{{item.NM_PRODUTO}}</td>
+			  <td>{{item.QTDE}}</td>                
+			  <td>{{item.CUSTO | currency: 'BRL'}}</td>
+			  <td><button class="btn btn-danger" (click)="rmComposicao(i)"><i class="fa fa-minus"></i></button></td>
+			</tr>
+			<tr [formGroup]="itensForm">                
+			  <td><input type="text" class="form-control" formControlName="NM_PRODUTO" [ngbTypeahead]="searchItens"
+				[resultTemplate]="rt" [inputFormatter]="formatter" 
+				[ngClass]="{'error-label': submitted2 && itensForm.controls['DESCRICAO'].errors}">
+			  </td>
+			  <td><input type="text" class="form-control"
+				[ngClass]="{'error-label': submitted2 && itensForm.controls['QTDE'].errors}"
+				formControlName="QTDE">
+			  </td>
+			  <td>{{itensForm.get('CUSTO').value | currency: 'BRL'}}</td>
+			  <td><button class="btn btn-success" (click)="addComposicao()"><i class="fa fa-plus"></i></button></td>
+			</tr>
+			<tr>
+			  <td>Total:</td>
+			  <td></td>
+			  <td></td>
+			  <td></td>
+			  <td></td>
+			</tr>
+		  </tbody>
+		</table>
+  </div>
+</div> -->

@@ -31,18 +31,10 @@
 						class="form-control" formControlName="EMAIL">
 				</div>
 				<div class="col-md-3 form-group">
-					<label>Telefone 1</label>
+					<label>Telefones</label>
 					<input type="text" [ngClass]="{'error-label': submitted && clienteForm.controls['TELEFONE_1'].errors}"
 						class="form-control" formControlName="TELEFONE_1">
-				</div>
-				<div class="col-md-3 form-group">
-					<label>Telefone 2</label>
-					<input type="text" class="form-control" formControlName="TELEFONE_2">
-				</div>
-				<div class="col-md-3 form-group">
-					<label>Telefone 3</label>
-					<input type="text" class="form-control" formControlName="TELEFONE_2">
-				</div>
+				</div>				
 				<div class="col-md-4 form-group">
 					<label>Nome Contato</label>
 					<input type="text" [ngClass]="{'error-label': submitted && clienteForm.controls['NM_CONTATO'].errors}"

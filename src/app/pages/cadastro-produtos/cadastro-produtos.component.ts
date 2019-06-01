@@ -137,7 +137,16 @@ export class CadastroProdutosComponent implements OnInit {
 				if (data.json.length > 0) {
 					const json = data.json[0];
 					this.produtosForm.patchValue(json);
-
+					const composicao = this.produtosForm.get('COMPOSICAO') as FormArray;
+					json.COMPOSICAO.forEach(obj => {
+						composicao.push(this.fb.group({
+							TIPO: [obj.TIPO],
+							ID: [obj.ID],
+							DESCRICAO: [obj.DESCRICAO, Validators.required],
+							QTDE_UTILIZADA: [obj.QTDE_UTILIZADA],
+							CUSTO: [obj.CUSTO]
+						}));
+					})
 					// const composicao = this.produtosForm.get('COMPOSICAO') as FormArray;
 					// this.produtosForm.controls['DESCRICAO'].disable();
 				}

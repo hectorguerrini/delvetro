@@ -11,7 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
-
+import { MatDividerModule } from '@angular/material/divider';
 import { ChartModule, HIGHCHARTS_MODULES } from 'angular-highcharts';
 import * as more from 'highcharts/highcharts-more.src';
 import * as exporting from 'highcharts/modules/exporting.src';
@@ -29,6 +29,8 @@ import { CadastroEstoqueComponent } from './pages/cadastro-estoque/cadastro-esto
 import { CadastroServicosComponent } from './pages/cadastro-servicos/cadastro-servicos.component';
 import { CadastroProdutosComponent } from './pages/cadastro-produtos/cadastro-produtos.component';
 import { VendasComponent } from './pages/vendas/vendas.component';
+import { CadastroVendaComponent } from './pages/cadastro-venda/cadastro-venda.component';
+
 
 
 registerLocaleData(localePt);
@@ -44,7 +46,8 @@ registerLocaleData(localePt);
 		CadastroEstoqueComponent,
 		CadastroServicosComponent,
 		CadastroProdutosComponent,
-		VendasComponent
+		VendasComponent,
+		CadastroVendaComponent
 	],
 	imports: [
 		AppRoutingModule,
@@ -58,7 +61,8 @@ registerLocaleData(localePt);
 		MatIconModule,
 		MatButtonModule,
 		ReactiveFormsModule,
-		MatDialogModule
+		MatDialogModule,
+		MatDividerModule
 
 	],
 	providers: [
@@ -66,6 +70,6 @@ registerLocaleData(localePt);
 		{ provide: HIGHCHARTS_MODULES, useFactory: () => [more, exporting] }
 	],
 	bootstrap: [AppComponent],
-	entryComponents: [MessageComponent, CadastroClienteComponent]
+	entryComponents: [MessageComponent, CadastroClienteComponent, CadastroVendaComponent]
 })
 export class AppModule { }
