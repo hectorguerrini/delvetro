@@ -138,7 +138,7 @@ export class CadastroProdutosComponent implements OnInit {
 					const json = data.json[0];
 					this.produtosForm.patchValue(json);
 					const composicao = this.produtosForm.get('COMPOSICAO') as FormArray;
-					json.COMPOSICAO.forEach(obj => {
+					json.COMPOSICAO.forEach( obj => {
 						composicao.push(this.fb.group({
 							TIPO: [obj.TIPO],
 							ID: [obj.ID],
@@ -146,7 +146,7 @@ export class CadastroProdutosComponent implements OnInit {
 							QTDE_UTILIZADA: [obj.QTDE_UTILIZADA],
 							CUSTO: [obj.CUSTO]
 						}));
-					})
+					});
 					// const composicao = this.produtosForm.get('COMPOSICAO') as FormArray;
 					this.produtosForm.controls['NM_PRODUTO'].disable();
 				}
@@ -203,7 +203,7 @@ export class CadastroProdutosComponent implements OnInit {
 			.cadastroProdutos(json)
 			.subscribe((data: { query: string; json: Array<Produto> }) => {
 				if (data.json.length > 0) {
-					this.popup('erro', 'Error no cadastro do produto');					
+					this.popup('erro', 'Error no cadastro do produto');
 				} else {
 					this.popup('erro', 'Error no cadastro do produto');
 				}
@@ -253,17 +253,17 @@ export class CadastroProdutosComponent implements OnInit {
 
 	}
 
-	resetForm(): void{
+	resetForm(): void {
 		this.produtosForm.controls['NM_PRODUTO'].enable();
 		const composicao = this.produtosForm.get('COMPOSICAO') as FormArray;
-		console.log(composicao.length)
-		for(let i = 0; i <= composicao.length; i++){			
-			composicao.removeAt(0);					
-		}		
-		
+		console.log(composicao.length);
+		for (let i = 0; i <= composicao.length; i++) {
+			composicao.removeAt(0);
+		}
+
 		this.produtosForm.reset({
 			PRECO_UNITARIO: '0,00'
-		})
+		});
 	}
 	searchComposicao = (text$: Observable<string>) =>
 		text$.pipe(
