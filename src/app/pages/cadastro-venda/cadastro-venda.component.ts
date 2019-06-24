@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { AppService } from 'src/app/app.service';
 import { Combo } from 'src/app/models/combo';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
 interface cliente{	
@@ -78,6 +78,9 @@ export class CadastroVendaComponent implements OnInit {
 
 	ngOnInit() {		
 		
+	}
+	addPagamento(): void{
+
 	}
 	addProduto(): void{
 		this.submittedProduto = true;		

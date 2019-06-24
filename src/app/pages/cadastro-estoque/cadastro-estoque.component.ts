@@ -4,7 +4,7 @@ import { distinctUntilChanged, debounceTime, map } from 'rxjs/operators';
 import { Combo } from 'src/app/models/combo';
 import { CadastroEstoqueService } from './cadastro-estoque.service';
 import { Estoque } from 'src/app/models/estoque';
-import { MatDialogConfig, MatDialog } from '@angular/material';
+import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { MessageComponent } from 'src/app/dialogs/message/message.component';
 import { Observable } from 'rxjs';
 import { AppService } from 'src/app/app.service';
@@ -65,11 +65,15 @@ export class CadastroEstoqueComponent implements OnInit {
 			.get('CUSTO_ULTIMO_RECEBIMENTO')
 			.valueChanges.pipe(distinctUntilChanged())
 			.subscribe(custo => {
-				let valor = custo
+				let valor = '0,00';;
+				if (custo) {
+					valor = custo
 					.replace(/\D/g, '')
 					.replace(/((\d{1,2})$)/g, ',$2')
 					.replace(/(^(0)+)/g, '');
-				valor = `${valor.replace(/^(\D)/g, '0$1')}`;
+					valor = `${valor.replace(/^(\D)/g, '0$1')}`;
+				}
+				
 				this.estoqueForm
 					.get('CUSTO_ULTIMO_RECEBIMENTO')
 					.setValue(valor);
@@ -90,12 +94,13 @@ export class CadastroEstoqueComponent implements OnInit {
 			',',
 			'.'
 		);
-		json.DESCRICAO = json.DESCRICAO.toUpperCase();
+		json.DESCRICAO = json.DESCRICAO ? json.DESCRICAO.toUpperCase() : json.DESCRICAO;
 		this.estoqueService
 			.cadastroEstoque(json)
 			.subscribe((data: { query: string; json: Array<Estoque> }) => {
 				if (data.json.length > 0) {
 					this.popup('success', 'Cadastro Efetuado com sucesso');
+					this.resetForm();
 				} else {
 					this.popup('erro', 'Error no cadastro');
 				}
@@ -112,8 +117,7 @@ export class CadastroEstoqueComponent implements OnInit {
 		const dialogRef = this.dialog.open(MessageComponent, dialogConfig);
 
 		dialogRef.afterClosed().subscribe(result => {
-			this.submitted = false;
-			this.estoqueForm.reset();
+			this.submitted = false;			
 		});
 	}
 
@@ -128,6 +132,16 @@ export class CadastroEstoqueComponent implements OnInit {
 					this.estoqueForm.controls['DESCRICAO'].disable();
 				}
 			});
+	}
+	resetForm(): void{
+		this.estoqueForm.controls['DESCRICAO'].enable();
+		this.estoqueForm.reset({
+			CUSTO_ULTIMO_RECEBIMENTO: '0,00',
+			UNIDADE: 'Unitario',
+			ESTOQUE_MIN: 0,
+			ESTOQUE_MAX: 0,
+			QTDE: 0
+		})
 	}
 	search = (text$: Observable<string>) =>
 		text$.pipe(

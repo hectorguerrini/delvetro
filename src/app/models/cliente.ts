@@ -1,3 +1,8 @@
+interface telefone {
+	ID_TELEFONE_CLIENTE: number;
+	TELEFONE: string
+}
+
 export class Cliente {
 	ID_CLIENTE: number;
 	NM_CLIENTE: string;
@@ -7,9 +12,7 @@ export class Cliente {
 	CIDADE: string;
 	CEP: string;
 	ESTADO: string;
-	TELEFONE_1: string;
-	TELEFONE_2: string;
-	TELEFONE_3: string;
+	TELEFONES: string;
 	RG: string;
 	EMAIL: string;
 	RAZAO_SOCIAL: string;

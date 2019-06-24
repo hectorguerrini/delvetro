@@ -10,7 +10,7 @@
 		<form class="form col-md-12" [formGroup]="clienteForm">
 			<div class="row">
 				<div class="col-md-4 form-group">
-					<label>Nome</label>
+					<label>Nome</label>					
 					<input type="text" [ngClass]="{'error-label': submitted && clienteForm.controls['NM_CLIENTE'].errors}"
 						class="form-control" formControlName="NM_CLIENTE" [ngbTypeahead]="search" [resultTemplate]="rt"
 						[inputFormatter]="formatter" (selectItem)="selectCliente($event.item)">
@@ -30,11 +30,14 @@
 					<input type="email" [ngClass]="{'error-label': submitted && clienteForm.controls['EMAIL'].errors}"
 						class="form-control" formControlName="EMAIL">
 				</div>
-				<div class="col-md-3 form-group">
-					<label>Telefones</label>
-					<input type="text" [ngClass]="{'error-label': submitted && clienteForm.controls['TELEFONE_1'].errors}"
-						class="form-control" formControlName="TELEFONE_1">
-				</div>				
+				<div class="col-md-3 " formArrayName="TELEFONES" *ngFor="let item of clienteForm.get('TELEFONES').value; let i = index">
+					<div class="form-group" [formGroupName]="i">
+						<label>Telefone {{i+1}}</label>
+						<input type="text"
+							class="form-control" formControlName="TELEFONE">
+					</div>					
+				</div>	
+							
 				<div class="col-md-4 form-group">
 					<label>Nome Contato</label>
 					<input type="text" [ngClass]="{'error-label': submitted && clienteForm.controls['NM_CONTATO'].errors}"
@@ -93,6 +96,10 @@
 			<button class="btn btn-delvetro" (click)="submitCliente()">
 				<span class="btn-label"><i class="fa fa-check"></i>
 				</span>Salvar
+			</button>
+			<button class="btn btn-delvetro" (click)="resetForm()">
+				<span class="btn-label"><i class="fa fa-refresh"></i>
+				</span>Limpar
 			</button>
 		</div>
 	</div>

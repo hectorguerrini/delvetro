@@ -121,11 +121,11 @@
 							<td><select name="" id="" class="form-control"></select>
 							</td>
 							<td><input type="text" class="form-control"
-									[ngClass]="{'error-label': submitted2 && pagamentoForm.controls['DT_PGTO'].errors}" formControlName="DT_PGTO">
+									[ngClass]="{'error-label': submittedPagamento && pagamentoForm.controls['DT_PGTO'].errors}" formControlName="DT_PGTO">
 							</td>
 							<td><input type="text" class="form-control"
-								[ngClass]="{'error-label': submitted2 && pagamentoForm.controls['VL_PGTO'].errors}" formControlName="VL_PGTO"></td>
-							<td><button class="btn btn-success" (click)="addComposicao()"><i class="fa fa-plus"></i></button></td>
+								[ngClass]="{'error-label': submittedPagamento && pagamentoForm.controls['VL_PGTO'].errors}" formControlName="VL_PGTO"></td>
+							<td><button class="btn btn-success" (click)="addPagamento()"><i class="fa fa-plus"></i></button></td>
 						</tr>						
 					</tbody>
 				</table>				
@@ -133,53 +133,3 @@
 		</form>
 	</div>
 </div>
-<!-- <div class="row">
-  <div class="col-md-12 title">
-	<h3>Lista de Produtos</h3>
-  </div>
-  <div class="col-md-12">
-	  <table class="table">
-		  <colgroup>
-			<col width="30%">
-			<col width="20%">
-			<col width="25%">              
-			<col width="25%">              
-		  </colgroup>
-		  <thead>
-			<tr>
-			  <th>Produto</th>
-			  <th>Quantidade</th>                                
-			  <th>Custo</th>
-			  <th></th>
-			</tr>
-		  </thead>
-		  <tbody>
-			<tr *ngFor="let item of vendaForm.get('ITENS').value; let i = index">
-			  <td>{{item.NM_PRODUTO}}</td>
-			  <td>{{item.QTDE}}</td>                
-			  <td>{{item.CUSTO | currency: 'BRL'}}</td>
-			  <td><button class="btn btn-danger" (click)="rmComposicao(i)"><i class="fa fa-minus"></i></button></td>
-			</tr>
-			<tr [formGroup]="itensForm">                
-			  <td><input type="text" class="form-control" formControlName="NM_PRODUTO" [ngbTypeahead]="searchItens"
-				[resultTemplate]="rt" [inputFormatter]="formatter" 
-				[ngClass]="{'error-label': submitted2 && itensForm.controls['DESCRICAO'].errors}">
-			  </td>
-			  <td><input type="text" class="form-control"
-				[ngClass]="{'error-label': submitted2 && itensForm.controls['QTDE'].errors}"
-				formControlName="QTDE">
-			  </td>
-			  <td>{{itensForm.get('CUSTO').value | currency: 'BRL'}}</td>
-			  <td><button class="btn btn-success" (click)="addComposicao()"><i class="fa fa-plus"></i></button></td>
-			</tr>
-			<tr>
-			  <td>Total:</td>
-			  <td></td>
-			  <td></td>
-			  <td></td>
-			  <td></td>
-			</tr>
-		  </tbody>
-		</table>
-  </div>
-</div> -->

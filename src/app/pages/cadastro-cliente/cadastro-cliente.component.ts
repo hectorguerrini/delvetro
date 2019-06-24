@@ -4,7 +4,7 @@ import { CadastroClienteService } from './cadastro-cliente.service';
 import { Observable } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
 import { Cliente } from 'src/app/models/cliente';
-import { MatDialogConfig, MatDialog } from '@angular/material';
+import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { MessageComponent } from 'src/app/dialogs/message/message.component';
 import { Combo } from '../../models/combo';
 import { AppService } from 'src/app/app.service';
@@ -16,6 +16,10 @@ import { AppService } from 'src/app/app.service';
 })
 export class CadastroClienteComponent implements OnInit {
 	submitted = false;
+	telefoneForm: FormGroup = this.fb.group({
+		ID_TELEFONE_CLIENTE: [''],
+		TELEFONE: ['']
+	})
 	clienteForm: FormGroup = this.fb.group({
 		ID_CLIENTE: [''],
 		NM_CLIENTE: ['', Validators.required],
@@ -27,15 +31,18 @@ export class CadastroClienteComponent implements OnInit {
 		CEP: ['', Validators.required],
 		ESTADO: ['', Validators.required],
 		EMAIL: ['', Validators.required],
-		TELEFONE_1: ['', Validators.required],
-		TELEFONE_2: [''],
-		TELEFONE_3: [''],
+		TELEFONES: this.fb.array([
+			this.telefonesForm(),
+			this.telefonesForm(),
+			this.telefonesForm()
+		]),
 		NM_CONTATO: ['', Validators.required],
 		LOJISTA: ['', Validators.required],
 		RG: ['', Validators.required],
 		CPF: ['', Validators.required],
 		COMPLEMENTO: ['']
 	});
+	
 	comboClientes: Array<Combo> = [];
 	constructor(
 		private fb: FormBuilder,
@@ -66,6 +73,12 @@ export class CadastroClienteComponent implements OnInit {
 			}
 		});
 	}
+	telefonesForm(): FormGroup {
+		return this.fb.group({
+			ID_TELEFONE_CLIENTE: [''],
+			TELEFONE: ['']
+		})
+	}
 	selectCliente(item: string): void {
 		const obj = this.comboClientes.find(el => el.LABEL === item);
 		this.clienteForm.get('ID_CLIENTE').setValue(obj.VALOR);
@@ -73,7 +86,9 @@ export class CadastroClienteComponent implements OnInit {
 			.getCliente(obj.VALOR)
 			.subscribe((data: { query: string; json: Array<Cliente> }) => {
 				if (data.json.length > 0) {
-					this.clienteForm.patchValue(data.json[0]);
+					let res = data.json[0];
+					res.TELEFONES = res.TELEFONES ? JSON.parse(res.TELEFONES) : []
+					this.clienteForm.patchValue(res);					
 					this.clienteForm.controls['NM_CLIENTE'].disable();
 				}
 			});
@@ -90,8 +105,7 @@ export class CadastroClienteComponent implements OnInit {
 		const dialogRef = this.dialog.open(MessageComponent, dialogConfig);
 
 		dialogRef.afterClosed().subscribe(result => {
-			this.submitted = false;
-			this.clienteForm.reset();
+			this.submitted = false;			
 		});
 	}
 	submitCliente(): void {
@@ -107,12 +121,16 @@ export class CadastroClienteComponent implements OnInit {
 			.subscribe((data: { query: string; json: Array<Cliente> }) => {
 				if (data.json.length > 0) {
 					this.popup('success', 'Cadastro Efetuado com sucesso');
+					this.resetForm();
 				} else {
 					this.popup('erro', 'Error no cadastro');
 				}
 			});
 	}
-
+	resetForm(): void{
+		this.clienteForm.controls['NM_CLIENTE'].enable();
+		this.clienteForm.reset();
+	}
 	search = (text$: Observable<string>) =>
 		text$.pipe(
 			debounceTime(200),

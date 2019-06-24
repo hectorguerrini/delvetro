@@ -11,7 +11,7 @@ import { Produto } from 'src/app/models/produto';
 import { Estoque } from 'src/app/models/estoque';
 import { Servico } from 'src/app/models/servico';
 import { MessageComponent } from 'src/app/dialogs/message/message.component';
-import { MatDialogConfig, MatDialog } from '@angular/material';
+import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { ComposicaoProdutoEstoque } from 'src/app/models/composicao-produto-estoque';
 import { ComposicaoProdutoSevico } from 'src/app/models/composicao-produto-servico';
 
@@ -148,7 +148,7 @@ export class CadastroProdutosComponent implements OnInit {
 						}));
 					})
 					// const composicao = this.produtosForm.get('COMPOSICAO') as FormArray;
-					// this.produtosForm.controls['DESCRICAO'].disable();
+					this.produtosForm.controls['NM_PRODUTO'].disable();
 				}
 			});
 	}
@@ -198,39 +198,12 @@ export class CadastroProdutosComponent implements OnInit {
 			',',
 			'.'
 		);
-		json.NM_PRODUTO = json.NM_PRODUTO.toUpperCase();
+		json.NM_PRODUTO = json.NM_PRODUTO ? json.NM_PRODUTO.toUpperCase() : '';
 		this.produtoService
 			.cadastroProdutos(json)
 			.subscribe((data: { query: string; json: Array<Produto> }) => {
 				if (data.json.length > 0) {
-					const composicao = this.produtosForm.get('COMPOSICAO') as FormArray;
-					composicao.value.forEach(el => {
-						if (el.TIPO === 'Estoque') {
-							const estoque = new ComposicaoProdutoEstoque();
-							estoque.ID_ESTOQUE = el.ID;
-							estoque.CUSTO = el.CUSTO;
-							estoque.QTDE_UTILIZADA = el.QTDE_UTILIZADA;
-							estoque.ID_PRODUTO = data.json[0].ID_PRODUTO;
-							this.produtoService.cadastroComposicaoEstoque(estoque)
-							.subscribe((data2: { query: string; json: Array<ComposicaoProdutoEstoque> } ) => {
-								if (data2.json.length > 0) {
-									this.popup('success', 'Cadastro Efetuado com sucesso');
-								}
-
-							});
-						} else if (el.TIPO === 'Serviço' ) {
-							const servico = new ComposicaoProdutoSevico();
-							servico.ID_SERVICO = el.ID;
-							servico.ID_PRODUTO = data.json[0].ID_PRODUTO;
-							this.produtoService.cadastroComposicaoServico(servico)
-							.subscribe((data2: { query: string; json: Array<ComposicaoProdutoSevico> } ) => {
-								if (data2.json.length > 0) {
-									this.popup('success', 'Cadastro Efetuado com sucesso');
-								}
-							});
-						}
-
-					});
+					this.popup('erro', 'Error no cadastro do produto');					
 				} else {
 					this.popup('erro', 'Error no cadastro do produto');
 				}
@@ -278,6 +251,19 @@ export class CadastroProdutosComponent implements OnInit {
 				});
 		}
 
+	}
+
+	resetForm(): void{
+		this.produtosForm.controls['NM_PRODUTO'].enable();
+		const composicao = this.produtosForm.get('COMPOSICAO') as FormArray;
+		console.log(composicao.length)
+		for(let i = 0; i <= composicao.length; i++){			
+			composicao.removeAt(0);					
+		}		
+		
+		this.produtosForm.reset({
+			PRECO_UNITARIO: '0,00'
+		})
 	}
 	searchComposicao = (text$: Observable<string>) =>
 		text$.pipe(

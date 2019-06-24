@@ -4,7 +4,7 @@ import { AppService } from 'src/app/app.service';
 import { Combo } from 'src/app/models/combo';
 import { CadastroServicosService } from './cadastro-servicos.service';
 import { Servico } from 'src/app/models/servico';
-import { MatDialogConfig, MatDialog } from '@angular/material';
+import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { MessageComponent } from 'src/app/dialogs/message/message.component';
 import { distinctUntilChanged, debounceTime, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
@@ -80,12 +80,13 @@ export class CadastroServicosComponent implements OnInit {
 		const servico = new Servico();
 		const json = Object.assign(servico, this.servicosForm.value);
 		json.CUSTO_POR_UNIDADE = json.CUSTO_POR_UNIDADE.replace(',', '.');
-		json.DESCRICAO = json.DESCRICAO.toUpperCase();
+		json.DESCRICAO = json.DESCRICAO ? json.DESCRICAO.toUpperCase() : '';
 		this.servicoService
 			.cadastroServico(json)
 			.subscribe((data: { query: string; json: Array<Servico> }) => {
-				if (data.json.length > 0) {
+				if (data.json.length > 0) {					
 					this.popup('success', 'Cadastro Efetuado com sucesso');
+					this.resetForm()
 				} else {
 					this.popup('erro', 'Error no cadastro');
 				}
@@ -103,8 +104,7 @@ export class CadastroServicosComponent implements OnInit {
 		const dialogRef = this.dialog.open(MessageComponent, dialogConfig);
 
 		dialogRef.afterClosed().subscribe(result => {
-			this.submitted = false;
-			this.servicosForm.reset();
+			this.submitted = false;			
 		});
 	}
 
@@ -119,6 +119,12 @@ export class CadastroServicosComponent implements OnInit {
 					this.servicosForm.controls['DESCRICAO'].disable();
 				}
 			});
+	}
+	resetForm(): void{
+		this.servicosForm.controls['DESCRICAO'].enable();
+		this.servicosForm.reset({
+			CUSTO_POR_UNIDADE: '0,00'
+		});
 	}
 	search = (text$: Observable<string>) =>
 		text$.pipe(

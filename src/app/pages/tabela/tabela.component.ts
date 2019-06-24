@@ -20,7 +20,7 @@ import { Router } from '@angular/router';
 })
 export class TabelaComponent implements OnInit {
 
-	@ViewChild(MatPaginator) paginator: MatPaginator;
+	@ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 	tabelaTotal =
 		{
 			coluna1: null,

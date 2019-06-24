@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialogConfig, MatDialog } from '@angular/material';
+import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { CadastroClienteComponent } from '../cadastro-cliente/cadastro-cliente.component';
 import { Observable } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
