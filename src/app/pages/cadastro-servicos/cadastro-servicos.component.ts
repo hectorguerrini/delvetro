@@ -84,9 +84,9 @@ export class CadastroServicosComponent implements OnInit {
 		this.servicoService
 			.cadastroServico(json)
 			.subscribe((data: { query: string; json: Array<Servico> }) => {
-				if (data.json.length > 0) {					
+				if (data.json.length > 0) {
 					this.popup('success', 'Cadastro Efetuado com sucesso');
-					this.resetForm()
+					this.resetForm();
 				} else {
 					this.popup('erro', 'Error no cadastro');
 				}
@@ -104,7 +104,7 @@ export class CadastroServicosComponent implements OnInit {
 		const dialogRef = this.dialog.open(MessageComponent, dialogConfig);
 
 		dialogRef.afterClosed().subscribe(result => {
-			this.submitted = false;			
+			this.submitted = false;
 		});
 	}
 
@@ -120,7 +120,7 @@ export class CadastroServicosComponent implements OnInit {
 				}
 			});
 	}
-	resetForm(): void{
+	resetForm(): void {
 		this.servicosForm.controls['DESCRICAO'].enable();
 		this.servicosForm.reset({
 			CUSTO_POR_UNIDADE: '0,00'

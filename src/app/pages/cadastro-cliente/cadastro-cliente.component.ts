@@ -19,7 +19,7 @@ export class CadastroClienteComponent implements OnInit {
 	telefoneForm: FormGroup = this.fb.group({
 		ID_TELEFONE_CLIENTE: [''],
 		TELEFONE: ['']
-	})
+	});
 	clienteForm: FormGroup = this.fb.group({
 		ID_CLIENTE: [''],
 		NM_CLIENTE: ['', Validators.required],
@@ -42,7 +42,7 @@ export class CadastroClienteComponent implements OnInit {
 		CPF: ['', Validators.required],
 		COMPLEMENTO: ['']
 	});
-	
+
 	comboClientes: Array<Combo> = [];
 	constructor(
 		private fb: FormBuilder,
@@ -77,7 +77,7 @@ export class CadastroClienteComponent implements OnInit {
 		return this.fb.group({
 			ID_TELEFONE_CLIENTE: [''],
 			TELEFONE: ['']
-		})
+		});
 	}
 	selectCliente(item: string): void {
 		const obj = this.comboClientes.find(el => el.LABEL === item);
@@ -86,9 +86,9 @@ export class CadastroClienteComponent implements OnInit {
 			.getCliente(obj.VALOR)
 			.subscribe((data: { query: string; json: Array<Cliente> }) => {
 				if (data.json.length > 0) {
-					let res = data.json[0];
-					res.TELEFONES = res.TELEFONES ? JSON.parse(res.TELEFONES) : []
-					this.clienteForm.patchValue(res);					
+					const res = data.json[0];
+					res.TELEFONES = res.TELEFONES ? JSON.parse(res.TELEFONES) : [];
+					this.clienteForm.patchValue(res);
 					this.clienteForm.controls['NM_CLIENTE'].disable();
 				}
 			});
@@ -105,7 +105,7 @@ export class CadastroClienteComponent implements OnInit {
 		const dialogRef = this.dialog.open(MessageComponent, dialogConfig);
 
 		dialogRef.afterClosed().subscribe(result => {
-			this.submitted = false;			
+			this.submitted = false;
 		});
 	}
 	submitCliente(): void {
@@ -127,7 +127,7 @@ export class CadastroClienteComponent implements OnInit {
 				}
 			});
 	}
-	resetForm(): void{
+	resetForm(): void {
 		this.clienteForm.controls['NM_CLIENTE'].enable();
 		this.clienteForm.reset();
 	}

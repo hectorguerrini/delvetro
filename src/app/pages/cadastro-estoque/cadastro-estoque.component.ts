@@ -65,7 +65,7 @@ export class CadastroEstoqueComponent implements OnInit {
 			.get('CUSTO_ULTIMO_RECEBIMENTO')
 			.valueChanges.pipe(distinctUntilChanged())
 			.subscribe(custo => {
-				let valor = '0,00';;
+				let valor = '0,00';
 				if (custo) {
 					valor = custo
 					.replace(/\D/g, '')
@@ -73,7 +73,7 @@ export class CadastroEstoqueComponent implements OnInit {
 					.replace(/(^(0)+)/g, '');
 					valor = `${valor.replace(/^(\D)/g, '0$1')}`;
 				}
-				
+
 				this.estoqueForm
 					.get('CUSTO_ULTIMO_RECEBIMENTO')
 					.setValue(valor);
@@ -117,7 +117,7 @@ export class CadastroEstoqueComponent implements OnInit {
 		const dialogRef = this.dialog.open(MessageComponent, dialogConfig);
 
 		dialogRef.afterClosed().subscribe(result => {
-			this.submitted = false;			
+			this.submitted = false;
 		});
 	}
 
@@ -133,7 +133,7 @@ export class CadastroEstoqueComponent implements OnInit {
 				}
 			});
 	}
-	resetForm(): void{
+	resetForm(): void {
 		this.estoqueForm.controls['DESCRICAO'].enable();
 		this.estoqueForm.reset({
 			CUSTO_ULTIMO_RECEBIMENTO: '0,00',
@@ -141,7 +141,7 @@ export class CadastroEstoqueComponent implements OnInit {
 			ESTOQUE_MIN: 0,
 			ESTOQUE_MAX: 0,
 			QTDE: 0
-		})
+		});
 	}
 	search = (text$: Observable<string>) =>
 		text$.pipe(

@@ -5,9 +5,9 @@ import { Combo } from 'src/app/models/combo';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
-interface cliente{	
-	id_cliente: number,
-	nome: string
+interface Cliente {
+	id_cliente: number;
+	nome: string;
 }
 @Component({
 	selector: 'app-cadastro-venda',
@@ -18,26 +18,26 @@ export class CadastroVendaComponent implements OnInit {
 	submittedProduto = false;
 	submittedPagamento = false;
 	submittedExtras = false;
-	openExtra: number = -1;
-  	itensForm: FormGroup = this.fb.group({
-		ID: [null],		
+	openExtra = -1;
+	itensForm: FormGroup = this.fb.group({
+		ID: [null],
 		TIPO: [''],
 		NM_PRODUTO: ['', Validators.required],
 		QTDE: [null, Validators.required],
 		LARGURA: [''],
 		ALTURA: [''],
-		CUSTO: [''],		
+		CUSTO: [''],
 	});
 	pagamentoForm: FormGroup = this.fb.group({
-		ID: [null, Validators.required],		
+		ID: [null, Validators.required],
 		ID_FORMA_PGT: [''],
 		DT_PGTO: [null, Validators.required],
 		VL_PGTO: ['', Validators.required]
 	});
 	extraForm: FormGroup = this.fb.group({
-		ID_SERVICO: [null],		
-		ID_ITEM_VENDIDO: [''],		
-		DESCRICAO: ['', Validators.required],		
+		ID_SERVICO: [null],
+		ID_ITEM_VENDIDO: [''],
+		DESCRICAO: ['', Validators.required],
 		QUANTIDADE: ['', Validators.required],
 		CUSTO: ['']
 	});
@@ -55,8 +55,8 @@ export class CadastroVendaComponent implements OnInit {
 		private fb: FormBuilder,
 		private appService: AppService,
 		public dialogRef: MatDialogRef<CadastroVendaComponent>,
-		@Inject(MAT_DIALOG_DATA) public data: cliente
-	) { 
+		@Inject(MAT_DIALOG_DATA) public data: Cliente
+	) {
 		appService
 			.getCombo('produtos')
 			.subscribe((data: { query: string; json: Array<Combo> }) => {
@@ -76,21 +76,20 @@ export class CadastroVendaComponent implements OnInit {
 		this.vendaForm.controls['NM_CLIENTE'].setValue(data.nome);
 	}
 
-	ngOnInit() {		
-		
+	ngOnInit() {
 	}
-	addPagamento(): void{
+	addPagamento(): void {
 
 	}
-	addProduto(): void{
-		this.submittedProduto = true;		
-		if(this.itensForm.invalid){
+	addProduto(): void {
+		this.submittedProduto = true;
+		if (this.itensForm.invalid) {
 			return;
 		}
 		const composicao = this.vendaForm.get('ITENS') as FormArray;
 		const obj = this.itensForm.value;
 		composicao.push(this.fb.group({
-			ID: [obj.ID],		
+			ID: [obj.ID],
 			TIPO: [obj.TIPO],
 			NM_PRODUTO: [obj.NM_PRODUTO],
 			QTDE: [obj.QTDE],
@@ -99,33 +98,32 @@ export class CadastroVendaComponent implements OnInit {
 			CUSTO: [obj.CUSTO],
 			EXTRAS: this.fb.array([])
 		}));
-		console.log(this.vendaForm)
+		console.log(this.vendaForm);
 	}
 	rmProduto(i: number): void {
 		const composicao = this.vendaForm.get('ITENS') as FormArray;
-		composicao.removeAt(i);		
+		composicao.removeAt(i);
 	}
-	addServicosExtras(id: number): void{
+	addServicosExtras(id: number): void {
 		this.submittedExtras = true;
-			
-		if(this.extraForm.invalid){
+		if (this.extraForm.invalid) {
 			return;
 		}
 		const composicao = this.vendaForm.controls['ITENS'] as FormArray;
 		const compExtras = composicao.controls[id].get('EXTRAS').value as FormArray;
 		const obj = this.extraForm.value;
 		compExtras.push(this.fb.group({
-			ID_SERVICO: [null],		
-			ID_ITEM_VENDIDO: [null],		
-			DESCRICAO: [obj.DESCRICAO],		
+			ID_SERVICO: [null],
+			ID_ITEM_VENDIDO: [null],
+			DESCRICAO: [obj.DESCRICAO],
 			QUANTIDADE: [obj.QUANTIDADE],
 			CUSTO: ['']
-		}))
-		console.log(this.vendaForm)
+		}));
+		console.log(this.vendaForm);
 	}
-	rmServicosExtras(id: number,i: number): void {
+	rmServicosExtras(id: number, i: number): void {
 		const composicao = this.vendaForm.get('ITENS').value as FormArray;
-		composicao[id].EXTRAS.removeAt(i);		
+		composicao[id].EXTRAS.removeAt(i);
 	}
 
 	searchProdutos = (text$: Observable<string>) =>
@@ -161,6 +159,6 @@ export class CadastroVendaComponent implements OnInit {
 						.slice(0, 5)
 						.map(s => s.LABEL)
 			)
-		)	
+		)
 	formatter = (LABEL: string) => LABEL;
 }

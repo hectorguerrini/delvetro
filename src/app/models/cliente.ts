@@ -1,6 +1,6 @@
-interface telefone {
+interface Telefone {
 	ID_TELEFONE_CLIENTE: number;
-	TELEFONE: string
+	TELEFONE: string;
 }
 
 export class Cliente {

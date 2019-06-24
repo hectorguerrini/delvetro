@@ -7,11 +7,11 @@ import { AppService } from 'src/app/app.service';
 import { Combo } from 'src/app/models/combo';
 import { FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { VendasService } from './vendas.service';
-import { vendasLista } from 'src/app/models/vendasLista';
+import { VendasLista } from 'src/app/models/vendasLista';
 import { CadastroVendaComponent } from '../cadastro-venda/cadastro-venda.component';
-interface cliente{	
-	id_cliente: number,
-	nome: string
+interface Cliente {
+	id_cliente: number;
+	nome: string;
 }
 @Component({
 	selector: 'app-vendas',
@@ -21,8 +21,8 @@ interface cliente{
 export class VendasComponent implements OnInit {
 
 	comboClientes: Array<Combo> = [];
-	vendasLista: Array<vendasLista> = [];	
-	cliente: cliente = {
+	vendasLista: Array<VendasLista> = [];
+	cliente: Cliente = {
 		id_cliente: null,
 		nome: ''
 	};
@@ -39,9 +39,9 @@ export class VendasComponent implements OnInit {
 			});
 	}
 
-	ngOnInit() {		
+	ngOnInit() {
 	}
-	novaVenda(): void{
+	novaVenda(): void {
 		const dialogConfig = new MatDialogConfig();
 
 		dialogConfig.disableClose = false;
@@ -61,7 +61,7 @@ export class VendasComponent implements OnInit {
 		this.cliente.nome = obj.LABEL;
 		this.vendasService
 			.getVendasCliente(obj.VALOR)
-			.subscribe((data: { query: string; json: Array<vendasLista> }) => {
+			.subscribe((data: { query: string; json: Array<VendasLista> }) => {
 				if (data.json.length > 0) {
 					this.vendasLista = data.json;
 				} else {
@@ -77,7 +77,7 @@ export class VendasComponent implements OnInit {
 		dialogConfig.autoFocus = true;
 		dialogConfig.width = '80vw';
 		dialogConfig.panelClass = 'model-cadastro';
-		//dialogConfig.data = { status: status, message: message };
+		// dialogConfig.data = { status: status, message: message };
 		const dialogRef = this.dialog.open(CadastroClienteComponent, dialogConfig);
 
 		dialogRef.afterClosed().subscribe(result => {

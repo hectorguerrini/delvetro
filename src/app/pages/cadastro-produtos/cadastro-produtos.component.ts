@@ -12,9 +12,6 @@ import { Estoque } from 'src/app/models/estoque';
 import { Servico } from 'src/app/models/servico';
 import { MessageComponent } from 'src/app/dialogs/message/message.component';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
-import { ComposicaoProdutoEstoque } from 'src/app/models/composicao-produto-estoque';
-import { ComposicaoProdutoSevico } from 'src/app/models/composicao-produto-servico';
-
 
 @Component({
 	selector: 'app-cadastro-produtos',
@@ -147,7 +144,7 @@ export class CadastroProdutosComponent implements OnInit {
 							CUSTO: [obj.CUSTO]
 						}));
 					});
-					// const composicao = this.produtosForm.get('COMPOSICAO') as FormArray;
+
 					this.produtosForm.controls['NM_PRODUTO'].disable();
 				}
 			});
