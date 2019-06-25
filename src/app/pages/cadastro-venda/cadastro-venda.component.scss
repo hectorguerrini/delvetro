@@ -5,7 +5,7 @@
         margin-bottom: 1%;
     }
     .template{
-        tr :nth-child(i){
+        tr :nth-child(n){
             border: 0px;
         }
     }
@@ -14,11 +14,11 @@
         .iconExtras{
             position: absolute;
             bottom: 0;
-            left: 0;            
+            left: 0;
             cursor: pointer;
         }
     }
-    
+
 
     .formExtras{
         div{

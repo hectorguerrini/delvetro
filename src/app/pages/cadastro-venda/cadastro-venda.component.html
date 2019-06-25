@@ -6,7 +6,7 @@
 		<div class="col-md-12 title">
 			<h2>{{data.nome}}</h2>
 		</div>
-		
+
 		<form class="form col-md-12" >
 			<div class="row">
 				<div class="col-md-12">
@@ -20,13 +20,13 @@
 						<col width="15%">
 						<col width="15%">
 						<col width="15%">
-						<col width="10%">	
-											
+						<col width="10%">
+
 					</colgroup>
 					<thead>
 						<tr>
 							<th>Descrição</th>
-							<th>Quantidade</th>							
+							<th>Quantidade</th>
 							<th>Largura</th>
 							<th>Altura</th>
 							<th>Preço</th>
@@ -36,23 +36,25 @@
 					<tbody>
 						<ng-template ngFor let-item [ngForOf]="vendaForm.get('ITENS').value" let-i="index" class="template">
 							<tr>
-								<td class="colExtra">{{item.NM_PRODUTO}} <i class="fa fa-plus iconExtras" (click)="openExtra = i"></i></td>
+								<td class="colExtra">{{item.NM_PRODUTO}}
+									<i class="fa fa-plus iconExtras" *ngIf="openExtra !== i" (click)="openExtra = i"></i>
+									<i class="fa fa-minus iconExtras" *ngIf="openExtra === i"(click)="openExtra = -1"></i>
+								</td>
 								<td>{{item.QTDE}}</td>
 								<td>{{item.LARGURA}}</td>
 								<td>{{item.ALTURA}}</td>
 								<td>{{item.CUSTO | currency: 'BRL'}}</td>
-								{{item.EXTRAS}}
 								<td><button class="btn btn-danger" (click)="rmProduto(i)"><i class="fa fa-minus"></i></button></td>
-							</tr>					
+							</tr>
 							<tr *ngFor="let extra of item.EXTRAS; let j = index">
-								<td></td>
 								<td>{{extra.DESCRICAO}}</td>
 								<td>{{extra.QUANTIDADE}}</td>
-								<td><button class="btn btn-danger"><i class="fa fa-minus" (click)="rmProduto(j)"></i></button></td>
+								<td></td>
+								<td><button class="btn btn-danger"><i class="fa fa-minus" (click)="rmServicosExtras(j)"></i></button></td>
 							</tr>
-							<tr *ngIf="openExtra == i" >								
+							<tr *ngIf="openExtra == i" >
 								<td colspan="6">
-									<form class="form-inline formExtras" [formGroup]="extraForm">										
+									<form class="form-inline formExtras" [formGroup]="extraForm">
 										<div class="form-group">
 											<label for="servico">Serviço: </label>
 											<input type="text" class="form-control" [ngbTypeahead]="searchServicos" formControlName="DESCRICAO"
@@ -62,12 +64,12 @@
 											<label>Quantidade: </label>
 											<input type="text" class="form-control"
 												formControlName="QUANTIDADE">
-										</div>	
-										<button class="btn btn-success"><i class="fa fa-plus" (click)="addServicosExtras(i)"></i></button>
+										</div>
+										<button class="btn btn-success" type="button"><i class="fa fa-plus" (click)="addServicosExtras(i)"></i></button>
 									</form>
 								</td>
 							</tr>
-						</ng-template>						
+						</ng-template>
 						<tr [formGroup]="itensForm">
 							<td><input type="text" class="form-control" formControlName="NM_PRODUTO" [ngbTypeahead]="searchProdutos"
 									[resultTemplate]="rt" [inputFormatter]="formatter"
@@ -84,11 +86,11 @@
 							</td>
 							<td>{{itensForm.get('CUSTO').value | currency: 'BRL'}}</td>
 							<td><button class="btn btn-success" (click)="addProduto()"><i class="fa fa-plus"></i></button></td>
-						</tr>						
+						</tr>
 					</tbody>
-				</table>								
+				</table>
 			</div>
-		</form>		
+		</form>
 		<form class="col-md-12">
 			<div class="row">
 				<div class="col-md-12">
@@ -126,10 +128,16 @@
 							<td><input type="text" class="form-control"
 								[ngClass]="{'error-label': submittedPagamento && pagamentoForm.controls['VL_PGTO'].errors}" formControlName="VL_PGTO"></td>
 							<td><button class="btn btn-success" (click)="addPagamento()"><i class="fa fa-plus"></i></button></td>
-						</tr>						
+						</tr>
 					</tbody>
-				</table>				
+				</table>
 			</div>
 		</form>
+		<div class="col-md-12">
+			<button class="btn btn-delvetro" (click)="salvarVenda()">
+				<span class="btn-label"><i class="fa fa-check"></i>
+				</span>Salvar
+			</button>
+		</div>
 	</div>
 </div>

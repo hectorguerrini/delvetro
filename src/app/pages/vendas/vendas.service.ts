@@ -17,4 +17,12 @@ export class VendasService {
 			headers: new HttpHeaders().set('Content-Type', 'application/json')
 		});
 	}
+	salvarVenda(venda: any) {
+		const url = `${this.url}/cadastro/venda`;
+
+		return this.http.post(url, venda, {
+			headers: new HttpHeaders().set('Content-Type', 'application/json')
+		});
+
+	}
 }

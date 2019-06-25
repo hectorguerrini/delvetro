@@ -5,6 +5,7 @@ import { Combo } from 'src/app/models/combo';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
+import { VendasService } from '../vendas/vendas.service';
 interface Cliente {
 	id_cliente: number;
 	nome: string;
@@ -20,7 +21,7 @@ export class CadastroVendaComponent implements OnInit {
 	submittedExtras = false;
 	openExtra = -1;
 	itensForm: FormGroup = this.fb.group({
-		ID: [null],
+		ID_SERVICO: [null],
 		TIPO: [''],
 		NM_PRODUTO: ['', Validators.required],
 		QTDE: [null, Validators.required],
@@ -54,6 +55,7 @@ export class CadastroVendaComponent implements OnInit {
 	constructor(
 		private fb: FormBuilder,
 		private appService: AppService,
+		private vendasService: VendasService,
 		public dialogRef: MatDialogRef<CadastroVendaComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: Cliente
 	) {
@@ -78,6 +80,17 @@ export class CadastroVendaComponent implements OnInit {
 
 	ngOnInit() {
 	}
+	salvarVenda(): void {
+		const venda = {};
+
+		const json = Object.assign(venda, this.vendaForm.value);
+		console.log('Venda ', json);
+		this.vendasService.salvarVenda(json)
+			.subscribe((data: {query: string, json: Array<any>}) => {
+				console.log(data.json);
+			})
+
+	}
 	addPagamento(): void {
 
 	}
@@ -88,7 +101,8 @@ export class CadastroVendaComponent implements OnInit {
 		}
 		const composicao = this.vendaForm.get('ITENS') as FormArray;
 		const obj = this.itensForm.value;
-		composicao.push(this.fb.group({
+
+		const itens: FormGroup = this.fb.group({
 			ID: [obj.ID],
 			TIPO: [obj.TIPO],
 			NM_PRODUTO: [obj.NM_PRODUTO],
@@ -97,8 +111,12 @@ export class CadastroVendaComponent implements OnInit {
 			ALTURA: [obj.ALTURA],
 			CUSTO: [obj.CUSTO],
 			EXTRAS: this.fb.array([])
-		}));
-		console.log(this.vendaForm);
+		});
+
+		composicao.push(itens);
+		this.submittedProduto = false;
+		this.itensForm.reset();
+
 	}
 	rmProduto(i: number): void {
 		const composicao = this.vendaForm.get('ITENS') as FormArray;
@@ -109,21 +127,28 @@ export class CadastroVendaComponent implements OnInit {
 		if (this.extraForm.invalid) {
 			return;
 		}
-		const composicao = this.vendaForm.controls['ITENS'] as FormArray;
-		const compExtras = composicao.controls[id].get('EXTRAS').value as FormArray;
+		const composicao = this.vendaForm.get('ITENS') as FormArray;
+		const compExtras = composicao.controls[id].get('EXTRAS') as FormArray;
+
 		const obj = this.extraForm.value;
-		compExtras.push(this.fb.group({
+		console.log(obj);
+		const extras: FormGroup = this.fb.group({
 			ID_SERVICO: [null],
 			ID_ITEM_VENDIDO: [null],
 			DESCRICAO: [obj.DESCRICAO],
 			QUANTIDADE: [obj.QUANTIDADE],
 			CUSTO: ['']
-		}));
+		});
+
+		compExtras.push(extras);
+		this.submittedExtras = false;
+		this.extraForm.reset();
 		console.log(this.vendaForm);
 	}
 	rmServicosExtras(id: number, i: number): void {
-		const composicao = this.vendaForm.get('ITENS').value as FormArray;
-		composicao[id].EXTRAS.removeAt(i);
+		const composicao = this.vendaForm.get('ITENS') as FormArray;
+		const compExtras = composicao.controls[id].get('EXTRAS') as FormArray;
+		compExtras.removeAt(i);
 	}
 
 	searchProdutos = (text$: Observable<string>) =>
