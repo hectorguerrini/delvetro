@@ -19,8 +19,8 @@
 						<col width="15%">
 						<col width="15%">
 						<col width="15%">
-						<col width="15%">
 						<col width="10%">
+						<col width="15%">
 
 					</colgroup>
 					<thead>
@@ -36,23 +36,38 @@
 					<tbody>
 						<ng-template ngFor let-item [ngForOf]="vendaForm.get('ITENS').value" let-i="index" class="template">
 							<tr>
-								<td class="colExtra">{{item.NM_PRODUTO}}
-									<i class="fa fa-plus iconExtras" *ngIf="openExtra !== i" (click)="openExtra = i"></i>
+								<td class="colExtra">
+									{{item.NM_PRODUTO}}
+
+									<!-- <i class="fa fa-plus iconExtras" *ngIf="openExtra !== i" (click)="openExtra = i"></i>
 									<i class="fa fa-minus iconExtras" *ngIf="openExtra === i"(click)="openExtra = -1"></i>
 									<i class="iconExtras">Serviço Extras</i>
-									<span class="iconExtras">{{item.EXTRAS.length}}</span>
+									<span class="iconExtras">{{item.EXTRAS.length}}</span> -->
 								</td>
 								<td>{{item.QTDE}}</td>
 								<td>{{item.LARGURA}}</td>
 								<td>{{item.ALTURA}}</td>
 								<td>{{item.CUSTO | currency: 'BRL'}}</td>
-								<td><button class="btn btn-danger" (click)="rmProduto(i)"><i class="fa fa-minus"></i></button></td>
+								<td class="groupButton">
+									<button class="btn btn-danger" (click)="rmProduto(i)" ngbPopover="Remover" placement="top" triggers="mouseenter:mouseleave">
+										<i class="fa fa-minus"></i>
+									</button>
+									<button class="btn btn-primary" type="button" (click)="openServicosExtras(i)" ngbPopover="Serviços Extra" placement="top" triggers="mouseenter:mouseleave">
+										{{item.EXTRAS.length}}
+										<span class="btn-label"><i class="fa" [ngClass]="{'fa-plus': openExtra !== i, 'fa-minus': openExtra === i}"></i></span>
+									</button>
+								</td>
 							</tr>
-							<tr *ngFor="let extra of item.EXTRAS; let j = index">
+							<tr *ngFor="let extra of item.EXTRAS; let j = index" [hidden]="openExtra !== i">
 								<td>{{extra.DESCRICAO}}</td>
 								<td>{{extra.QUANTIDADE}}</td>
 								<td colspan="3"></td>
-								<td><button class="btn btn-danger" type="button" (click)="rmServicosExtras(i, j)"><i class="fa fa-minus"></i></button></td>
+								<td>
+									<button class="btn btn-danger" type="button" (click)="rmServicosExtras(i, j)" ngbPopover="Remover Serviço Extra"
+										placement="top" triggers="mouseenter:mouseleave">
+										<i class="fa fa-minus"></i>
+									</button>
+								</td>
 							</tr>
 							<tr *ngIf="openExtra == i" >
 								<td colspan="6">
@@ -67,7 +82,10 @@
 											<input type="text" class="form-control"
 												formControlName="QUANTIDADE">
 										</div>
-										<button class="btn btn-success" type="submit" (click)="addServicosExtras(i)"><i class="fa fa-plus"></i></button>
+										<button class="btn btn-success" type="submit" (click)="addServicosExtras(i)" ngbPopover="Adicionar Serviço Extra"
+											placement="top" triggers="mouseenter:mouseleave">
+											<i class="fa fa-plus"></i>
+										</button>
 									</form>
 								</td>
 							</tr>
@@ -87,7 +105,11 @@
 								[ngClass]="{'error-label': submittedProduto && itensForm.controls['ALTURA'].errors}" formControlName="ALTURA">
 							</td>
 							<td>{{itensForm.get('CUSTO').value | currency: 'BRL'}}</td>
-							<td><button class="btn btn-success" (click)="addProduto()"><i class="fa fa-plus"></i></button></td>
+							<td>
+								<button class="btn btn-success" (click)="addProduto()" ngbPopover="Adicionar Produtos" placement="top" triggers="mouseenter:mouseleave">
+									<i class="fa fa-plus"></i>
+								</button>
+							</td>
 						</tr>
 					</tbody>
 				</table>
@@ -122,14 +144,25 @@
 							<td><button class="btn btn-danger" (click)="rmComposicao(i)"><i class="fa fa-minus"></i></button></td>
 						</tr> -->
 						<tr [formGroup]="pagamentoForm">
-							<td><select name="" id="" class="form-control"></select>
+							<td>
+								<select class="form-control" formControlName="ID_FORMA_PGT"
+									[ngClass]="{'error-label': submittedPagamento && pagamentoForm.controls['ID_FORMA_PGT'].errors}">
+									<option *ngFor="let item of comboFormaPgto" [ngValue]="item.VALOR">{{item.LABEL}}</option>
+								</select>
 							</td>
-							<td><input type="text" class="form-control"
-									[ngClass]="{'error-label': submittedPagamento && pagamentoForm.controls['DT_PGTO'].errors}" formControlName="DT_PGTO">
+							<td>
+								<input type="text" class="form-control" formControlName="DT_PGTO"
+									[ngClass]="{'error-label': submittedPagamento && pagamentoForm.controls['DT_PGTO'].errors}">
 							</td>
-							<td><input type="text" class="form-control"
-								[ngClass]="{'error-label': submittedPagamento && pagamentoForm.controls['VL_PGTO'].errors}" formControlName="VL_PGTO"></td>
-							<td><button class="btn btn-success" (click)="addPagamento()"><i class="fa fa-plus"></i></button></td>
+							<td>
+								<input type="text" class="form-control" formControlName="VL_PGTO"
+									[ngClass]="{'error-label': submittedPagamento && pagamentoForm.controls['VL_PGTO'].errors}">
+							</td>
+							<td>
+								<button class="btn btn-success" (click)="addPagamento()">
+									<i class="fa fa-plus"></i>
+								</button>
+							</td>
 						</tr>
 					</tbody>
 				</table>

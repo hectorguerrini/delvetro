@@ -4,7 +4,7 @@ import { AppService } from 'src/app/app.service';
 import { Combo } from 'src/app/models/combo';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
-import { debounceTime, map } from 'rxjs/operators';
+import { debounceTime, map, distinctUntilChanged } from 'rxjs/operators';
 import { VendasService } from '../vendas/vendas.service';
 interface Cliente {
 	id_cliente: number;
@@ -30,7 +30,6 @@ export class CadastroVendaComponent implements OnInit {
 		CUSTO: [''],
 	});
 	pagamentoForm: FormGroup = this.fb.group({
-		ID: [null, Validators.required],
 		ID_FORMA_PGT: [''],
 		DT_PGTO: [null, Validators.required],
 		VL_PGTO: ['', Validators.required]
@@ -79,7 +78,34 @@ export class CadastroVendaComponent implements OnInit {
 	}
 
 	ngOnInit() {
+		this.onChanges();
 	}
+	onChanges(): void {
+		this.pagamentoForm.get('VL_PGTO')
+			.valueChanges.pipe(distinctUntilChanged())
+			.subscribe(custo => {
+				let valor = '0,00';
+				if (custo) {
+					valor = custo
+						.replace(/\D/g, '')
+						.replace(/((\d{1,2})$)/g, ',$2')
+						.replace(/(^(0)+)/g, '');
+					valor = `${valor.replace(/^(\D)/g, '0$1')}`;
+				}
+
+				this.pagamentoForm
+					.get('VL_PGTO')
+					.setValue(valor);
+				this.pagamentoForm
+					.get('VL_PGTO')
+					.updateValueAndValidity();
+			}
+		);
+	}
+	openServicosExtras(index: number): void {
+		this.openExtra = this.openExtra === index ? -1 : index;
+	}
+
 	salvarVenda(): void {
 		const venda = {};
 
@@ -88,11 +114,31 @@ export class CadastroVendaComponent implements OnInit {
 		this.vendasService.salvarVenda(json)
 			.subscribe((data: {query: string, json: Array<any>}) => {
 				console.log(data.json);
-			})
+			});
 
 	}
 	addPagamento(): void {
+		this.submittedPagamento = true;
+		if (this.pagamentoForm.invalid) {
+			return;
+		}
 
+		const composicao = this.vendaForm.get('PGTO') as FormArray;
+		const obj = this.pagamentoForm.value;
+		const pgto: FormGroup = this.fb.group({
+			ID_FORMA_PGT: [obj.ID_FORMA_PGT],
+			DT_PGTO: [obj.DT_PGTO],
+			VL_PGTO: [obj.VL_PGTO]
+		});
+
+		composicao.push(pgto);
+		this.submittedPagamento = false;
+		this.pagamentoForm.reset();
+
+	}
+	rmPagamento(i: number): void {
+		const composicao = this.vendaForm.get('PGTO') as FormArray;
+		composicao.removeAt(i);
 	}
 	addProduto(): void {
 		this.submittedProduto = true;
