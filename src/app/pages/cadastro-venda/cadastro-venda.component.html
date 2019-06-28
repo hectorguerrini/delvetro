@@ -39,6 +39,8 @@
 								<td class="colExtra">{{item.NM_PRODUTO}}
 									<i class="fa fa-plus iconExtras" *ngIf="openExtra !== i" (click)="openExtra = i"></i>
 									<i class="fa fa-minus iconExtras" *ngIf="openExtra === i"(click)="openExtra = -1"></i>
+									<i class="iconExtras">Serviço Extras</i>
+									<span class="iconExtras">{{item.EXTRAS.length}}</span>
 								</td>
 								<td>{{item.QTDE}}</td>
 								<td>{{item.LARGURA}}</td>
@@ -49,8 +51,8 @@
 							<tr *ngFor="let extra of item.EXTRAS; let j = index">
 								<td>{{extra.DESCRICAO}}</td>
 								<td>{{extra.QUANTIDADE}}</td>
-								<td></td>
-								<td><button class="btn btn-danger"><i class="fa fa-minus" (click)="rmServicosExtras(j)"></i></button></td>
+								<td colspan="3"></td>
+								<td><button class="btn btn-danger" type="button" (click)="rmServicosExtras(i, j)"><i class="fa fa-minus"></i></button></td>
 							</tr>
 							<tr *ngIf="openExtra == i" >
 								<td colspan="6">
@@ -65,7 +67,7 @@
 											<input type="text" class="form-control"
 												formControlName="QUANTIDADE">
 										</div>
-										<button class="btn btn-success" type="button"><i class="fa fa-plus" (click)="addServicosExtras(i)"></i></button>
+										<button class="btn btn-success" type="submit" (click)="addServicosExtras(i)"><i class="fa fa-plus"></i></button>
 									</form>
 								</td>
 							</tr>
