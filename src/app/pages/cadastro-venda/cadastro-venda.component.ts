@@ -31,6 +31,7 @@ export class CadastroVendaComponent implements OnInit {
 	});
 	pagamentoForm: FormGroup = this.fb.group({
 		ID_FORMA_PGT: [''],
+		NM_FORMA_PGT: [''],
 		DT_PGTO: [null, Validators.required],
 		VL_PGTO: ['', Validators.required]
 	});
@@ -110,11 +111,16 @@ export class CadastroVendaComponent implements OnInit {
 		const venda = {};
 
 		const json = Object.assign(venda, this.vendaForm.value);
+		json.PGTO.forEach(el => {
+			el.VL_PGTO = el.VL_PGTO.replace(',','.')
+			
+		});
 		console.log('Venda ', json);
-		this.vendasService.salvarVenda(json)
-			.subscribe((data: {query: string, json: Array<any>}) => {
-				console.log(data.json);
-			});
+
+		// this.vendasService.salvarVenda(json)
+		// 	.subscribe((data: {query: string, json: Array<any>}) => {
+		// 		console.log(data.json);
+		// 	});
 
 	}
 	addPagamento(): void {
@@ -125,8 +131,11 @@ export class CadastroVendaComponent implements OnInit {
 
 		const composicao = this.vendaForm.get('PGTO') as FormArray;
 		const obj = this.pagamentoForm.value;
+		
+		const nm_forma_pgto = this.comboFormaPgto.find(el => el.VALOR == obj.ID_FORMA_PGT).LABEL;
 		const pgto: FormGroup = this.fb.group({
 			ID_FORMA_PGT: [obj.ID_FORMA_PGT],
+			NM_FORMA_PGT: [nm_forma_pgto],
 			DT_PGTO: [obj.DT_PGTO],
 			VL_PGTO: [obj.VL_PGTO]
 		});

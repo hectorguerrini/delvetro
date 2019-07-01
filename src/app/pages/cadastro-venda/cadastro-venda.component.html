@@ -106,7 +106,8 @@
 							</td>
 							<td>{{itensForm.get('CUSTO').value | currency: 'BRL'}}</td>
 							<td>
-								<button class="btn btn-success" (click)="addProduto()" ngbPopover="Adicionar Produtos" placement="top" triggers="mouseenter:mouseleave">
+								<button class="btn btn-success" (click)="addProduto()" 
+								ngbPopover="Adicionar Produtos" placement="top" triggers="mouseenter:mouseleave">
 									<i class="fa fa-plus"></i>
 								</button>
 							</td>
@@ -137,12 +138,17 @@
 						</tr>
 					</thead>
 					<tbody>
-						<!-- <tr *ngFor="let item of vendaForm.get('ITENS').value; let i = index">
-							<td>{{item.NM_PRODUTO}}</td>
-							<td>{{item.QTDE}}</td>
-							<td>{{item.CUSTO | currency: 'BRL'}}</td>
-							<td><button class="btn btn-danger" (click)="rmComposicao(i)"><i class="fa fa-minus"></i></button></td>
-						</tr> -->
+						<tr *ngFor="let item of vendaForm.get('PGTO').value; let i = index">
+							<td>{{item.NM_FORMA_PGT}}</td>
+							<td>{{item.DT_PGTO | date:'dd/MM/yyyy'}}</td>
+							<td>R$ {{item.VL_PGTO}}</td>
+							<td>
+								<button class="btn btn-danger" (click)="rmPagamento(i)"
+									ngbPopover="Remover Pagamento" placement="top" triggers="mouseenter:mouseleave">
+									<i class="fa fa-minus"></i>
+								</button>
+							</td>
+						</tr>
 						<tr [formGroup]="pagamentoForm">
 							<td>
 								<select class="form-control" formControlName="ID_FORMA_PGT"
@@ -159,7 +165,8 @@
 									[ngClass]="{'error-label': submittedPagamento && pagamentoForm.controls['VL_PGTO'].errors}">
 							</td>
 							<td>
-								<button class="btn btn-success" (click)="addPagamento()">
+								<button class="btn btn-success" (click)="addPagamento()"
+									ngbPopover="Adicionar Pagamento" placement="top" triggers="mouseenter:mouseleave">
 									<i class="fa fa-plus"></i>
 								</button>
 							</td>
