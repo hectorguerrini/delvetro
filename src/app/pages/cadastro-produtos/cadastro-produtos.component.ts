@@ -200,7 +200,7 @@ export class CadastroProdutosComponent implements OnInit {
 			.cadastroProdutos(json)
 			.subscribe((data: { query: string; json: Array<Produto> }) => {
 				if (data.json.length > 0) {
-					this.popup('erro', 'Error no cadastro do produto');
+					this.popup('success', 'Cadastro Efetuado com sucesso');
 				} else {
 					this.popup('erro', 'Error no cadastro do produto');
 				}
@@ -233,6 +233,10 @@ export class CadastroProdutosComponent implements OnInit {
 					if (data.json.length > 0) {
 						this.composicao = data.json[0];
 						this.composicao.CUSTO = data.json[0].CUSTO_POR_UNIDADE;
+						this.composicaoForm.get('CUSTO').setValue(this.composicao.CUSTO);
+						this.composicaoForm
+							.get('CUSTO')
+							.updateValueAndValidity();
 					}
 				});
 		} else {
@@ -247,6 +251,7 @@ export class CadastroProdutosComponent implements OnInit {
 					}
 				});
 		}
+
 
 	}
 

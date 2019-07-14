@@ -1,0 +1,20 @@
+<h1 mat-dialog-title>{{data.NM_CLIENTE}}</h1>
+<div class="orcamento" mat-dialog-content>
+	<h3>Produtos</h3>
+	<ul>
+		<li *ngFor="let item of data.ITENS">
+			{{item.QTDE}} {{item.NM_PRODUTO}} {{item.LARGURA}} x {{item.ALTURA}}
+			<ul>
+				<li *ngFor="let extra of item.EXTRAS">
+					{{extra.QUANTIDADE}} {{extra.DESCRICAO}}
+				</li>
+			</ul>
+		</li>
+	</ul>
+	<h3>Formas de Pagamento</h3>
+	<ul>
+		<li>Dinheiro: {{120 | currency: 'BRL'}}</li>
+		<li>Cartão Debito: {{120*1.1 | currency: 'BRL'}}</li>
+		<li>Cartão Credito: {{120*1.15 | currency: 'BRL'}}</li>
+	</ul>
+</div>

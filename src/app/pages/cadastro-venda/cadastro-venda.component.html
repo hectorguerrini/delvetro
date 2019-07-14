@@ -36,14 +36,7 @@
 					<tbody>
 						<ng-template ngFor let-item [ngForOf]="vendaForm.get('ITENS').value" let-i="index" class="template">
 							<tr>
-								<td class="colExtra">
-									{{item.NM_PRODUTO}}
-
-									<!-- <i class="fa fa-plus iconExtras" *ngIf="openExtra !== i" (click)="openExtra = i"></i>
-									<i class="fa fa-minus iconExtras" *ngIf="openExtra === i"(click)="openExtra = -1"></i>
-									<i class="iconExtras">Serviço Extras</i>
-									<span class="iconExtras">{{item.EXTRAS.length}}</span> -->
-								</td>
+								<td class="colExtra">{{item.NM_PRODUTO}}</td>
 								<td>{{item.QTDE}}</td>
 								<td>{{item.LARGURA}}</td>
 								<td>{{item.ALTURA}}</td>
@@ -55,6 +48,10 @@
 									<button class="btn btn-primary" type="button" (click)="openServicosExtras(i)" ngbPopover="Serviços Extra" placement="top" triggers="mouseenter:mouseleave">
 										{{item.EXTRAS.length}}
 										<span class="btn-label"><i class="fa" [ngClass]="{'fa-plus': openExtra !== i, 'fa-minus': openExtra === i}"></i></span>
+									</button>
+									<button class="btn btn-primary">
+										0
+										<span class="btn-label"><i class="fa fa-paperclip"></i></span>
 									</button>
 								</td>
 							</tr>
@@ -92,7 +89,7 @@
 						</ng-template>
 						<tr [formGroup]="itensForm">
 							<td><input type="text" class="form-control" formControlName="NM_PRODUTO" [ngbTypeahead]="searchProdutos"
-									[resultTemplate]="rt" [inputFormatter]="formatter"
+									[resultTemplate]="rt" [inputFormatter]="formatter" (selectItem)="selectProduto($event.item)"
 									[ngClass]="{'error-label': submittedProduto && itensForm.controls['NM_PRODUTO'].errors}">
 							</td>
 							<td><input type="text" class="form-control"
@@ -106,7 +103,7 @@
 							</td>
 							<td>{{itensForm.get('CUSTO').value | currency: 'BRL'}}</td>
 							<td>
-								<button class="btn btn-success" (click)="addProduto()" 
+								<button class="btn btn-success" (click)="addProduto()"
 								ngbPopover="Adicionar Produtos" placement="top" triggers="mouseenter:mouseleave">
 									<i class="fa fa-plus"></i>
 								</button>
@@ -116,6 +113,7 @@
 				</table>
 			</div>
 		</form>
+		<!---
 		<form class="col-md-12">
 			<div class="row">
 				<div class="col-md-12">
@@ -175,11 +173,17 @@
 				</table>
 			</div>
 		</form>
-		<div class="col-md-12">
+		-->
+		<div class="col-md-12 groupButton">
 			<button class="btn btn-delvetro" (click)="salvarVenda()">
 				<span class="btn-label"><i class="fa fa-check"></i>
 				</span>Salvar
 			</button>
+			<button class="btn btn-delvetro" (click)="orcamento()">
+				<span class="btn-label"><i class="fa fa-check"></i>
+				</span>Orçamento
+			</button>
+
 		</div>
 	</div>
 </div>

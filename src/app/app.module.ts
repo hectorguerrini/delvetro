@@ -30,6 +30,7 @@ import { CadastroServicosComponent } from './pages/cadastro-servicos/cadastro-se
 import { CadastroProdutosComponent } from './pages/cadastro-produtos/cadastro-produtos.component';
 import { VendasComponent } from './pages/vendas/vendas.component';
 import { CadastroVendaComponent } from './pages/cadastro-venda/cadastro-venda.component';
+import { OrcamentoComponent } from './dialogs/orcamento/orcamento.component';
 
 
 
@@ -47,7 +48,8 @@ registerLocaleData(localePt);
 		CadastroServicosComponent,
 		CadastroProdutosComponent,
 		VendasComponent,
-		CadastroVendaComponent
+		CadastroVendaComponent,
+		OrcamentoComponent
 	],
 	imports: [
 		AppRoutingModule,
@@ -70,6 +72,12 @@ registerLocaleData(localePt);
 		{ provide: HIGHCHARTS_MODULES, useFactory: () => [more, exporting] }
 	],
 	bootstrap: [AppComponent],
-	entryComponents: [MessageComponent, CadastroClienteComponent, CadastroVendaComponent]
+	entryComponents: [
+		MessageComponent,
+		CadastroClienteComponent,
+		CadastroVendaComponent,
+		OrcamentoComponent
+	]
+
 })
 export class AppModule { }

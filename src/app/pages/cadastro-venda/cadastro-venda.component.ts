@@ -2,10 +2,12 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { AppService } from 'src/app/app.service';
 import { Combo } from 'src/app/models/combo';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { debounceTime, map, distinctUntilChanged } from 'rxjs/operators';
 import { VendasService } from '../vendas/vendas.service';
+import { MessageComponent } from 'src/app/dialogs/message/message.component';
+import { OrcamentoComponent } from 'src/app/dialogs/orcamento/orcamento.component';
 interface Cliente {
 	id_cliente: number;
 	nome: string;
@@ -17,8 +19,9 @@ interface Cliente {
 })
 export class CadastroVendaComponent implements OnInit {
 	submittedProduto = false;
-	submittedPagamento = false;
+	// submittedPagamento = false;
 	submittedExtras = false;
+	submitted = false;
 	openExtra = -1;
 	itensForm: FormGroup = this.fb.group({
 		ID_SERVICO: [null],
@@ -29,12 +32,12 @@ export class CadastroVendaComponent implements OnInit {
 		ALTURA: [''],
 		CUSTO: [''],
 	});
-	pagamentoForm: FormGroup = this.fb.group({
-		ID_FORMA_PGT: [''],
-		NM_FORMA_PGT: [''],
-		DT_PGTO: [null, Validators.required],
-		VL_PGTO: ['', Validators.required]
-	});
+	// pagamentoForm: FormGroup = this.fb.group({
+	// 	ID_FORMA_PGT: [''],
+	// 	NM_FORMA_PGT: [''],
+	// 	DT_PGTO: [null, Validators.required],
+	// 	VL_PGTO: ['', Validators.required]
+	// });
 	extraForm: FormGroup = this.fb.group({
 		ID_SERVICO: [null],
 		ID_ITEM_VENDIDO: [''],
@@ -45,22 +48,22 @@ export class CadastroVendaComponent implements OnInit {
 	vendaForm: FormGroup = this.fb.group({
 		ID_CLIENTE: ['', Validators.required],
 		NM_CLIENTE: ['', Validators.required],
-		CUSTO: [''],
+		CUSTO: [0],
 		ITENS: this.fb.array([]),
 		PGTO: this.fb.array([])
 	});
 	comboProdutos: Array<Combo>;
 	comboFormaPgto: Array<Combo>;
-	comboServicos: Array<Combo>;
 	constructor(
 		private fb: FormBuilder,
 		private appService: AppService,
 		private vendasService: VendasService,
 		public dialogRef: MatDialogRef<CadastroVendaComponent>,
+		private dialog: MatDialog,
 		@Inject(MAT_DIALOG_DATA) public data: Cliente
 	) {
 		appService
-			.getCombo('produtos')
+			.getCombo('produtos_vendas')
 			.subscribe((data: { query: string; json: Array<Combo> }) => {
 				this.comboProdutos = data.json;
 			});
@@ -69,51 +72,55 @@ export class CadastroVendaComponent implements OnInit {
 			.subscribe((data: { query: string; json: Array<Combo> }) => {
 				this.comboFormaPgto = data.json;
 			});
-		appService
-			.getCombo('servicos')
-			.subscribe((data: { query: string; json: Array<Combo> }) => {
-				this.comboServicos = data.json;
-			});
 		this.vendaForm.controls['ID_CLIENTE'].setValue(data.id_cliente);
 		this.vendaForm.controls['NM_CLIENTE'].setValue(data.nome);
 	}
 
 	ngOnInit() {
-		this.onChanges();
+
 	}
 	onChanges(): void {
-		this.pagamentoForm.get('VL_PGTO')
-			.valueChanges.pipe(distinctUntilChanged())
-			.subscribe(custo => {
-				let valor = '0,00';
-				if (custo) {
-					valor = custo
-						.replace(/\D/g, '')
-						.replace(/((\d{1,2})$)/g, ',$2')
-						.replace(/(^(0)+)/g, '');
-					valor = `${valor.replace(/^(\D)/g, '0$1')}`;
-				}
 
-				this.pagamentoForm
-					.get('VL_PGTO')
-					.setValue(valor);
-				this.pagamentoForm
-					.get('VL_PGTO')
-					.updateValueAndValidity();
-			}
-		);
 	}
 	openServicosExtras(index: number): void {
 		this.openExtra = this.openExtra === index ? -1 : index;
 	}
+	popup(status, message) {
+		const dialogConfig = new MatDialogConfig();
+
+		dialogConfig.disableClose = false;
+		dialogConfig.hasBackdrop = true;
+		dialogConfig.autoFocus = true;
+		dialogConfig.width = '260px';
+		dialogConfig.data = { status: status, message: message };
+		const dialogRef = this.dialog.open(MessageComponent, dialogConfig);
+
+		dialogRef.afterClosed().subscribe(result => {
+			this.submitted = false;
+		});
+	}
+	orcamento(): void {
+		const json = Object.assign({}, this.vendaForm.value);
+		const dialogConfig = new MatDialogConfig();
+
+		dialogConfig.disableClose = false;
+		dialogConfig.hasBackdrop = true;
+		dialogConfig.autoFocus = true;
+		dialogConfig.width = '500px';
+		dialogConfig.data = json;
+		const dialogRef = this.dialog.open(OrcamentoComponent, dialogConfig);
+
+		dialogRef.afterClosed().subscribe(result => {});
+	}
 
 	salvarVenda(): void {
+
 		const venda = {};
 
 		const json = Object.assign(venda, this.vendaForm.value);
 		json.PGTO.forEach(el => {
-			el.VL_PGTO = el.VL_PGTO.replace(',','.')
-			
+			el.VL_PGTO = el.VL_PGTO.replace(',', '.');
+
 		});
 		console.log('Venda ', json);
 
@@ -123,32 +130,51 @@ export class CadastroVendaComponent implements OnInit {
 		// 	});
 
 	}
-	addPagamento(): void {
-		this.submittedPagamento = true;
-		if (this.pagamentoForm.invalid) {
-			return;
-		}
+	selectProduto(item: string): void {
+		const obj = this.comboProdutos.find(el => el.LABEL === item);
+		this.itensForm.setValue({
+			ID_SERVICO: obj.VALOR,
+			NM_PRODUTO: obj.LABEL,
+			CUSTO: obj.CUSTO,
+			TIPO: obj.TIPO,
+			QTDE: 1,
+			LARGURA: 100,
+			ALTURA: 100
 
-		const composicao = this.vendaForm.get('PGTO') as FormArray;
-		const obj = this.pagamentoForm.value;
-		
-		const nm_forma_pgto = this.comboFormaPgto.find(el => el.VALOR == obj.ID_FORMA_PGT).LABEL;
-		const pgto: FormGroup = this.fb.group({
-			ID_FORMA_PGT: [obj.ID_FORMA_PGT],
-			NM_FORMA_PGT: [nm_forma_pgto],
-			DT_PGTO: [obj.DT_PGTO],
-			VL_PGTO: [obj.VL_PGTO]
 		});
 
-		composicao.push(pgto);
-		this.submittedPagamento = false;
-		this.pagamentoForm.reset();
+	}
+	calculoCustoVenda(): void {
+
+
 
 	}
-	rmPagamento(i: number): void {
-		const composicao = this.vendaForm.get('PGTO') as FormArray;
-		composicao.removeAt(i);
-	}
+	// addPagamento(): void {
+	// 	this.submittedPagamento = true;
+	// 	if (this.pagamentoForm.invalid) {
+	// 		return;
+	// 	}
+
+	// 	const composicao = this.vendaForm.get('PGTO') as FormArray;
+	// 	const obj = this.pagamentoForm.value;
+
+	// 	const nm_forma_pgto = this.comboFormaPgto.find(el => el.VALOR === obj.ID_FORMA_PGT).LABEL;
+	// 	const pgto: FormGroup = this.fb.group({
+	// 		ID_FORMA_PGT: [obj.ID_FORMA_PGT],
+	// 		NM_FORMA_PGT: [nm_forma_pgto],
+	// 		DT_PGTO: [obj.DT_PGTO],
+	// 		VL_PGTO: [obj.VL_PGTO]
+	// 	});
+
+	// 	composicao.push(pgto);
+	// 	this.submittedPagamento = false;
+	// 	this.pagamentoForm.reset();
+
+	// }
+	// rmPagamento(i: number): void {
+	// 	const composicao = this.vendaForm.get('PGTO') as FormArray;
+	// 	composicao.removeAt(i);
+	// }
 	addProduto(): void {
 		this.submittedProduto = true;
 		if (this.itensForm.invalid) {
@@ -206,6 +232,8 @@ export class CadastroVendaComponent implements OnInit {
 		compExtras.removeAt(i);
 	}
 
+
+
 	searchProdutos = (text$: Observable<string>) =>
 		text$.pipe(
 			debounceTime(200),
@@ -213,12 +241,7 @@ export class CadastroVendaComponent implements OnInit {
 				term === ''
 					? []
 					: this.comboProdutos
-						.filter(
-							v =>
-								v.LABEL.toLowerCase().indexOf(
-									term.toLowerCase()
-								) > -1
-						)
+						.filter(v => v.LABEL.toLowerCase().indexOf(term.toLowerCase()) > -1 && v.TIPO !== 'Servico')
 						.slice(0, 5)
 						.map(s => s.LABEL)
 			)
@@ -229,13 +252,8 @@ export class CadastroVendaComponent implements OnInit {
 			map(term =>
 				term === ''
 					? []
-					: this.comboServicos
-						.filter(
-							v =>
-								v.LABEL.toLowerCase().indexOf(
-									term.toLowerCase()
-								) > -1
-						)
+					: this.comboProdutos
+						.filter(v => v.LABEL.toLowerCase().indexOf(term.toLowerCase()) > -1 && v.TIPO === 'Servico')
 						.slice(0, 5)
 						.map(s => s.LABEL)
 			)
