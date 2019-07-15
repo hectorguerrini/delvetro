@@ -53,6 +53,17 @@ export class VendasComponent implements OnInit {
 		const dialogRef = this.dialog.open(CadastroVendaComponent, dialogConfig);
 
 		dialogRef.afterClosed().subscribe(result => {
+			if (result) {
+				this.vendasService
+					.getVendasCliente(this.cliente.id_cliente)
+					.subscribe((data: { query: string; json: Array<VendasLista> }) => {
+						if (data.json.length > 0) {
+							this.vendasLista = data.json;
+						} else {
+							this.vendasLista = [];
+						}
+					});
+			}
 		});
 	}
 	selectCliente(item: string): void {

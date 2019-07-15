@@ -202,7 +202,7 @@ export class CadastroProdutosComponent implements OnInit {
 				if (data.json.length > 0) {
 					this.popup('success', 'Cadastro Efetuado com sucesso');
 				} else {
-					this.popup('erro', 'Error no cadastro do produto');
+					this.popup('error', 'Error no cadastro do produto');
 				}
 			});
 	}

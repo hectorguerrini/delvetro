@@ -16,12 +16,12 @@ import { AppService } from 'src/app/app.service';
 export class CadastroEstoqueComponent implements OnInit {
 	submitted = false;
 	estoqueForm: FormGroup = this.fb.group({
-		ID_ESTOQUE: [''],
+		ID_ESTOQUE: [null],
 		ID_TIPO: ['', Validators.required],
 		DESCRICAO: ['', Validators.required],
 		QTDE: [0],
 		UNIDADE: ['Unitario', Validators.required],
-		ESPESSURA: [],
+		ESPESSURA: [0],
 		LOCALIZACAO: [''],
 		ESTOQUE_MIN: [0, Validators.required],
 		ESTOQUE_MAX: [0, Validators.required],
@@ -93,7 +93,7 @@ export class CadastroEstoqueComponent implements OnInit {
 		json.CUSTO_ULTIMO_RECEBIMENTO = json.CUSTO_ULTIMO_RECEBIMENTO.replace(
 			',',
 			'.'
-		);
+		)*1;
 		json.DESCRICAO = json.DESCRICAO ? json.DESCRICAO.toUpperCase() : json.DESCRICAO;
 		this.estoqueService
 			.cadastroEstoque(json)
@@ -102,7 +102,7 @@ export class CadastroEstoqueComponent implements OnInit {
 					this.popup('success', 'Cadastro Efetuado com sucesso');
 					this.resetForm();
 				} else {
-					this.popup('erro', 'Error no cadastro');
+					this.popup('error', 'Error no cadastro');
 				}
 			});
 	}

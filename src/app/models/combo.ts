@@ -2,6 +2,6 @@ export interface Combo {
 	VALOR: number;
 	LABEL: string;
 	TIPO?: string;
-	CUSTO?: number;
+	PRECO?: number;
 	UNIDADE?: string;
 }

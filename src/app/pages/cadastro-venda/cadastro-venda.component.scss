@@ -17,6 +17,14 @@
             left: 0;
             cursor: pointer;
         }
+        ul {
+            padding-inline-start: 40px;
+        }
+    }
+    .result{
+        font-size: 18px;
+        position: absolute;
+        right: 0;
     }
 	.groupButton{
 		button{

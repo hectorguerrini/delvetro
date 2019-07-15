@@ -1,7 +1,2 @@
-<span class="status">
-	<mat-icon class="ico">done</mat-icon>
-</span>
+<span class="status" [ngClass]="{'success':data.status=='success','error':data.status=='error','login':data.status=='login'}"></span>
 <label>{{data.message}}</label>
-<div mat-dialog-actions class="button">
-	<button mat-button (click)="onOkClick()">Ok</button>
-</div>

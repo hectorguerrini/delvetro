@@ -17,7 +17,7 @@ export class OrcamentoComponent implements OnInit {
 	ngOnInit() {
 	}
 	onOkClick(): void {
-		this.dialogRef.close();
+		this.dialogRef.close(true);
 	}
 
 }

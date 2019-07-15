@@ -88,7 +88,7 @@ export class CadastroServicosComponent implements OnInit {
 					this.popup('success', 'Cadastro Efetuado com sucesso');
 					this.resetForm();
 				} else {
-					this.popup('erro', 'Error no cadastro');
+					this.popup('error', 'Error no cadastro');
 				}
 			});
 	}

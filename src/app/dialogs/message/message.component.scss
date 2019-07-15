@@ -1,18 +1,21 @@
-.mat-icon {
-	font-size: 112px;
-	width: 112px;
-	height: 112px;
-	line-height: 112px;
-	color: green
-}
-
 .status {
-	justify-content: center;
-	display: flex;
+	position: relative;
+	left: calc(50% - 48px);
+	label {
+		font-family: 'Times New Roman', Times, serif;
+	}
 }
 
-.button {
-	display: flex;
-	justify-content: center;
+.success:before {
+	color: green;
+	font-family: FontAwesome;
+	font-size: 112px;
+	content: "\f058";
+}
 
+.error:before {
+	color: #e31212f1;
+	font-family: FontAwesome;
+	font-size: 112px;
+	content: "\f057";
 }

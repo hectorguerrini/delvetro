@@ -10,7 +10,8 @@
 		<form class="form col-md-12" >
 			<div class="row">
 				<div class="col-md-12">
-					<h4>Produtos</h4>
+					<h4 style="display: inline-block">Produtos</h4>
+					<label class="result">Status: {{vendaForm.get('STATUS_VENDA').value}}</label>
 					<mat-divider></mat-divider>
 				</div>
 				<table class="table">
@@ -36,20 +37,34 @@
 					<tbody>
 						<ng-template ngFor let-item [ngForOf]="vendaForm.get('ITENS').value" let-i="index" class="template">
 							<tr>
-								<td class="colExtra">{{item.NM_PRODUTO}}</td>
+								<td class="colExtra">
+									{{item.NM_PRODUTO}}
+									<ul *ngIf="openExtra !== i">
+										<li *ngFor="let extras of item.EXTRAS">
+											{{extras.QUANTIDADE}} {{extras.DESCRICAO}}
+										</li>
+									</ul>
+								</td>
 								<td>{{item.QTDE}}</td>
 								<td>{{item.LARGURA}}</td>
 								<td>{{item.ALTURA}}</td>
-								<td>{{item.CUSTO | currency: 'BRL'}}</td>
+								<td>
+									{{item.PRECO_FINAL | currency: 'BRL'}}
+									<ul *ngIf="openExtra !== i" style="list-style: none">
+										<li *ngFor="let extras of item.EXTRAS">
+											{{extras.PRECO_FINAL | currency: 'BRL'}}
+										</li>
+									</ul>
+								</td>
 								<td class="groupButton">
 									<button class="btn btn-danger" (click)="rmProduto(i)" ngbPopover="Remover" placement="top" triggers="mouseenter:mouseleave">
 										<i class="fa fa-minus"></i>
 									</button>
-									<button class="btn btn-primary" type="button" (click)="openServicosExtras(i)" ngbPopover="Serviços Extra" placement="top" triggers="mouseenter:mouseleave">
+									<button class="btn btn-primary" *ngIf="item.TIPO === 'Chaparia'" type="button" (click)="openServicosExtras(i)" ngbPopover="Serviços Extra" placement="top" triggers="mouseenter:mouseleave">
 										{{item.EXTRAS.length}}
 										<span class="btn-label"><i class="fa" [ngClass]="{'fa-plus': openExtra !== i, 'fa-minus': openExtra === i}"></i></span>
 									</button>
-									<button class="btn btn-primary">
+									<button class="btn btn-primary" *ngIf="item.TIPO === 'Chaparia'">
 										0
 										<span class="btn-label"><i class="fa fa-paperclip"></i></span>
 									</button>
@@ -57,8 +72,9 @@
 							</tr>
 							<tr *ngFor="let extra of item.EXTRAS; let j = index" [hidden]="openExtra !== i">
 								<td>{{extra.DESCRICAO}}</td>
-								<td>{{extra.QUANTIDADE}}</td>
-								<td colspan="3"></td>
+								<td>{{extra.QUANTIDADE}}</td>								
+								<td colspan="2"></td>
+								<td>{{extra.PRECO_FINAL | currency: 'BRL'}}</td>
 								<td>
 									<button class="btn btn-danger" type="button" (click)="rmServicosExtras(i, j)" ngbPopover="Remover Serviço Extra"
 										placement="top" triggers="mouseenter:mouseleave">
@@ -72,22 +88,26 @@
 										<div class="form-group">
 											<label for="servico">Serviço: </label>
 											<input type="text" class="form-control" [ngbTypeahead]="searchServicos" formControlName="DESCRICAO"
-												[resultTemplate]="rt" [inputFormatter]="formatter">
+												[resultTemplate]="rt" [inputFormatter]="formatter" (selectItem)="selectServicosExtras($event.item)">
 										</div>
 										<div class="form-group">
 											<label>Quantidade: </label>
 											<input type="text" class="form-control"
 												formControlName="QUANTIDADE">
 										</div>
-										<button class="btn btn-success" type="submit" (click)="addServicosExtras(i)" ngbPopover="Adicionar Serviço Extra"
-											placement="top" triggers="mouseenter:mouseleave">
-											<i class="fa fa-plus"></i>
-										</button>
+										<div class="form-group">
+											<label for="">{{extraForm.get('PRECO_FINAL').value | currency: 'BRL'}}</label>
+											<button class="btn btn-success" type="submit" (click)="addServicosExtras(i)" ngbPopover="Adicionar Serviço Extra"
+												placement="top" triggers="mouseenter:mouseleave">
+												<i class="fa fa-plus"></i>
+											</button>
+										</div>
+										
 									</form>
 								</td>
 							</tr>
 						</ng-template>
-						<tr [formGroup]="itensForm">
+						<tr [formGroup]="itensForm" *ngIf="openExtra === -1 || vendaForm.get('PRECO_FINAL').value === 0">
 							<td><input type="text" class="form-control" formControlName="NM_PRODUTO" [ngbTypeahead]="searchProdutos"
 									[resultTemplate]="rt" [inputFormatter]="formatter" (selectItem)="selectProduto($event.item)"
 									[ngClass]="{'error-label': submittedProduto && itensForm.controls['NM_PRODUTO'].errors}">
@@ -95,13 +115,13 @@
 							<td><input type="text" class="form-control"
 									[ngClass]="{'error-label': submittedProduto && itensForm.controls['QTDE'].errors}" formControlName="QTDE">
 							</td>
-							<td><input type="text" class="form-control"
+							<td><input type="text" class="form-control" *ngIf="itensForm.get('TIPO').value === 'Chaparia'"
 								[ngClass]="{'error-label': submittedProduto && itensForm.controls['LARGURA'].errors}" formControlName="LARGURA">
 							</td>
-							<td><input type="text" class="form-control"
+							<td><input type="text" class="form-control" *ngIf="itensForm.get('TIPO').value === 'Chaparia'"
 								[ngClass]="{'error-label': submittedProduto && itensForm.controls['ALTURA'].errors}" formControlName="ALTURA">
 							</td>
-							<td>{{itensForm.get('CUSTO').value | currency: 'BRL'}}</td>
+							<td>{{itensForm.get('PRECO_FINAL').value | currency: 'BRL'}}</td>
 							<td>
 								<button class="btn btn-success" (click)="addProduto()"
 								ngbPopover="Adicionar Produtos" placement="top" triggers="mouseenter:mouseleave">
@@ -174,16 +194,16 @@
 			</div>
 		</form>
 		-->
-		<div class="col-md-12 groupButton">
-			<button class="btn btn-delvetro" (click)="salvarVenda()">
-				<span class="btn-label"><i class="fa fa-check"></i>
-				</span>Salvar
-			</button>
+		<div class="col-md-12 groupButton">			
 			<button class="btn btn-delvetro" (click)="orcamento()">
 				<span class="btn-label"><i class="fa fa-check"></i>
-				</span>Orçamento
+				</span>Salvar Orçamento
 			</button>
-
+			<button class="btn btn-delvetro" >
+				<span class="btn-label"><i class="fa fa-check"></i>
+				</span>Fechar Pedido
+			</button>
+			<label class="result">Preço Final: {{vendaForm.get('PRECO_FINAL').value | currency: 'BRL'}}</label>
 		</div>
 	</div>
 </div>
