@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { AppService } from 'src/app/app.service';
 import { Combo } from 'src/app/models/combo';
@@ -9,10 +9,6 @@ import { VendasService } from '../vendas/vendas.service';
 import { MessageComponent } from 'src/app/dialogs/message/message.component';
 import { OrcamentoComponent } from 'src/app/dialogs/orcamento/orcamento.component';
 import { Venda } from 'src/app/models/venda';
-interface Cliente {
-	id_cliente: number;
-	nome: string;
-}
 class Calculo {
 	qtde: number;
 	altura: number;
@@ -29,6 +25,8 @@ class Calculo {
 	styleUrls: ['./cadastro-venda.component.scss']
 })
 export class CadastroVendaComponent implements OnInit {
+	@ViewChild('imageInput', {static: false}) imageinput: ElementRef; 
+
 	submittedProduto = false;
 	// submittedPagamento = false;
 	submittedExtras = false;
@@ -60,6 +58,7 @@ export class CadastroVendaComponent implements OnInit {
 		PRECO_UNITARIO: ['']
 	});
 	vendaForm: FormGroup = this.fb.group({
+		ID_VENDA: [null],
 		ID_CLIENTE: ['', Validators.required],
 		NM_CLIENTE: ['', Validators.required],
 		PRECO_FINAL: [0],
@@ -74,27 +73,42 @@ export class CadastroVendaComponent implements OnInit {
 		private vendasService: VendasService,
 		public dialogRef: MatDialogRef<CadastroVendaComponent>,
 		private dialog: MatDialog,
-		@Inject(MAT_DIALOG_DATA) public data: Cliente
+		@Inject(MAT_DIALOG_DATA) public data: Venda
 	) {
 		appService
 			.getCombo('produtos_vendas')
 			.subscribe((data: { query: string; json: Array<Combo> }) => {
 				this.comboProdutos = data.json;
 			});
-		appService
-			.getCombo('formas_pagamento')
-			.subscribe((data: { query: string; json: Array<Combo> }) => {
-				this.comboFormaPgto = data.json;
-			});
-		this.vendaForm.controls['ID_CLIENTE'].setValue(data.id_cliente);
-		this.vendaForm.controls['NM_CLIENTE'].setValue(data.nome);
+		// appService
+		// 	.getCombo('formas_pagamento')
+		// 	.subscribe((data: { query: string; json: Array<Combo> }) => {
+		// 		this.comboFormaPgto = data.json;
+		// 	});
+		if(data.ID_VENDA){
+			this.getVenda(data.ID_VENDA);
+		} else {
+			this.vendaForm.controls['ID_CLIENTE'].setValue(data.ID_CLIENTE);
+			this.vendaForm.controls['NM_CLIENTE'].setValue(data.NM_CLIENTE);	
+		}
+		
 	}
 
 	ngOnInit() {
 
 	}
 	onChanges(): void {
-
+	}
+	processFile(event: any) {
+		// const file: File = imageInput.files[0];
+		console.log('file: ', this.imageinput.nativeElement.files[0]);
+		// this.vendasService.onUpload(file, this.vendaForm.get('ID_CLIENTE').value)
+		// 	.subscribe(data => {
+		// 		console.log(data)
+		// 	})		
+	}
+	get getItensArray(): FormArray {
+		return this.vendaForm.get('ITENS') as FormArray;
 	}
 	openServicosExtras(index: number): void {
 		this.openExtra = this.openExtra === index ? -1 : index;
@@ -138,6 +152,33 @@ export class CadastroVendaComponent implements OnInit {
 				this.salvarVenda();
 			}
 		});
+	}
+	
+	getVenda(ID_VENDA: number): void {
+		this.vendasService.getVenda(ID_VENDA)
+			.subscribe((data: {query: string, json: Array<Venda>}) => {
+				if (data.json.length > 0) {
+					this.vendaForm.setValue({
+						ID_VENDA: data.json[0].ID_VENDA,
+						ID_CLIENTE: data.json[0].ID_CLIENTE,
+						NM_CLIENTE: data.json[0].NM_CLIENTE,
+						PRECO_FINAL: data.json[0].PRECO_FINAL,
+						STATUS_VENDA: data.json[0].STATUS_VENDA,
+						ITENS: []
+					})
+					data.json[0].ITENS.forEach((el) => {
+						el.EXTRAS = el.EXTRAS ? el.EXTRAS : [];
+						this.getItensArray.push(this.fb.group(el));	
+					})
+					
+					// setTimeout(()=>{
+					// 	this.vendaForm.get('ITENS').setValue(data.json[0].ITENS);						
+					// },)
+					
+				} else {
+					this.popup('error', 'Erro ao carregar Venda');
+				}
+			})
 	}
 
 	salvarVenda(): void {

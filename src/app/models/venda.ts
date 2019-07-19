@@ -24,7 +24,7 @@ interface ItensVendidos {
 	EXTRAS: Array<ServicosExtras>;
 }
 
-export interface Venda {
+export class Venda {
 	ID_VENDA: number;
 	ID_CLIENTE: number;
 	NM_CLIENTE: string;
