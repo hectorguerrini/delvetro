@@ -1,25 +1,42 @@
-<h1 mat-dialog-title>{{data.NM_CLIENTE}}</h1>
-<div class="orcamento" mat-dialog-content>
-	<h3>Produtos</h3>
-	<ul>
-		<li *ngFor="let item of data.ITENS">
-			<label *ngIf="item.TIPO === 'Chaparia'">{{item.QTDE}} {{item.NM_PRODUTO}} {{item.LARGURA}} x {{item.ALTURA}} {{item.PRECO_FINAL | currency: 'BRL'}}</label>
-			<label *ngIf="item.TIPO !== 'Chaparia'">{{item.QTDE}} {{item.NM_PRODUTO}} {{item.PRECO_FINAL | currency: 'BRL'}}</label>
-			<ul *ngIf="item.TIPO === 'Chaparia'">
-				<li *ngFor="let extra of item.EXTRAS">
-					{{extra.QUANTIDADE}} {{extra.DESCRICAO}} {{extra.PRECO_FINAL | currency: 'BRL'}}
-				</li>
-			</ul>
-		</li>
-	</ul>
-	<h3>Formas de Pagamento</h3>
-	<ul>
-		<li>Dinheiro: {{data.PRECO_FINAL | currency: 'BRL'}}</li>
-		<li>Cartão Debito: {{data.PRECO_FINAL*1.1 | currency: 'BRL'}}</li>
-		<li>Cartão Credito: {{data.PRECO_FINAL*1.15 | currency: 'BRL'}}</li>
-	</ul>
+<div id="orcamento" class="main">
+	<div class="title">
+		<img src="assets/logo2.png" alt="logo" height="48px">
+		<h1 mat-dialog-title>{{data.NM_CLIENTE}}</h1>
+	</div>
+	<div class="orcamento" mat-dialog-content>
+		<h3>Produtos</h3>
+		<ul>
+			<li *ngFor="let item of data.ITENS">
+				{{item.QTDE}} {{item.NM_PRODUTO}}
+				{{item.TIPO === 'Chaparia' ? item.LARGURA + ' x ' + item.ALTURA  : ''}}
+				{{item.PRECO_FINAL | currency: 'BRL'}}
+				<ul *ngIf="item.TIPO === 'Chaparia'">
+					<li *ngFor="let extra of item.EXTRAS">
+						{{extra.QUANTIDADE}} {{extra.DESCRICAO}} {{extra.PRECO_FINAL | currency: 'BRL'}}
+					</li>
+				</ul>
+			</li>
+		</ul>
+		<h3>Formas de Pagamento</h3>
+		<ul>
+			<li>Dinheiro: {{data.PRECO_FINAL | currency: 'BRL'}}</li>
+			<li>Cartão Debito: {{data.PRECO_FINAL*1.1 | currency: 'BRL'}}</li>
+			<li>Cartão Credito: {{data.PRECO_FINAL*1.15 | currency: 'BRL'}}</li>
+		</ul>
+	</div>
+	<label>{{time}}</label>
 </div>
 <div mat-dialog-actions>
-	<button mat-button class="btn btn-delvetro" (click)="onOkClick()">Salvar</button>
-	<button mat-button class="btn btn-delvetro">Baixar Orçamento</button>
+	<button class="btn btn-delvetro" (click)="onOkClick()">
+		<span class="btn-label">
+			<i class="fa fa-floppy-o" aria-hidden="true"></i>
+		</span>
+		Salvar
+	</button>
+	<button class="btn btn-delvetro" (click)="downloadOrcamento()">
+		<span class="btn-label">
+			<i class="fa fa-download"></i>
+		</span>
+		Baixar Orçamento
+	</button>
 </div>

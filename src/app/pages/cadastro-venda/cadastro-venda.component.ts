@@ -9,6 +9,7 @@ import { VendasService } from '../vendas/vendas.service';
 import { MessageComponent } from 'src/app/dialogs/message/message.component';
 import { OrcamentoComponent } from 'src/app/dialogs/orcamento/orcamento.component';
 import { Venda } from 'src/app/models/venda';
+
 interface Cliente {
 	id_cliente: number;
 	nome: string;
@@ -41,7 +42,7 @@ export class CadastroVendaComponent implements OnInit {
 		NM_PRODUTO: ['', Validators.required],
 		QTDE: [null, Validators.required],
 		LARGURA: [''],
-		ALTURA: [''],		
+		ALTURA: [''],
 		PRECO_FINAL: [''],
 		PRECO_UNITARIO: ['']
 	});
@@ -66,8 +67,8 @@ export class CadastroVendaComponent implements OnInit {
 		STATUS_VENDA: ['Nova Venda'],
 		ITENS: this.fb.array([])
 	});
-	comboProdutos: Array<Combo>;
-	comboFormaPgto: Array<Combo>;
+	comboProdutos: Array<Combo> = [];
+	comboFormaPgto: Array<Combo> = [];
 	constructor(
 		private fb: FormBuilder,
 		private appService: AppService,
@@ -114,7 +115,7 @@ export class CadastroVendaComponent implements OnInit {
 		});
 	}
 
-	calculoPrecoFinal(valor: number, soma: boolean): void {			
+	calculoPrecoFinal(valor: number, soma: boolean): void {
 		const preco = soma ? this.vendaForm.get('PRECO_FINAL').value + valor : this.vendaForm.get('PRECO_FINAL').value - valor;
 		this.vendaForm.get('PRECO_FINAL').setValue(preco);
 		this.vendaForm
@@ -144,13 +145,13 @@ export class CadastroVendaComponent implements OnInit {
 
 		let venda = <Venda>{};
 
-		venda = Object.assign(venda, this.vendaForm.value);		
+		venda = Object.assign(venda, this.vendaForm.value);
 		venda.QTD_PRODUTOS = venda.ITENS.length;
 		venda.PRODUTOS = [];
-		venda.ITENS.forEach(el => {			
+		venda.ITENS.forEach(el => {
 			if (el.TIPO === 'Chaparia') {
-				const qtde = el.QTDE*1;
-				for(let i = 0; i < qtde; i++) {
+				const qtde = el.QTDE * 1;
+				for (let i = 0; i < qtde; i++) {
 					const obj = Object.assign({}, el);
 					obj.PRECO_FINAL = el.PRECO_FINAL / qtde;
 					obj.QTDE = 1;
@@ -159,7 +160,7 @@ export class CadastroVendaComponent implements OnInit {
 			} else {
 				venda.PRODUTOS.push(el);
 			}
-		})
+		});
 		console.log('Venda ', venda);
 
 		this.vendasService.salvarVenda(venda)
@@ -189,7 +190,7 @@ export class CadastroVendaComponent implements OnInit {
 		this.onChangesCalc();
 	}
 	onChangesCalc(): void {
-		
+
 		if ( this.itensForm.get('TIPO').value === 'Chaparia' ) {
 			this.itensForm.get('QTDE')
 				.valueChanges
@@ -199,7 +200,7 @@ export class CadastroVendaComponent implements OnInit {
 					this.itensForm
 						.get('PRECO_FINAL')
 						.updateValueAndValidity();
-			})
+			});
 			this.itensForm.get('ALTURA')
 				.valueChanges
 				.subscribe(el => {
@@ -208,7 +209,7 @@ export class CadastroVendaComponent implements OnInit {
 					this.itensForm
 						.get('PRECO_FINAL')
 						.updateValueAndValidity();
-			})
+			});
 			this.itensForm.get('LARGURA')
 				.valueChanges
 				.subscribe(el => {
@@ -217,7 +218,7 @@ export class CadastroVendaComponent implements OnInit {
 					this.itensForm
 						.get('PRECO_FINAL')
 						.updateValueAndValidity();
-			})
+			});
 		} else {
 			this.itensForm.get('QTDE')
 				.valueChanges
@@ -227,27 +228,27 @@ export class CadastroVendaComponent implements OnInit {
 					this.itensForm
 						.get('PRECO_FINAL')
 						.updateValueAndValidity();
-			})
+			});
 		}
-		
+
 	}
 	calculoCustoVenda(): Calculo {
-		let calculo = new Calculo();
+		const calculo = new Calculo();
 		calculo.valor = 0;
 		if (this.itensForm.get('UNIDADE').value === 'Metro Quadrado') {
-			calculo.altura = this.itensForm.get('ALTURA').value*1;
-			calculo.largura = this.itensForm.get('LARGURA').value*1;
-			calculo.qtde = this.itensForm.get('QTDE').value*1;
-			
-			calculo.area = (calculo.largura * calculo.altura)/1000000;
+			calculo.altura = this.itensForm.get('ALTURA').value * 1;
+			calculo.largura = this.itensForm.get('LARGURA').value * 1;
+			calculo.qtde = this.itensForm.get('QTDE').value * 1;
 
-			calculo.altura_considerada = Math.ceil(calculo.altura / 5)*5;
-			calculo.largura_considerada = Math.ceil(calculo.largura / 5)*5;
+			calculo.area = (calculo.largura * calculo.altura) / 1000000;
 
-			calculo.area_considerada = Math.max(((calculo.altura_considerada * calculo.largura_considerada)/1000000),0.25);
+			calculo.altura_considerada = Math.ceil(calculo.altura / 5) * 5;
+			calculo.largura_considerada = Math.ceil(calculo.largura / 5) * 5;
+
+			calculo.area_considerada = Math.max(((calculo.altura_considerada * calculo.largura_considerada) / 1000000), 0.25);
 
 			calculo.valor = calculo.qtde * (calculo.area_considerada * this.itensForm.get('PRECO_UNITARIO').value);
-			
+
 			console.log(`
 				altura: ${calculo.altura}
 				largura: ${calculo.largura}
@@ -258,9 +259,9 @@ export class CadastroVendaComponent implements OnInit {
 				area considerada: ${calculo.area_considerada}
 
 				valor: ${calculo.valor}
-			`)
+			`);
 		}
-		
+
 
 		return calculo;
 	}
@@ -316,15 +317,15 @@ export class CadastroVendaComponent implements OnInit {
 
 		composicao.push(itens);
 		this.submittedProduto = false;
-		this.itensForm.reset();		
+		this.itensForm.reset();
 		this.calculoPrecoFinal(obj.PRECO_FINAL, true);
-		
+
 	}
-	rmProduto(i: number): void {		
+	rmProduto(i: number): void {
 		const composicao = this.vendaForm.get('ITENS') as FormArray;
 		this.calculoPrecoFinal(composicao.controls[i].get('PRECO_FINAL').value, false);
-		composicao.removeAt(i);		
-	}	
+		composicao.removeAt(i);
+	}
 	selectServicosExtras(item: string): void {
 		const obj = this.comboProdutos.find(el => el.LABEL === item);
 		this.extraForm.setValue({
@@ -344,7 +345,7 @@ export class CadastroVendaComponent implements OnInit {
 				this.extraForm
 					.get('PRECO_FINAL')
 					.updateValueAndValidity();
-			})
+			});
 	}
 	addServicosExtras(id: number): void {
 		this.submittedExtras = true;

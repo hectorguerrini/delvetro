@@ -37,7 +37,7 @@ body{
 	color:#fff;
 	padding-bottom: 0;
 	padding-top: 0;
-	
+
 	&:hover, &:focus{
 		color:#fff;
 		background-color: var(--delvetro-primary-dark);
@@ -48,12 +48,15 @@ body{
 		left: -12px;
 		display: inline-block;
 		padding: 6px 12px;
-		
+
 	}
 	&.success{
 		background-color: var(--delvetro-success);
 		border-color: var(--delvetro-success);
 	}
+}
+.btn+.btn{
+	margin-left: 5px;
 }
 .error-label{
 	border-color: red;
@@ -64,5 +67,5 @@ body{
 	.styleCadastro{
 		margin-top: 0;
 	}
-	
+
 }

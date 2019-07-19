@@ -1,5 +1,18 @@
+.main {
+	padding: 14px;
+}
 .orcamento {
 	ul {
 		padding-inline-start: 40px;
+	}
+
+}
+.title {
+	img {
+		display: inline-block;
+		margin-right: 20px;
+	}
+	h1 {
+		display: inline-block;
 	}
 }

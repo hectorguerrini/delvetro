@@ -107,7 +107,7 @@ export class VendasComponent implements OnInit {
 									term.toLowerCase()
 								) > -1
 						)
-						.slice(0, 5)
+						.slice(0, 10)
 						.map(s => s.LABEL)
 			)
 		)
