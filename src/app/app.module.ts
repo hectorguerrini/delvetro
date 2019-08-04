@@ -31,6 +31,7 @@ import { CadastroProdutosComponent } from './pages/cadastro-produtos/cadastro-pr
 import { VendasComponent } from './pages/vendas/vendas.component';
 import { CadastroVendaComponent } from './pages/cadastro-venda/cadastro-venda.component';
 import { OrcamentoComponent } from './dialogs/orcamento/orcamento.component';
+import { CadastroBeneficiadosComponent } from './pages/cadastro-beneficiados/cadastro-beneficiados.component';
 
 
 
@@ -49,7 +50,8 @@ registerLocaleData(localePt);
 		CadastroProdutosComponent,
 		VendasComponent,
 		CadastroVendaComponent,
-		OrcamentoComponent
+		OrcamentoComponent,
+		CadastroBeneficiadosComponent
 	],
 	imports: [
 		AppRoutingModule,

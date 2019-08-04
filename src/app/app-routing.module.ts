@@ -8,6 +8,7 @@ import { CadastroEstoqueComponent } from './pages/cadastro-estoque/cadastro-esto
 import { CadastroServicosComponent } from './pages/cadastro-servicos/cadastro-servicos.component';
 import { CadastroProdutosComponent } from './pages/cadastro-produtos/cadastro-produtos.component';
 import { VendasComponent } from './pages/vendas/vendas.component';
+import { CadastroBeneficiadosComponent } from './pages/cadastro-beneficiados/cadastro-beneficiados.component';
 const routes: Routes = [
 	{ path: 'dashboard', component: DashboardComponent },
 	{ path: 'cliente', component: ClienteComponent},
@@ -16,6 +17,7 @@ const routes: Routes = [
 	{ path: 'cadastro/estoque', component: CadastroEstoqueComponent},
 	{ path: 'cadastro/servicos', component: CadastroServicosComponent},
 	{ path: 'cadastro/produtos', component: CadastroProdutosComponent},
+	{ path: 'cadastro/beneficiados', component: CadastroBeneficiadosComponent},
 	{ path: 'vendas', component: VendasComponent},
 	{ path: '**', redirectTo: '/dashboard', pathMatch: 'full' }
 ];

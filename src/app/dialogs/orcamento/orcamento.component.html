@@ -8,7 +8,7 @@
 		<ul>
 			<li *ngFor="let item of data.ITENS">
 				{{item.QTDE}} {{item.NM_PRODUTO}}
-				{{item.TIPO === 'Chaparia' ? item.LARGURA + ' x ' + item.ALTURA  : ''}}
+				{{item.TIPO === 'Chaparia' ? item.LARGURA + ' x ' + item.ALTURA + ' | ' + item.AREA_CONSIDERADA + ' m²'   : ''}}
 				{{item.PRECO_FINAL | currency: 'BRL'}}
 				<ul *ngIf="item.TIPO === 'Chaparia'">
 					<li *ngFor="let extra of item.EXTRAS">
@@ -20,8 +20,8 @@
 		<h3>Formas de Pagamento</h3>
 		<ul>
 			<li>Dinheiro: {{data.PRECO_FINAL | currency: 'BRL'}}</li>
-			<li>Cartão Debito: {{data.PRECO_FINAL*1.1 | currency: 'BRL'}}</li>
-			<li>Cartão Credito: {{data.PRECO_FINAL*1.15 | currency: 'BRL'}}</li>
+			<li>Cartão Debito: {{data.PRECO_FINAL*1.05 | currency: 'BRL'}}</li>
+			<li>Cartão Credito: {{data.PRECO_FINAL*1.10 | currency: 'BRL'}}</li>
 		</ul>
 	</div>
 	<label>{{time}}</label>

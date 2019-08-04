@@ -11,7 +11,7 @@ export class VendasService {
 	constructor(public http: HttpClient) { }
 
 	getVendasCliente(id_cliente: number) {
-		const url = `${this.url}/cadastro/vendas/${id_cliente}`;
+		const url = `${this.url}/cadastro/lista_vendas/${id_cliente}`;
 
 		return this.http.get(url, {
 			headers: new HttpHeaders().set('Content-Type', 'application/json')
@@ -24,5 +24,18 @@ export class VendasService {
 			headers: new HttpHeaders().set('Content-Type', 'application/json')
 		});
 
+	}
+	getVenda(id_venda: number) {
+		const url = `${this.url}/cadastro/venda/${id_venda}`;
+
+		return this.http.get(url, {
+			headers: new HttpHeaders().set('Content-Type', 'application/json')
+		});
+	}
+	onUpload(file: File, id_cliente: number) {
+		const url = `${this.url}/upload/${id_cliente}`;
+		const uploadData = new FormData();
+		uploadData.append('file', file, file.name);
+		return this.http.post(url, uploadData)		  
 	}
 }

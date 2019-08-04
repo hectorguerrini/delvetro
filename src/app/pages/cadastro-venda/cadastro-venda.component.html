@@ -4,7 +4,7 @@
 <div class="cadastroVendas styleCadastro">
 	<div>
 		<div class="col-md-12 title">
-			<h2>{{data.nome}}</h2>
+			<h2>{{vendaForm.get('NM_CLIENTE').value}}</h2>
 		</div>
 
 		<form class="form col-md-12" >
@@ -17,17 +17,17 @@
 				<table class="table">
 					<colgroup>
 						<col width="30%">
-						<col width="15%">
-						<col width="15%">
-						<col width="15%">
+						<col width="10%">
+						<col width="10%">
 						<col width="10%">
 						<col width="15%">
+						<col width="20%">
 
 					</colgroup>
 					<thead>
 						<tr>
 							<th>Descrição</th>
-							<th>Quantidade</th>
+							<th class="text-center">Qtde</th>
 							<th>Largura</th>
 							<th>Altura</th>
 							<th>Preço</th>
@@ -45,7 +45,7 @@
 										</li>
 									</ul>
 								</td>
-								<td>{{item.QTDE}}</td>
+								<td class="text-center">{{item.QTDE}}</td>
 								<td>{{item.LARGURA}}</td>
 								<td>{{item.ALTURA}}</td>
 								<td>
@@ -61,13 +61,16 @@
 										<i class="fa fa-minus"></i>
 									</button>
 									<button class="btn btn-primary" *ngIf="item.TIPO === 'Chaparia'" type="button" (click)="openServicosExtras(i)" ngbPopover="Serviços Extra" placement="top" triggers="mouseenter:mouseleave">
-										{{item.EXTRAS.length}}
+										{{item.EXTRAS ? item.EXTRAS.length : 0}}
 										<span class="btn-label"><i class="fa" [ngClass]="{'fa-plus': openExtra !== i, 'fa-minus': openExtra === i}"></i></span>
 									</button>
-									<button class="btn btn-primary" *ngIf="item.TIPO === 'Chaparia'">
+									<label class="btn btn-primary input" *ngIf="item.TIPO === 'Chaparia'" (click)="imageInput.click()">
 										0
 										<span class="btn-label"><i class="fa fa-paperclip"></i></span>
-									</button>
+										<input #imageInput
+										type="file"
+										(change)="processFile($event)">
+									</label>
 								</td>
 							</tr>
 							<tr *ngFor="let extra of item.EXTRAS; let j = index" [hidden]="openExtra !== i">
@@ -199,7 +202,7 @@
 				<span class="btn-label"><i class="fa fa-check"></i>
 				</span>Salvar Orçamento
 			</button>
-			<button class="btn btn-delvetro" >
+			<button class="btn btn-delvetro" (click)="salvarVenda('Pedido Fechado')">
 				<span class="btn-label"><i class="fa fa-check"></i>
 				</span>Fechar Pedido
 			</button>

@@ -5,14 +5,11 @@ import { Observable } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
 import { AppService } from 'src/app/app.service';
 import { Combo } from 'src/app/models/combo';
-import { FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { VendasService } from './vendas.service';
 import { VendasLista } from 'src/app/models/vendasLista';
 import { CadastroVendaComponent } from '../cadastro-venda/cadastro-venda.component';
-interface Cliente {
-	id_cliente: number;
-	nome: string;
-}
+import { Venda } from 'src/app/models/venda';
+
 @Component({
 	selector: 'app-vendas',
 	templateUrl: './vendas.component.html',
@@ -22,24 +19,39 @@ export class VendasComponent implements OnInit {
 
 	comboClientes: Array<Combo> = [];
 	vendasLista: Array<VendasLista> = [];
-	cliente: Cliente = {
-		id_cliente: null,
-		nome: ''
-	};
+	venda = new Venda();
 	constructor(
-		private fb: FormBuilder,
 		private appService: AppService,
 		private vendasService: VendasService,
 		private dialog: MatDialog
-	) {
-		appService
+	) { }
+
+	ngOnInit() {
+		
+		this.appService
 			.getCombo('clientes')
 			.subscribe((data: { query: string; json: Array<Combo> }) => {
 				this.comboClientes = data.json;
 			});
 	}
+	editarVenda(ID_VENDA: number):  void {
+		this.venda.ID_VENDA = ID_VENDA;
+		const dialogConfig = new MatDialogConfig();
 
-	ngOnInit() {
+		dialogConfig.disableClose = false;
+		dialogConfig.hasBackdrop = true;
+		dialogConfig.autoFocus = true;
+		dialogConfig.width = '80vw';
+		dialogConfig.panelClass = 'model-cadastro';
+		dialogConfig.data = this.venda;
+		const dialogRef = this.dialog.open(CadastroVendaComponent, dialogConfig);
+
+		dialogRef.afterClosed().subscribe(result => {
+			if (result) {
+				this.getVendaLista();
+			}
+		});
+
 	}
 	novaVenda(): void {
 		const dialogConfig = new MatDialogConfig();
@@ -49,29 +61,18 @@ export class VendasComponent implements OnInit {
 		dialogConfig.autoFocus = true;
 		dialogConfig.width = '80vw';
 		dialogConfig.panelClass = 'model-cadastro';
-		dialogConfig.data = this.cliente;
+		dialogConfig.data = this.venda;
 		const dialogRef = this.dialog.open(CadastroVendaComponent, dialogConfig);
 
 		dialogRef.afterClosed().subscribe(result => {
 			if (result) {
-				this.vendasService
-					.getVendasCliente(this.cliente.id_cliente)
-					.subscribe((data: { query: string; json: Array<VendasLista> }) => {
-						if (data.json.length > 0) {
-							this.vendasLista = data.json;
-						} else {
-							this.vendasLista = [];
-						}
-					});
+				this.getVendaLista();
 			}
 		});
 	}
-	selectCliente(item: string): void {
-		const obj = this.comboClientes.find(el => el.LABEL === item);
-		this.cliente.id_cliente = obj.VALOR;
-		this.cliente.nome = obj.LABEL;
+	getVendaLista(): void {
 		this.vendasService
-			.getVendasCliente(obj.VALOR)
+			.getVendasCliente(this.venda.ID_CLIENTE)
 			.subscribe((data: { query: string; json: Array<VendasLista> }) => {
 				if (data.json.length > 0) {
 					this.vendasLista = data.json;
@@ -79,6 +80,12 @@ export class VendasComponent implements OnInit {
 					this.vendasLista = [];
 				}
 			});
+	}
+	selectCliente(item: string): void {
+		const obj = this.comboClientes.find(el => el.LABEL === item);
+		this.venda.ID_CLIENTE = obj.VALOR;
+		this.venda.NM_CLIENTE = obj.LABEL;
+		this.getVendaLista();
 	}
 	novoCliente(): void {
 		const dialogConfig = new MatDialogConfig();
@@ -92,6 +99,7 @@ export class VendasComponent implements OnInit {
 		const dialogRef = this.dialog.open(CadastroClienteComponent, dialogConfig);
 
 		dialogRef.afterClosed().subscribe(result => {
+			this.ngOnInit();
 		});
 	}
 	search = (text$: Observable<string>) =>

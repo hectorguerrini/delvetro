@@ -3,7 +3,8 @@ interface ServicosExtras {
 	ID_ITEM_VENDIDO: number;
 	DESCRICAO: string;
 	QUANTIDADE: number;
-	PRECO_FINAL: string;
+	PRECO_FINAL: number;
+	PRECO_UNITARIO: number;
 }
 
 // interface Pagamento {
@@ -20,11 +21,16 @@ interface ItensVendidos {
 	QTDE: number;
 	LARGURA: number;
 	ALTURA: number;
+	AREA: number;
+	LARGURA_CONSIDERADA: number;
+	ALTURA_CONSIDERADA: number;
+	AREA_CONSIDERADA: number;
 	PRECO_FINAL: number;
+	PRECO_UNITARIO: number;
 	EXTRAS: Array<ServicosExtras>;
 }
 
-export interface Venda {
+export class Venda {
 	ID_VENDA: number;
 	ID_CLIENTE: number;
 	NM_CLIENTE: string;

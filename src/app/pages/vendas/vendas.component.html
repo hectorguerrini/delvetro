@@ -8,12 +8,12 @@
 				[resultTemplate]="rt" [inputFormatter]="formatter" (selectItem)="selectCliente($event.item)"
 				placeholder="Selecione um cliente">
 		</div>
-		<div class="col-md-3 form-group" [hidden]="cliente.id_cliente">
+		<div class="col-md-3 form-group" [hidden]="venda.ID_CLIENTE">
 			<button class="btn btn-delvetro form-control" (click)="novoCliente()">
 				<span class="btn-label"><i class="fa fa-user-plus"></i>
 				</span>Cadastrar Novo Cliente</button>
 		</div>
-		<div class="col-md-3 form-group" *ngIf="cliente.id_cliente">
+		<div class="col-md-3 form-group" *ngIf="venda.ID_CLIENTE">
 			<button class="btn btn-delvetro success form-control" (click)="novaVenda()">
 				<span class="btn-label"><i class="fa fa-cart-plus"></i>
 				</span>Nova Venda/Orçamento</button>
@@ -23,14 +23,16 @@
 		<div class="col-md-12">
 			<table class="table">
 				<colgroup>
+					<col width="10%">
 					<col width="20%">
-					<col width="25%">
 					<col width="20%">
 					<col width="20%">
-					<col width="15%">
+					<col width="20%">
+					<col width="10%">
 				</colgroup>
 				<thead>
 					<tr>
+						<th>N° Pedido</th>
 						<th>Data Venda</th>
 						<th>Funcionário</th>
 						<th>Valor</th>
@@ -40,15 +42,25 @@
 				</thead>
 				<tbody>
 					<tr *ngFor="let item of vendasLista">
+						<td>#{{item.ID_VENDA}}</td>
 						<td>{{item.DT_VENDA | date:'dd/MM/yyyy'}}</td>
 						<td>{{item.NM_FUNCIONARIO}}</td>
 						<td>{{item.VL_TOTAL | currency: 'BRL'}}</td>
 						<td>{{item.STATUS_VENDA}}</td>
-						<td><i class="fa fa-pencil"></i></td>
+						<td>
+							<button class="btn btn-delvetro" ngbPopover="Editar Orçamento" placement="top" triggers="mouseenter:mouseleave"
+								(click)="editarVenda(item.ID_VENDA)" *ngIf="item.STATUS_VENDA === 'Orçamento'">
+								<i class="fa fa-pencil"></i>
+							</button>
+							<button class="btn btn-delvetro" ngbPopover="Receber Pagamento" placement="top" triggers="mouseenter:mouseleave"
+								 *ngIf="item.STATUS_VENDA !== 'Orçamento'">
+								<i class="fa fa-dollar"></i>
+							</button>
+						</td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
 	</div>
-	
+
 </div>
