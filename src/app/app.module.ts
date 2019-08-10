@@ -12,6 +12,11 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatMomentDateModule, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+
 import { ChartModule, HIGHCHARTS_MODULES } from 'angular-highcharts';
 import * as more from 'highcharts/highcharts-more.src';
 import * as exporting from 'highcharts/modules/exporting.src';
@@ -32,6 +37,8 @@ import { VendasComponent } from './pages/vendas/vendas.component';
 import { CadastroVendaComponent } from './pages/cadastro-venda/cadastro-venda.component';
 import { OrcamentoComponent } from './dialogs/orcamento/orcamento.component';
 import { CadastroBeneficiadosComponent } from './pages/cadastro-beneficiados/cadastro-beneficiados.component';
+import { PagamentosComponent } from './pages/pagamentos/pagamentos.component';
+
 
 
 
@@ -51,7 +58,8 @@ registerLocaleData(localePt);
 		VendasComponent,
 		CadastroVendaComponent,
 		OrcamentoComponent,
-		CadastroBeneficiadosComponent
+		CadastroBeneficiadosComponent,
+		PagamentosComponent
 	],
 	imports: [
 		AppRoutingModule,
@@ -66,19 +74,25 @@ registerLocaleData(localePt);
 		MatButtonModule,
 		ReactiveFormsModule,
 		MatDialogModule,
-		MatDividerModule
+		MatDividerModule,
+		MatDatepickerModule,
+		MatMomentDateModule,
+		MatFormFieldModule,
+		MatInputModule
 
 	],
 	providers: [
 		{ provide: LOCALE_ID, useValue: 'pt' },
-		{ provide: HIGHCHARTS_MODULES, useFactory: () => [more, exporting] }
+		{ provide: HIGHCHARTS_MODULES, useFactory: () => [more, exporting] },
+		{ provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } }
 	],
 	bootstrap: [AppComponent],
 	entryComponents: [
 		MessageComponent,
 		CadastroClienteComponent,
 		CadastroVendaComponent,
-		OrcamentoComponent
+		OrcamentoComponent,
+		PagamentosComponent
 	]
 
 })

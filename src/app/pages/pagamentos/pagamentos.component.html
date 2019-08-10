@@ -1,0 +1,86 @@
+<div class="pagamentos styleCadastro">
+	<div>
+		<div class="col-md-12">
+			<h2>Nº Pedido: {{data.ID_VENDA}} - {{data.NM_CLIENTE}}</h2>
+		</div>
+
+		<form class="col-md-12" [formGroup]="pgtoForm">
+			<div class="row">
+				<div class="col-md-3 form-group">
+					<label>Forma de Pagamento</label>
+					<select class="form-control" formControlName="ID_FORMA_PGTO">
+						<option *ngFor="let item of comboFormaPgto" [ngValue]="item.VALOR">{{item.LABEL}}</option>
+					</select>
+				</div>
+				<div class="col-md-3 form-group">
+					<label>Data de Pagamento</label>
+					<div class="input-group">
+						<input [matDatepicker]="picker" placeholder="mm/dd/yyyy" formControlName="DT_PGTO"
+						(dateChange)="setDate($event)" class="form-control">
+						<mat-datepicker-toggle class="input-group-btn" matSuffix [for]="picker"></mat-datepicker-toggle>
+					</div>
+					<mat-datepicker #picker></mat-datepicker>
+				</div>
+				<div class="col-md-2 form-group">
+					<label>Valor Total</label>
+					<input type="text" class="form-control" formControlName="VL_PGTO" (focus)="vlTotalChange()">
+				</div>
+				<div class="col-md-2 form-group">
+					<label>Valor + Taxa</label>
+					<input type="text" class="form-control" formControlName="VL_PGTO_CONSID" (focus)="vlConsidChange()">
+				</div>
+				<div class="col-md-2 form-group">
+					<label>Desconto</label>
+					<input type="number" class="form-control" formControlName="DESCONTO">
+				</div>
+				<div class="col-md-12">
+					<button type="button" class="btn btn-delvetro col-md-3" (click)="addPagamento()">
+						<span class="btn-label">
+							<i class="fa fa-plus"></i>
+						</span>
+						Adicionar Pagamento
+					</button>
+				</div>				
+			</div>
+		</form>		
+		<div class="col-md-12 tabelaPgto">		
+			<div class="col-md-12">
+				<h4>Pagamento</h4>
+				<mat-divider></mat-divider>
+			</div>
+			<table class="table">
+				<colgroup>
+					<col width="30%">
+					<col width="20%">
+					<col width="20%">
+					<col width="20%">
+					<col width="10%">					
+				</colgroup>
+				<thead>
+					<tr>
+						<th>Forma de Pagamento</th>
+						<th>Data</th>
+						<th>Valor Total</th>
+						<th>Valor Total + Taxa</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngFor="let item of pagamentoForm.get('PGTO').value; let i = index">
+						<td>{{item.NM_FORMA_PGTO}}</td>
+						<td>{{item.DT_PGTO | date:'dd/MM/yyyy'}}</td>
+						<td>R$ {{item.VL_PGTO}}</td>
+						<td>R$ {{item.VL_PGTO_CONSID}}</td>
+						<td>
+							<button class="btn btn-danger" ngbPopover="Remover Pagamento" placement="top"
+								triggers="mouseenter:mouseleave" (click)="rmPagamento(i)">
+								<i class="fa fa-minus"></i>
+							</button>
+						</td>
+					</tr>				
+				</tbody>
+			</table>
+		</div>
+	</div>
+	
+</div>

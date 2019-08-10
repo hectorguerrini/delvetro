@@ -57,20 +57,25 @@
 									</ul>
 								</td>
 								<td>
-									<button class="btn btn-danger" (click)="rmProduto(i)" ngbPopover="Remover" placement="top" triggers="mouseenter:mouseleave">
+									<button [hidden]="vendaForm.get('STATUS_VENDA').value === 'Pedido Fechado'" class="btn btn-danger"
+										(click)="rmProduto(i)" ngbPopover="Remover" placement="top" triggers="mouseenter:mouseleave">
 										<i class="fa fa-minus"></i>
 									</button>
-									<button class="btn btn-primary" *ngIf="item.TIPO === 'Chaparia'" type="button" (click)="openServicosExtras(i)" ngbPopover="Serviços Extra" placement="top" triggers="mouseenter:mouseleave">
+									<button [hidden]="vendaForm.get('STATUS_VENDA').value === 'Pedido Fechado' || item.TIPO !== 'Chaparia'"
+										class="btn btn-primary" type="button" (click)="openServicosExtras(i)" ngbPopover="Serviços Extra" placement="top"
+										triggers="mouseenter:mouseleave">
 										{{item.EXTRAS ? item.EXTRAS.length : 0}}
-										<span class="btn-label"><i class="fa" [ngClass]="{'fa-plus': openExtra !== i, 'fa-minus': openExtra === i}"></i></span>
+										<span class="btn-label">
+											<i class="fa" [ngClass]="{'fa-plus': openExtra !== i, 'fa-minus': openExtra === i}"></i>
+										</span>
 									</button>
-									<label class="btn btn-primary input" *ngIf="item.TIPO === 'Chaparia'" (click)="imageInput.click()">
-										0
-										<span class="btn-label"><i class="fa fa-paperclip"></i></span>
-										<input #imageInput
-										type="file"
-										(change)="processFile($event)">
-									</label>
+									<button [hidden]="vendaForm.get('STATUS_VENDA').value === 'Pedido Fechado' || item.TIPO !== 'Chaparia'"
+										class="btn btn-primary input" (click)="imageInput.click()">
+										<span class="btn-label">
+											<i class="fa fa-paperclip"></i>
+										</span>
+										<input #imageInput type="file" (change)="processFile($event)">
+									</button>
 								</td>
 							</tr>
 							<tr *ngFor="let extra of item.EXTRAS; let j = index" [hidden]="openExtra !== i">
@@ -110,7 +115,8 @@
 								</td>
 							</tr>
 						</ng-template>
-						<tr [formGroup]="itensForm" *ngIf="openExtra === -1 || vendaForm.get('PRECO_FINAL').value === 0">
+						<tr [formGroup]="itensForm"
+							*ngIf="(openExtra === -1 || vendaForm.get('PRECO_FINAL').value === 0) && vendaForm.get('STATUS_VENDA').value !== 'Pedido Fechado'">
 							<td><input type="text" class="form-control" formControlName="NM_PRODUTO" [ngbTypeahead]="searchProdutos"
 									[resultTemplate]="rt" [inputFormatter]="formatter" (selectItem)="selectProduto($event.item)"
 									[ngClass]="{'error-label': submittedProduto && itensForm.controls['NM_PRODUTO'].errors}">
@@ -135,76 +141,21 @@
 					</tbody>
 				</table>
 			</div>
-		</form>
-		<!---
-		<form class="col-md-12">
-			<div class="row">
-				<div class="col-md-12">
-					<h4>Pagamento</h4>
-					<mat-divider></mat-divider>
-				</div>
-				<table class="table">
-					<colgroup>
-						<col width="30%">
-						<col width="20%">
-						<col width="25%">
-						<col width="25%">
-					</colgroup>
-					<thead>
-						<tr>
-							<th>Forma de Pagamento</th>
-							<th>Data</th>
-							<th>Valor</th>
-							<th></th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr *ngFor="let item of vendaForm.get('PGTO').value; let i = index">
-							<td>{{item.NM_FORMA_PGT}}</td>
-							<td>{{item.DT_PGTO | date:'dd/MM/yyyy'}}</td>
-							<td>R$ {{item.VL_PGTO}}</td>
-							<td>
-								<button class="btn btn-danger" (click)="rmPagamento(i)"
-									ngbPopover="Remover Pagamento" placement="top" triggers="mouseenter:mouseleave">
-									<i class="fa fa-minus"></i>
-								</button>
-							</td>
-						</tr>
-						<tr [formGroup]="pagamentoForm">
-							<td>
-								<select class="form-control" formControlName="ID_FORMA_PGT"
-									[ngClass]="{'error-label': submittedPagamento && pagamentoForm.controls['ID_FORMA_PGT'].errors}">
-									<option *ngFor="let item of comboFormaPgto" [ngValue]="item.VALOR">{{item.LABEL}}</option>
-								</select>
-							</td>
-							<td>
-								<input type="text" class="form-control" formControlName="DT_PGTO"
-									[ngClass]="{'error-label': submittedPagamento && pagamentoForm.controls['DT_PGTO'].errors}">
-							</td>
-							<td>
-								<input type="text" class="form-control" formControlName="VL_PGTO"
-									[ngClass]="{'error-label': submittedPagamento && pagamentoForm.controls['VL_PGTO'].errors}">
-							</td>
-							<td>
-								<button class="btn btn-success" (click)="addPagamento()"
-									ngbPopover="Adicionar Pagamento" placement="top" triggers="mouseenter:mouseleave">
-									<i class="fa fa-plus"></i>
-								</button>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</form>
-		-->
-		<div class="col-md-12">
-			<button class="btn btn-delvetro" (click)="orcamento()">
-				<span class="btn-label"><i class="fa fa-check"></i>
-				</span>Salvar Orçamento
+		</form>		
+		<div class="col-md-12" style="height: 38px;">
+			<button [hidden]="vendaForm.get('STATUS_VENDA').value === 'Pedido Fechado'" class="btn btn-delvetro"
+				(click)="orcamento()">
+				<span class="btn-label">
+					<i class="fa fa-check"></i>
+				</span>
+				Salvar Orçamento
 			</button>
-			<button class="btn btn-delvetro" (click)="salvarVenda('Pedido Fechado')">
-				<span class="btn-label"><i class="fa fa-check"></i>
-				</span>Fechar Pedido
+			<button [hidden]="vendaForm.get('STATUS_VENDA').value === 'Pedido Fechado'" class="btn btn-delvetro"
+				(click)="salvarVenda('Pedido Fechado')">
+				<span class="btn-label">
+					<i class="fa fa-check"></i>
+				</span>
+				Fechar Pedido
 			</button>
 			<label class="result">Preço Final: {{vendaForm.get('PRECO_FINAL').value | currency: 'BRL'}}</label>
 		</div>

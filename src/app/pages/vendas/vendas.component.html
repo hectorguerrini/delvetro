@@ -52,8 +52,12 @@
 								(click)="editarVenda(item.ID_VENDA)" *ngIf="item.STATUS_VENDA === 'Orçamento'">
 								<i class="fa fa-pencil"></i>
 							</button>
+							<button class="btn btn-delvetro" ngbPopover="Visualizar Venda" placement="top" triggers="mouseenter:mouseleave"
+								(click)="editarVenda(item.ID_VENDA)" *ngIf="item.STATUS_VENDA !== 'Orçamento'">
+								<i class="fa fa-eye"></i>
+							</button>
 							<button class="btn btn-delvetro" ngbPopover="Receber Pagamento" placement="top" triggers="mouseenter:mouseleave"
-								 *ngIf="item.STATUS_VENDA !== 'Orçamento'">
+								(click)="pagamentos(item.ID_VENDA)" *ngIf="item.STATUS_VENDA !== 'Orçamento'">
 								<i class="fa fa-dollar"></i>
 							</button>
 						</td>

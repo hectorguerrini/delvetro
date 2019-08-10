@@ -43,12 +43,7 @@ export class CadastroVendaComponent implements OnInit {
 		PRECO_FINAL: [''],
 		PRECO_UNITARIO: ['']
 	});
-	// pagamentoForm: FormGroup = this.fb.group({
-	// 	ID_FORMA_PGT: [''],
-	// 	NM_FORMA_PGT: [''],
-	// 	DT_PGTO: [null, Validators.required],
-	// 	VL_PGTO: ['', Validators.required]
-	// });
+	
 	extraForm: FormGroup = this.fb.group({
 		ID_PRODUTO: [null],
 		ID_ITEM_VENDIDO: [''],
@@ -80,11 +75,6 @@ export class CadastroVendaComponent implements OnInit {
 			.subscribe((data: { query: string; json: Array<Combo> }) => {
 				this.comboProdutos = data.json;
 			});
-		// appService
-		// 	.getCombo('formas_pagamento')
-		// 	.subscribe((data: { query: string; json: Array<Combo> }) => {
-		// 		this.comboFormaPgto = data.json;
-		// 	});
 		if (data.ID_VENDA) {
 			this.getVenda(data.ID_VENDA);
 		} else {
@@ -307,32 +297,7 @@ export class CadastroVendaComponent implements OnInit {
 
 		return calculo;
 	}
-	// addPagamento(): void {
-	// 	this.submittedPagamento = true;
-	// 	if (this.pagamentoForm.invalid) {
-	// 		return;
-	// 	}
 
-	// 	const composicao = this.vendaForm.get('PGTO') as FormArray;
-	// 	const obj = this.pagamentoForm.value;
-
-	// 	const nm_forma_pgto = this.comboFormaPgto.find(el => el.VALOR === obj.ID_FORMA_PGT).LABEL;
-	// 	const pgto: FormGroup = this.fb.group({
-	// 		ID_FORMA_PGT: [obj.ID_FORMA_PGT],
-	// 		NM_FORMA_PGT: [nm_forma_pgto],
-	// 		DT_PGTO: [obj.DT_PGTO],
-	// 		VL_PGTO: [obj.VL_PGTO]
-	// 	});
-
-	// 	composicao.push(pgto);
-	// 	this.submittedPagamento = false;
-	// 	this.pagamentoForm.reset();
-
-	// }
-	// rmPagamento(i: number): void {
-	// 	const composicao = this.vendaForm.get('PGTO') as FormArray;
-	// 	composicao.removeAt(i);
-	// }
 	addProduto(): void {
 		this.submittedProduto = true;
 		if (this.itensForm.invalid) {

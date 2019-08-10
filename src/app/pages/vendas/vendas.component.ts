@@ -9,6 +9,7 @@ import { VendasService } from './vendas.service';
 import { VendasLista } from 'src/app/models/vendasLista';
 import { CadastroVendaComponent } from '../cadastro-venda/cadastro-venda.component';
 import { Venda } from 'src/app/models/venda';
+import { PagamentosComponent } from '../pagamentos/pagamentos.component';
 
 @Component({
 	selector: 'app-vendas',
@@ -33,6 +34,24 @@ export class VendasComponent implements OnInit {
 			.subscribe((data: { query: string; json: Array<Combo> }) => {
 				this.comboClientes = data.json;
 			});
+	}
+	pagamentos(ID_VENDA: number): void {
+		this.venda.ID_VENDA = ID_VENDA;
+		const dialogConfig = new MatDialogConfig();
+
+		dialogConfig.disableClose = false;
+		dialogConfig.hasBackdrop = true;
+		dialogConfig.autoFocus = true;
+		dialogConfig.width = '80vw';
+		dialogConfig.panelClass = 'model-cadastro';
+		dialogConfig.data = this.venda;
+		const dialogRef = this.dialog.open(PagamentosComponent, dialogConfig);
+
+		dialogRef.afterClosed().subscribe(result => {
+			if (result) {
+				this.getVendaLista();
+			}
+		});
 	}
 	editarVenda(ID_VENDA: number):  void {
 		this.venda.ID_VENDA = ID_VENDA;
