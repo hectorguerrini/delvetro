@@ -43,7 +43,7 @@ export class CadastroVendaComponent implements OnInit {
 		PRECO_FINAL: [''],
 		PRECO_UNITARIO: ['']
 	});
-	
+
 	extraForm: FormGroup = this.fb.group({
 		ID_PRODUTO: [null],
 		ID_ITEM_VENDIDO: [''],
@@ -75,17 +75,16 @@ export class CadastroVendaComponent implements OnInit {
 			.subscribe((data: { query: string; json: Array<Combo> }) => {
 				this.comboProdutos = data.json;
 			});
-		if (data.ID_VENDA) {
-			this.getVenda(data.ID_VENDA);
-		} else {
-			this.vendaForm.controls['ID_CLIENTE'].setValue(data.ID_CLIENTE);
-			this.vendaForm.controls['NM_CLIENTE'].setValue(data.NM_CLIENTE);
-		}
 
 	}
 
 	ngOnInit() {
-
+		if (this.data.ID_VENDA) {
+			this.getVenda(this.data.ID_VENDA);
+		} else {
+			this.vendaForm.controls['ID_CLIENTE'].setValue(this.data.ID_CLIENTE);
+			this.vendaForm.controls['NM_CLIENTE'].setValue(this.data.NM_CLIENTE);
+		}
 	}
 	onChanges(): void {
 	}
@@ -375,12 +374,12 @@ export class CadastroVendaComponent implements OnInit {
 		compExtras.push(extras);
 		this.submittedExtras = false;
 		this.extraForm.reset();
-		this.calculoPrecoFinal(obj.PRECO_FINAL, true);
+		this.calculoPrecoFinal(obj.PRECO_FINAL * composicao.controls[id].get('QTDE').value , true);
 	}
 	rmServicosExtras(id: number, i: number): void {
 		const composicao = this.vendaForm.get('ITENS') as FormArray;
 		const compExtras = composicao.controls[id].get('EXTRAS') as FormArray;
-		this.calculoPrecoFinal(compExtras.controls[i].get('PRECO_FINAL').value, false);
+		this.calculoPrecoFinal(compExtras.controls[i].get('PRECO_FINAL').value * composicao.controls[id].get('QTDE').value, false);
 		compExtras.removeAt(i);
 	}
 

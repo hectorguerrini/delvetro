@@ -55,6 +55,26 @@ body{
 		border-color: var(--delvetro-success);
 	}
 }
+.btn-delvetro-error{
+	background-color: red;
+	border-color: red;
+	color:#fff;
+	padding-bottom: 0;
+	padding-top: 0;
+
+	&:hover, &:focus{
+		color:#fff;
+		background-color: red;
+		border-color: red;
+	}
+	.btn-label{
+		position: relative;
+		left: -12px;
+		display: inline-block;
+		padding: 6px 12px;
+
+	}
+}
 .btn+.btn{
 	margin-left: 5px;
 }

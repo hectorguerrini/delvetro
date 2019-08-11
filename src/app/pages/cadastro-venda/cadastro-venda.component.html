@@ -141,7 +141,7 @@
 					</tbody>
 				</table>
 			</div>
-		</form>		
+		</form>
 		<div class="col-md-12" style="height: 38px;">
 			<button [hidden]="vendaForm.get('STATUS_VENDA').value === 'Pedido Fechado'" class="btn btn-delvetro"
 				(click)="orcamento()">
@@ -156,6 +156,13 @@
 					<i class="fa fa-check"></i>
 				</span>
 				Fechar Pedido
+			</button>
+			<button [hidden]="vendaForm.get('STATUS_VENDA').value !== 'Pedido Fechado'" class="btn btn-delvetro-error"
+				(click)="salvarVenda('Cancelado')">
+				<span class="btn-label">
+					<i class="fa fa-close"></i>
+				</span>
+				Cancelar Pedido
 			</button>
 			<label class="result">Preço Final: {{vendaForm.get('PRECO_FINAL').value | currency: 'BRL'}}</label>
 		</div>

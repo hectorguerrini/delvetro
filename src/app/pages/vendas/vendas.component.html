@@ -35,7 +35,7 @@
 						<th>N° Pedido</th>
 						<th>Data Venda</th>
 						<th>Funcionário</th>
-						<th>Valor</th>
+						<th>Valor Aberto/Total</th>
 						<th>Status</th>
 						<th></th>
 					</tr>
@@ -45,7 +45,7 @@
 						<td>#{{item.ID_VENDA}}</td>
 						<td>{{item.DT_VENDA | date:'dd/MM/yyyy'}}</td>
 						<td>{{item.NM_FUNCIONARIO}}</td>
-						<td>{{item.VL_TOTAL | currency: 'BRL'}}</td>
+						<td>{{item.VL_TOTAL | currency: 'BRL'}}/{{item.VL_TOTAL | currency: 'BRL'}}</td>
 						<td>{{item.STATUS_VENDA}}</td>
 						<td>
 							<button class="btn btn-delvetro" ngbPopover="Editar Orçamento" placement="top" triggers="mouseenter:mouseleave"

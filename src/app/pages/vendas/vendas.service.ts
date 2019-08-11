@@ -36,6 +36,6 @@ export class VendasService {
 		const url = `${this.url}/upload/${id_cliente}`;
 		const uploadData = new FormData();
 		uploadData.append('file', file, file.name);
-		return this.http.post(url, uploadData)		  
+		return this.http.post(url, uploadData);
 	}
 }

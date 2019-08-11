@@ -15,4 +15,8 @@ export class AppService {
 			headers: new HttpHeaders().set('Content-Type', 'application/json')
 		});
 	}
+
+	convertLabeltoNumber(label: string): number {
+		return parseFloat(label.replace(',', '.'));
+	}
 }

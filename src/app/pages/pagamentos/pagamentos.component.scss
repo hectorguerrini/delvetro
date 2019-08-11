@@ -1,6 +1,8 @@
 .pagamentos {
     margin-top: 10vh;
-    padding: 1%;
+	padding: 1%;
+	display: flex;
+	flex-wrap: wrap;
     .tabelaPgto {
         margin-top: 1em;
     }

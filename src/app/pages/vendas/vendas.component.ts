@@ -28,7 +28,6 @@ export class VendasComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
-		
 		this.appService
 			.getCombo('clientes')
 			.subscribe((data: { query: string; json: Array<Combo> }) => {
@@ -66,6 +65,7 @@ export class VendasComponent implements OnInit {
 		const dialogRef = this.dialog.open(CadastroVendaComponent, dialogConfig);
 
 		dialogRef.afterClosed().subscribe(result => {
+			this.venda.ID_VENDA = 0;
 			if (result) {
 				this.getVendaLista();
 			}

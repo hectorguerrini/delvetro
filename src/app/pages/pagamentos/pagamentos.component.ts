@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
 import { AppService } from 'src/app/app.service';
 import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -8,35 +8,39 @@ import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import * as moment from 'moment';
+import { PagamentosService } from './pagamentos.service';
 
 @Component({
 	selector: 'app-pagamentos',
 	templateUrl: './pagamentos.component.html',
 	styleUrls: ['./pagamentos.component.scss']
 })
-export class PagamentosComponent implements OnInit {
+export class PagamentosComponent implements OnInit, OnDestroy {
 
 	pgtoForm: FormGroup = this.fb.group({
 		ID_FORMA_PGTO: [1, Validators.required],
 		NM_FORMA_PGTO: [''],
-		DESCONTO: [0],
 		DT_PGTO: [moment(), Validators.required],
 		VL_PGTO: ['0,00', Validators.required],
 		VL_PGTO_CONSID: ['0,00', Validators.required]
-	})
+	});
 	pagamentoForm: FormGroup = this.fb.group({
 		ID_CLIENTE: ['', Validators.required],
 		ID_VENDA: ['', Validators.required],
+		DESCONTO: [0],
+		CREDITO_CONSUMO: [0],
+		VL_TOTAL: [0],
+		VL_ABERTO: [0],
 		PGTO: this.fb.array([])
 	});
 	comboFormaPgto: Array<Combo> = [];
-	unsubscriptionTotal = new Subject<void>();
-	unsubscriptionConsid = new Subject<void>();
+	unsubscription = new Subject<void>();
 	constructor(
 		private fb: FormBuilder,
 		private appService: AppService,
 		public dialogRef: MatDialogRef<PagamentosComponent>,
 		private dialog: MatDialog,
+		private pagamentosService: PagamentosService,
 		@Inject(MAT_DIALOG_DATA) public data: Venda
 	) {
 		appService
@@ -45,17 +49,31 @@ export class PagamentosComponent implements OnInit {
 				this.comboFormaPgto = data.json;
 				this.comboFormaPgto.map(el => {
 					el.PRECO = el.TIPO === 'Debito' ? 1.05 : el.TIPO === 'Credito' ? 1.1 : 1;
-				})
+				});
 			});
 	}
 
 	ngOnInit() {
+		this.pagamentosService.getVendaCliente(this.data.ID_VENDA)
+			.subscribe((data: { query: string; json: Array<any> }) => {
+				if (data.json.length > 0 ) {
+					this.pagamentoForm.get('CREDITO_CONSUMO').setValue(data.json[0].CREDITO_CONSUMO);
+					this.pagamentoForm.get('VL_TOTAL').setValue(data.json[0].VL_TOTAL);
+					this.pagamentoForm.get('VL_ABERTO').setValue(data.json[0].VL_ABERTO);
+				}
+
+			});
 		this.pagamentoForm.get('ID_CLIENTE').setValue(this.data.ID_CLIENTE);
 		this.pagamentoForm.get('ID_VENDA').setValue(this.data.ID_VENDA);
 		this.onChange();
 	}
-	calculoValor(valor, taxa, desconto): number {
-		return (valor - (valor*desconto/100)) * taxa 
+	ngOnDestroy() {
+		this.unsubscription.next();
+		this.unsubscription.complete();
+	}
+
+	calculoValor(valor, taxa): number {
+		return valor * taxa;
 	}
 	onChange(): void {
 		this.pgtoForm
@@ -63,16 +81,16 @@ export class PagamentosComponent implements OnInit {
 			.valueChanges.pipe(distinctUntilChanged())
 			.subscribe(el => {
 				let custo = this.pgtoForm.get('VL_PGTO').value;
-				custo = custo.replace(',','.');
-				const desconto = this.pgtoForm.get('DESCONTO').value;
+				custo = custo.replace(',', '.');
+
 				const forma_pgto = this.comboFormaPgto.find(pg => pg.VALOR === el);
-				const valor = `${this.calculoValor(custo, forma_pgto.PRECO, desconto).toFixed(2).replace('.', ',').replace(/^(\D)/g, '0$1')}`;				
+				const valor = `${this.calculoValor(custo, forma_pgto.PRECO).toFixed(2).replace('.', ',').replace(/^(\D)/g, '0$1')}`;
 
 				this.pgtoForm.get('VL_PGTO_CONSID').setValue(valor);
 				this.pgtoForm
 					.get('VL_PGTO_CONSID')
 					.updateValueAndValidity();
-			})
+			});
 	}
 
 	addPagamento(): void {
@@ -83,17 +101,20 @@ export class PagamentosComponent implements OnInit {
 
 		const composicao = this.pagamentoForm.get('PGTO') as FormArray;
 		const obj = this.pgtoForm.value;
-
+		const vl_pgto = this.appService.convertLabeltoNumber(obj.VL_PGTO);
+		const vl_pgto_consid = this.appService.convertLabeltoNumber(obj.VL_PGTO_CONSID);
 		const pgto: FormGroup = this.fb.group({
 			ID_FORMA_PGTO: [obj.ID_FORMA_PGTO],
 			NM_FORMA_PGTO: [this.comboFormaPgto.find(el => el.VALOR === obj.ID_FORMA_PGTO).LABEL],
 			DESCONTO: [obj.DESCONTO],
 			DT_PGTO: [obj.DT_PGTO],
-			VL_PGTO: [obj.VL_PGTO],
-			VL_PGTO_CONSID: [obj.VL_PGTO_CONSID]
+			VL_PGTO: [vl_pgto],
+			VL_PGTO_CONSID: [vl_pgto_consid]
 		});
 
 		composicao.push(pgto);
+
+		this.pagamentoForm.get('VL_ABERTO').setValue(this.pagamentoForm.get('VL_ABERTO').value - vl_pgto);
 
 		this.pgtoForm.reset({
 			ID_FORMA_PGTO: 1,
@@ -109,16 +130,11 @@ export class PagamentosComponent implements OnInit {
 		composicao.removeAt(i);
 	}
 	vlTotalChange(): void {
-		this.unsubscriptionConsid.next();
-		this.unsubscriptionConsid.complete();
-		if (this.unsubscriptionTotal.isStopped) {
-			this.unsubscriptionTotal = new Subject<void>();
-		}
 		this.pgtoForm
 			.get('VL_PGTO')
 			.valueChanges.pipe(
 				distinctUntilChanged(),
-				takeUntil(this.unsubscriptionTotal)
+				takeUntil(this.unsubscription)
 			).subscribe(custo => {
 				let valor = custo
 					.replace(/\D/g, '')
@@ -135,23 +151,18 @@ export class PagamentosComponent implements OnInit {
 					.get('VL_PGTO')
 					.updateValueAndValidity();
 
-				this.pgtoForm.get('VL_PGTO_CONSID').setValue(valor_final);
+				this.pgtoForm.get('VL_PGTO_CONSID').setValue(valor_final, {emitEvent: false});
 				this.pgtoForm
 					.get('VL_PGTO_CONSID')
 					.updateValueAndValidity();
 			});
 	}
 	vlConsidChange(): void {
-		this.unsubscriptionTotal.next();
-		this.unsubscriptionTotal.complete();
-		if (this.unsubscriptionTotal.isStopped) {
-			this.unsubscriptionConsid = new Subject<void>();
-		}
 		this.pgtoForm
 			.get('VL_PGTO_CONSID')
 			.valueChanges.pipe(
 				distinctUntilChanged(),
-				takeUntil(this.unsubscriptionConsid)
+				takeUntil(this.unsubscription)
 			).subscribe(custo => {
 				let valor = custo
 					.replace(/\D/g, '')
@@ -166,7 +177,7 @@ export class PagamentosComponent implements OnInit {
 					.get('VL_PGTO_CONSID')
 					.updateValueAndValidity();
 
-				this.pgtoForm.get('VL_PGTO').setValue(valor_final);
+				this.pgtoForm.get('VL_PGTO').setValue(valor_final, {emitEvent: false});
 				this.pgtoForm
 					.get('VL_PGTO')
 					.updateValueAndValidity();
@@ -174,6 +185,6 @@ export class PagamentosComponent implements OnInit {
 	}
 	setDate(event: MatDatepickerInputEvent<Date>): void {
 		console.log(event);
-		console.log(this.pgtoForm)
+		console.log(this.pgtoForm);
 	}
 }
