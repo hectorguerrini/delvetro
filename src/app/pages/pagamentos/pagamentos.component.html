@@ -6,7 +6,7 @@
 			Nº Venda: {{data.ID_VENDA}}<br>
 			Credito Consumo do Cliente: {{pagamentoForm.get('CREDITO_CONSUMO').value | currency: 'BRL'}}<br>
 			Valor da Venda: {{pagamentoForm.get('VL_TOTAL').value | currency: 'BRL'}}<br>
-			Valor em Aberto: {{pagamentoForm.get('VL_ABERTO').value | currency: 'BRL'}}<br>
+			Valor em Aberto: {{pagamentoForm.get('VL_TOTAL').value - pagamentoForm.get('VL_PAGO_TOTAL').value | currency: 'BRL'}}<br>
 			<!-- Desconto: {{pagamentoForm.get('DESCONTO').value | currency: 'BRL'}} <i class="fa fa-pencil"></i> -->
 		</p>
 
@@ -84,5 +84,14 @@
 				</tr>
 			</tbody>
 		</table>
+	</div>
+	<div class="col-md-12">
+		<button [hidden]="pagamentoForm.get('PGTO').value.length === 0" class="btn btn-delvetro"
+			(click)="salvarPagamento()">
+			<span class="btn-label">
+				<i class="fa fa-check"></i>
+			</span>
+			Salvar Pagamentos
+		</button>
 	</div>
 </div>

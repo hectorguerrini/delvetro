@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Venda } from 'src/app/models/venda';
 
 @Injectable({
 	providedIn: 'root'
@@ -17,7 +18,7 @@ export class VendasService {
 			headers: new HttpHeaders().set('Content-Type', 'application/json')
 		});
 	}
-	salvarVenda(venda: any) {
+	salvarVenda(venda: Venda) {
 		const url = `${this.url}/cadastro/venda`;
 
 		return this.http.post(url, venda, {

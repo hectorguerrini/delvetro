@@ -16,4 +16,12 @@ export class PagamentosService {
 			headers: new HttpHeaders().set('Content-Type', 'application/json')
 		});
 	}
+	salvarPagamento(pagamento: any) {
+		const url = `${this.url}/cadastro/recebimento`;
+
+		return this.http.post(url, pagamento, {
+			headers: new HttpHeaders().set('Content-Type', 'application/json')
+		});
+
+	}
 }
