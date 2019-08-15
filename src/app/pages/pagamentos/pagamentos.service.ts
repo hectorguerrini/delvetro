@@ -9,8 +9,8 @@ export class PagamentosService {
 	url = environment.url;
 	constructor(public http: HttpClient) { }
 
-	getVendaCliente(id_venda: number) {
-		const url = `${this.url}/get/venda_recebimento/${id_venda}`;
+	getVendaCliente(id_cliente: number,id_venda: number) {
+		const url = `${this.url}/get/venda_recebimento/${id_cliente}/${id_venda}`;
 
 		return this.http.get(url, {
 			headers: new HttpHeaders().set('Content-Type', 'application/json')

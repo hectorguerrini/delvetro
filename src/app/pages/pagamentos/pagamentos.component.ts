@@ -55,7 +55,7 @@ export class PagamentosComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
-		this.pagamentosService.getVendaCliente(this.data.ID_VENDA)
+		this.pagamentosService.getVendaCliente(this.data.ID_CLIENTE, this.data.ID_VENDA)
 			.subscribe((data: { query: string; json: Array<any> }) => {
 				if (data.json.length > 0 ) {
 					this.pagamentoForm.get('CREDITO_CONSUMO').setValue(data.json[0].CREDITO_CONSUMO);

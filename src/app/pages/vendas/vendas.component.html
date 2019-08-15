@@ -18,6 +18,11 @@
 				<span class="btn-label"><i class="fa fa-cart-plus"></i>
 				</span>Nova Venda/Orçamento</button>
 		</div>
+		<div class="col-md-3 form-group" *ngIf="venda.ID_CLIENTE">
+			<button class="btn btn-delvetro success form-control" (click)="pagamentos()">
+				<span class="btn-label"><i class="fa fa-cart-plus"></i>
+				</span>Pagamento Cliente</button>
+		</div>
 	</div>
 	<div class="row" *ngIf="vendasLista.length > 0">
 		<div class="col-md-12">

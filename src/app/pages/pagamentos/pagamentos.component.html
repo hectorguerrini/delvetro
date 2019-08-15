@@ -2,14 +2,18 @@
 
 	<div class="col-md-6">
 		<h2>{{data.NM_CLIENTE}}</h2>
-		<p>
+		<p *ngIf="data.ID_VENDA">
 			Nº Venda: {{data.ID_VENDA}}<br>
 			Credito Consumo do Cliente: {{pagamentoForm.get('CREDITO_CONSUMO').value | currency: 'BRL'}}<br>
 			Valor da Venda: {{pagamentoForm.get('VL_TOTAL').value | currency: 'BRL'}}<br>
 			Valor em Aberto: {{pagamentoForm.get('VL_TOTAL').value - pagamentoForm.get('VL_PAGO_TOTAL').value | currency: 'BRL'}}<br>
 			<!-- Desconto: {{pagamentoForm.get('DESCONTO').value | currency: 'BRL'}} <i class="fa fa-pencil"></i> -->
 		</p>
-
+		<p [hidden]="data.ID_VENDA">			
+			Credito Consumo do Cliente: {{pagamentoForm.get('CREDITO_CONSUMO').value | currency: 'BRL'}}<br>			
+			Valor em Aberto: {{pagamentoForm.get('VL_TOTAL').value - pagamentoForm.get('VL_PAGO_TOTAL').value | currency: 'BRL'}}<br>
+			<!-- Desconto: {{pagamentoForm.get('DESCONTO').value | currency: 'BRL'}} <i class="fa fa-pencil"></i> -->
+		</p>
 	</div>
 
 	<form class="col-md-6" [formGroup]="pgtoForm">
@@ -38,7 +42,7 @@
 				<input type="text" class="form-control" formControlName="VL_PGTO_CONSID" (focus)="vlConsidChange()">
 			</div>
 			<div class="col-md-12">
-				<button type="button" class="btn btn-delvetro col-md-6" (click)="addPagamento()">
+				<button type="button" class="btn btn-delvetro " (click)="addPagamento()">
 					<span class="btn-label">
 						<i class="fa fa-plus"></i>
 					</span>
