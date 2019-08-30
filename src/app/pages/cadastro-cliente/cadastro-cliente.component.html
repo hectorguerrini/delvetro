@@ -11,7 +11,7 @@
 			<div class="row">
 				<div class="col-md-4 form-group">
 					<label>Nome</label>					
-					<input type="text" [ngClass]="{'error-label': submitted && clienteForm.controls['NM_CLIENTE'].errors}"
+					<input type="text" [ngClass]="{'x-label': submitted && clienteForm.controls['NM_CLIENTE'].errors}"
 						class="form-control" formControlName="NM_CLIENTE" [ngbTypeahead]="search" [resultTemplate]="rt"
 						[inputFormatter]="formatter" (selectItem)="selectCliente($event.item)">
 				</div>
