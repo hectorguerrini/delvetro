@@ -1,0 +1,35 @@
+<div class="dashFinanceiro styleCadastro">
+	<div class="col-md-12 text-center">
+		<h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'pt' }}</h3>
+	</div>
+	<div class="col-md-12">
+		<mwl-calendar-month-view [viewDate]="viewDate" [events]="events"></mwl-calendar-month-view>
+	</div>
+	<div class="col-md-12 text-center">
+		<div class="btn btn-primary" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate"><i class="fa fa-arrow-left"></i></div>
+		<div class="btn btn-primary" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate"><i class="fa fa-arrow-right"></i></div>
+	</div>
+</div>
+
+<div class="dashFinanceiro styleCadastro">
+	<h3>Tabela de Despesas</h3>
+	<table class="table">
+		<colgroup>
+			<col width="25%">
+			<col width="15%">
+			<col width="15%">
+			<col width="15%">
+			<col width="15%">
+		</colgroup>
+		<thead>
+			<tr>
+				<th>Despesa</th>
+				<th>Categoria</th>
+				<th>Dt Vencimento</th>
+				<th>Dt Pagamento</th>
+				<th>Valor</th>
+			</tr>
+		</thead>
+	</table>
+</div>
+

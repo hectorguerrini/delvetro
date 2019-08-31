@@ -23,6 +23,7 @@
     "@angular/platform-browser-dynamic": "~8.0.2",
     "@angular/router": "~8.0.2",
     "@ng-bootstrap/ng-bootstrap": "^4.0.2",
+    "angular-calendar": "^0.27.18",
     "angular-highcharts": "^8.0.2",
     "bootstrap": "^4.3.1",
     "core-js": "^2.5.4",

@@ -9,6 +9,8 @@ import { CadastroServicosComponent } from './pages/cadastro-servicos/cadastro-se
 import { CadastroProdutosComponent } from './pages/cadastro-produtos/cadastro-produtos.component';
 import { VendasComponent } from './pages/vendas/vendas.component';
 import { CadastroBeneficiadosComponent } from './pages/cadastro-beneficiados/cadastro-beneficiados.component';
+import { FinanceiroComponent } from './pages/financeiro/financeiro.component';
+import { DashboardFinanceiroComponent } from './pages/dashboard-financeiro/dashboard-financeiro.component';
 const routes: Routes = [
 	{ path: 'dashboard', component: DashboardComponent },
 	{ path: 'cliente', component: ClienteComponent},
@@ -19,6 +21,8 @@ const routes: Routes = [
 	{ path: 'cadastro/produtos', component: CadastroProdutosComponent},
 	{ path: 'cadastro/beneficiados', component: CadastroBeneficiadosComponent},
 	{ path: 'vendas', component: VendasComponent},
+	{ path: 'financeiro', component: FinanceiroComponent},
+	{ path: 'financeiro/calendario', component: DashboardFinanceiroComponent},
 	{ path: '**', redirectTo: '/dashboard', pathMatch: 'full' }
 ];
 

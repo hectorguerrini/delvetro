@@ -38,9 +38,21 @@ import { CadastroVendaComponent } from './pages/cadastro-venda/cadastro-venda.co
 import { OrcamentoComponent } from './dialogs/orcamento/orcamento.component';
 import { CadastroBeneficiadosComponent } from './pages/cadastro-beneficiados/cadastro-beneficiados.component';
 import { PagamentosComponent } from './pages/pagamentos/pagamentos.component';
+import { FinanceiroComponent } from './pages/financeiro/financeiro.component';
+import { DashboardFinanceiroComponent } from './pages/dashboard-financeiro/dashboard-financeiro.component';
 
-
-
+import {
+	CalendarDateFormatter,
+	CalendarModule,
+	CalendarMomentDateFormatter,
+	DateAdapter,
+	MOMENT
+} from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/moment';
+import * as moment from 'moment';
+export function momentAdapterFactory() {
+	return adapterFactory(moment);
+}
 
 registerLocaleData(localePt);
 @NgModule({
@@ -59,7 +71,9 @@ registerLocaleData(localePt);
 		CadastroVendaComponent,
 		OrcamentoComponent,
 		CadastroBeneficiadosComponent,
-		PagamentosComponent
+		PagamentosComponent,
+		FinanceiroComponent,
+		DashboardFinanceiroComponent
 	],
 	imports: [
 		AppRoutingModule,
@@ -78,13 +92,25 @@ registerLocaleData(localePt);
 		MatDatepickerModule,
 		MatMomentDateModule,
 		MatFormFieldModule,
-		MatInputModule
-
+		MatInputModule,
+		CalendarModule.forRoot(
+			{
+				provide: DateAdapter,
+				useFactory: momentAdapterFactory
+			},
+			{
+				dateFormatter: {
+					provide: CalendarDateFormatter,
+					useClass: CalendarMomentDateFormatter
+				}
+			}
+		)
 	],
 	providers: [
 		{ provide: LOCALE_ID, useValue: 'pt' },
 		{ provide: HIGHCHARTS_MODULES, useFactory: () => [more, exporting] },
-		{ provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } }
+		{ provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
+		{ provide: MOMENT, useValue: moment }
 	],
 	bootstrap: [AppComponent],
 	entryComponents: [

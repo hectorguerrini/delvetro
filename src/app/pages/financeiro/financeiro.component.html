@@ -1,0 +1,76 @@
+<div class="financeiro styleCadastro">
+	<div class="col-md-12">
+		<h2>Lançar Despesas</h2>
+	</div>
+	<form class="col-md-12" [formGroup]="despesaForm">
+		<div class="row">
+			<div class="col-md-3 form-group">
+				<label>Descrição Despesa</label>
+				<input type="text" class="form-control" formControlName="NM_DESPESA"
+					[ngClass]="{'error-label': submitted && despesaForm.controls['NM_DESPESA'].errors}">
+			</div>
+			<div class="col-md-3 form-group">
+				<label>Beneficiado</label>
+				<select class="form-control" formControlName="ID_BENEFICIADO"
+					[ngClass]="{'error-label': submitted && despesaForm.controls['ID_BENEFICIADO'].errors}">
+					<option *ngFor="let item of comboBeneficiados" [ngValue]="item.VALOR">{{item.LABEL}}</option>
+				</select>
+			</div>
+			<div class="col-md-3 form-group">
+				<label>Categoria</label>
+				<select class="form-control" formControlName="ID_CATEGORIA"
+					[ngClass]="{'error-label': submitted && despesaForm.controls['ID_CATEGORIA'].errors}">
+					<option *ngFor="let item of comboCategoria" [ngValue]="item.VALOR">{{item.LABEL}}</option>
+				</select>
+			</div>
+			<div class="col-md-3 form-group">
+				<label>Data Vencimento</label>
+				<div class="input-group">
+					<input [matDatepicker]="pickerVencimento" placeholder="mm/dd/yyyy" formControlName="DT_VENCIMENTO"
+						class="form-control" [ngClass]="{'error-label': submitted && despesaForm.controls['DT_VENCIMENTO'].errors}">
+					<mat-datepicker-toggle class="input-group-btn" matSuffix [for]="pickerVencimento"></mat-datepicker-toggle>
+				</div>
+				<mat-datepicker #pickerVencimento></mat-datepicker>
+			</div>
+			<div class="col-md-3 form-group">
+				<label>Data de Pagamento</label>
+				<div class="input-group">
+					<input [matDatepicker]="pickerPagamento" placeholder="mm/dd/yyyy" formControlName="DT_PGTO"
+						class="form-control">
+					<mat-datepicker-toggle class="input-group-btn" matSuffix [for]="pickerPagamento"></mat-datepicker-toggle>
+				</div>
+				<mat-datepicker #pickerPagamento></mat-datepicker>
+			</div>
+			<div class="col-md-3 form-group">
+				<label>Forma de Pagamento</label>
+				<select class="form-control" formControlName="ID_FORMA_PGTO"
+					[ngClass]="{'error-label': submitted && despesaForm.controls['ID_FORMA_PGTO'].errors}">
+					<option *ngFor="let item of comboFormaPgto" [ngValue]="item.VALOR">{{item.LABEL}}</option>
+				</select>
+			</div>
+			<div class="col-md-3 form-group">
+				<label>Valor de Pagamento</label>
+				<input type="text" class="form-control" formControlName="VL_DESPESA">
+			</div>
+			<div class="col-md-3 form-group">
+				<label>Status Pagamento</label>
+				<select class="form-control" formControlName="STATUS_PGTO"
+					[ngClass]="{'error-label': submitted && despesaForm.controls['STATUS_PGTO'].errors}">
+					<option value="Aguardando Pagamento">Aguardando Pagamento</option>
+					<option value="Pago">Pago</option>
+				</select>
+			</div>
+
+		</div>
+	</form>
+	<div class="col-md-12">
+		<button class="btn btn-delvetro" (click)="salvarDespesa()">
+			<span class="btn-label"><i class="fa fa-check"></i>
+			</span>Salvar
+		</button>
+		<button class="btn btn-delvetro" (click)="resetForm()">
+			<span class="btn-label"><i class="fa fa-refresh"></i>
+			</span>Limpar
+		</button>
+	</div>
+</div>

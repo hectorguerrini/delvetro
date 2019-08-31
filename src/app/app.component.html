@@ -15,6 +15,17 @@
 
 	</div>
 	<span [routerLink]="'vendas'"><i class="fa fa-shopping-cart"></i>Vendas</span>
+	<div class="cadastros">
+		<span><i class="fa fa-dollar"></i>Financeiro</span>
+
+		<ul>
+			<li [routerLink]="'financeiro'">Lançar Despesas</li>
+			<li [routerLink]="'financeiro/calendario'">Visualizar Despesas</li>
+		</ul>
+
+	</div>
+
+
 	<span [routerLink]="'dashboard'"><i class="fa fa-bar-chart"></i>Dashboard</span>
 	<span [routerLink]="'cliente'"><i class="fa fa-user-circle-o"></i>Cliente</span>
 
