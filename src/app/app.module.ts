@@ -50,6 +50,7 @@ import {
 } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/moment';
 import * as moment from 'moment';
+import { MainComponent } from './main/main.component';
 export function momentAdapterFactory() {
 	return adapterFactory(moment);
 }
@@ -73,7 +74,8 @@ registerLocaleData(localePt);
 		CadastroBeneficiadosComponent,
 		PagamentosComponent,
 		FinanceiroComponent,
-		DashboardFinanceiroComponent
+		DashboardFinanceiroComponent,
+		MainComponent
 	],
 	imports: [
 		AppRoutingModule,
