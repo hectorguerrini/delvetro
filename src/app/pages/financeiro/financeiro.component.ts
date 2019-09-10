@@ -1,14 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Combo } from 'src/app/models/combo';
-import { AppService } from 'src/app/app.service';
+import { Combo } from 'src/app/shared/models/combo';
+import { AppService } from 'src/app/core/services/app.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import * as moment from 'moment';
-import { Despesa } from 'src/app/models/despesa';
+import { Despesa } from 'src/app/shared/models/despesa';
 import { FinanceiroService } from './financeiro.service';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
-import { MessageComponent } from 'src/app/dialogs/message/message.component';
+import { MessageComponent } from 'src/app/core/dialogs/message/message.component';
 @Component({
 	selector: 'app-financeiro',
 	templateUrl: './financeiro.component.html',
@@ -38,17 +38,17 @@ export class FinanceiroComponent implements OnInit, OnDestroy {
 		private appService: AppService,
 		private financeiroService: FinanceiroService
 	) {
-		appService
+		this.appService
 			.getCombo('beneficiados')
 			.subscribe((data: { query: string; json: Array<Combo> }) => {
 				this.comboBeneficiados = data.json;
 			});
-		appService
+		this.appService
 			.getCombo('formas_pagamento')
 			.subscribe((data: { query: string; json: Array<Combo> }) => {
 				this.comboFormaPgto = data.json;
 			});
-		appService
+		this.appService
 			.getCombo('categoria_despesa')
 			.subscribe((data: { query: string; json: Array<Combo> }) => {
 				this.comboCategoria = data.json;
