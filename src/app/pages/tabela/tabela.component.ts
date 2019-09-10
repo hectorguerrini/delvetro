@@ -4,9 +4,9 @@ import { TabelaService } from './tabela.service';
 import { NgbCalendar, NgbDate } from '@ng-bootstrap/ng-bootstrap';
 import * as moment from 'moment';
 moment.locale('pt-br');
-import { Paginacao } from 'src/app/models/paginacao';
+import { Paginacao } from 'src/app/shared/models/paginacao';
 import { MatPaginator } from '@angular/material/paginator';
-import { Tabela } from 'src/app/models/tabela';
+import { Tabela } from 'src/app/shared/models/tabela';
 
 import * as jspdf from 'jspdf';
 import html2canvas from 'html2canvas';

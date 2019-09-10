@@ -3,12 +3,12 @@ import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { CadastroClienteComponent } from '../cadastro-cliente/cadastro-cliente.component';
 import { Observable } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
-import { AppService } from 'src/app/app.service';
-import { Combo } from 'src/app/models/combo';
+import { AppService } from 'src/app/core/services/app.service';
+import { Combo } from 'src/app/shared/models/combo';
 import { VendasService } from './vendas.service';
-import { VendasLista } from 'src/app/models/vendasLista';
+import { VendasLista } from 'src/app/shared/models/vendasLista';
 import { CadastroVendaComponent } from '../cadastro-venda/cadastro-venda.component';
-import { Venda } from 'src/app/models/venda';
+import { Venda } from 'src/app/shared/models/venda';
 import { PagamentosComponent } from '../pagamentos/pagamentos.component';
 
 @Component({

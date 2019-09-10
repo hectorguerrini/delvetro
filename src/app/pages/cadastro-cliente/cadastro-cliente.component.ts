@@ -3,11 +3,11 @@ import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { CadastroClienteService } from './cadastro-cliente.service';
 import { Observable } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
-import { Cliente } from 'src/app/models/cliente';
+import { Cliente } from 'src/app/shared/models/cliente';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
-import { MessageComponent } from 'src/app/dialogs/message/message.component';
-import { Combo } from '../../models/combo';
-import { AppService } from 'src/app/app.service';
+import { MessageComponent } from 'src/app/core/dialogs/message/message.component';
+import { Combo } from '../../shared/models/combo';
+import { AppService } from 'src/app/core/services/app.service';
 
 @Component({
 	selector: 'app-cadastro-cliente',
@@ -49,15 +49,16 @@ export class CadastroClienteComponent implements OnInit {
 		private cadastroService: CadastroClienteService,
 		private appService: AppService,
 		private dialog: MatDialog
-	) {
-		appService
+	) {	
+		this.appService
 			.getCombo('clientes')
 			.subscribe((data: { query: string; json: Array<Combo> }) => {
 				this.comboClientes = data.json;
-			});
+			});	
 	}
 
 	ngOnInit() {
+		
 		this.onChanges();
 	}
 	onChanges(): void {

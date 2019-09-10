@@ -3,7 +3,7 @@ import { Chart } from 'angular-highcharts';
 import * as Highcharts from 'highcharts';
 import * as moment from 'moment';
 import { DashboardService } from './dashboard.service';
-import { ChartPie } from 'src/app/models/chart-pie';
+import { ChartPie } from 'src/app/shared/models/chart-pie';
 
 @Component({
 	selector: 'app-dashboard',

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Produto } from 'src/app/models/produto';
-import { ComposicaoProdutoEstoque } from 'src/app/models/composicao-produto-estoque';
-import { ComposicaoProdutoSevico } from 'src/app/models/composicao-produto-servico';
+import { Produto } from 'src/app/shared/models/produto';
+import { ComposicaoProdutoEstoque } from 'src/app/shared/models/composicao-produto-estoque';
+import { ComposicaoProdutoSevico } from 'src/app/shared/models/composicao-produto-servico';
 
 
 @Injectable({

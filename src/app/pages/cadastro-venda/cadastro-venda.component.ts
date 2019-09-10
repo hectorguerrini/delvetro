@@ -1,14 +1,14 @@
 import { Component, OnInit, Inject, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
-import { AppService } from 'src/app/app.service';
-import { Combo } from 'src/app/models/combo';
+import { AppService } from 'src/app/core/services/app.service';
+import { Combo } from 'src/app/shared/models/combo';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { debounceTime, map, distinctUntilChanged } from 'rxjs/operators';
 import { VendasService } from '../vendas/vendas.service';
-import { MessageComponent } from 'src/app/dialogs/message/message.component';
-import { OrcamentoComponent } from 'src/app/dialogs/orcamento/orcamento.component';
-import { Venda } from 'src/app/models/venda';
+import { MessageComponent } from 'src/app/core/dialogs/message/message.component';
+import { OrcamentoComponent } from 'src/app/core/dialogs/orcamento/orcamento.component';
+import { Venda } from 'src/app/shared/models/venda';
 class Calculo {
 	qtde: number;
 	altura: number;
@@ -70,7 +70,7 @@ export class CadastroVendaComponent implements OnInit {
 		private dialog: MatDialog,
 		@Inject(MAT_DIALOG_DATA) public data: Venda
 	) {
-		appService
+		this.appService
 			.getCombo('produtos_vendas')
 			.subscribe((data: { query: string; json: Array<Combo> }) => {
 				this.comboProdutos = data.json;

@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
-import { AppService } from 'src/app/app.service';
-import { Combo } from 'src/app/models/combo';
+import { AppService } from 'src/app/core/services/app.service';
+import { Combo } from 'src/app/shared/models/combo';
 import { Observable } from 'rxjs';
 import { debounceTime, map, distinctUntilChanged } from 'rxjs/operators';
 import { CadastroServicosService } from '../cadastro-servicos/cadastro-servicos.service';
 import { CadastroEstoqueService } from '../cadastro-estoque/cadastro-estoque.service';
 import { CadastroProdutosService } from './cadastro-produtos.service';
-import { Produto } from 'src/app/models/produto';
-import { Estoque } from 'src/app/models/estoque';
-import { Servico } from 'src/app/models/servico';
-import { MessageComponent } from 'src/app/dialogs/message/message.component';
+import { Produto } from 'src/app/shared/models/produto';
+import { Estoque } from 'src/app/shared/models/estoque';
+import { Servico } from 'src/app/shared/models/servico';
+import { MessageComponent } from 'src/app/core/dialogs/message/message.component';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 
 @Component({
@@ -52,17 +52,17 @@ export class CadastroProdutosComponent implements OnInit {
 		private produtoService: CadastroProdutosService,
 		private dialog: MatDialog
 	) {
-		appService
+		this.appService
 			.getCombo('servicos')
 			.subscribe((data: { query: string; json: Array<Combo> }) => {
 				this.comboServicos = data.json;
 			});
-		appService
+		this.appService
 			.getCombo('estoque')
 			.subscribe((data: { query: string; json: Array<Combo> }) => {
 				this.comboEstoque = data.json;
 			});
-		appService
+		this.appService
 			.getCombo('produtos')
 			.subscribe((data: { query: string; json: Array<Combo> }) => {
 				this.comboProdutos = data.json;

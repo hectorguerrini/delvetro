@@ -1,15 +1,15 @@
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
-import { AppService } from 'src/app/app.service';
+import { AppService } from 'src/app/core/services/app.service';
 import { MatDialogRef, MatDialog, MAT_DIALOG_DATA, MatDialogConfig } from '@angular/material/dialog';
-import { Venda } from 'src/app/models/venda';
-import { Combo } from 'src/app/models/combo';
+import { Venda } from 'src/app/shared/models/venda';
+import { Combo } from 'src/app/shared/models/combo';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import * as moment from 'moment';
 import { PagamentosService } from './pagamentos.service';
-import { MessageComponent } from 'src/app/dialogs/message/message.component';
+import { MessageComponent } from 'src/app/core/dialogs/message/message.component';
 
 @Component({
 	selector: 'app-pagamentos',
@@ -44,7 +44,7 @@ export class PagamentosComponent implements OnInit, OnDestroy {
 		private pagamentosService: PagamentosService,
 		@Inject(MAT_DIALOG_DATA) public data: Venda
 	) {
-		appService
+		this.appService
 			.getCombo('formas_pagamento')
 			.subscribe((data: { query: string; json: Array<Combo> }) => {
 				this.comboFormaPgto = data.json;

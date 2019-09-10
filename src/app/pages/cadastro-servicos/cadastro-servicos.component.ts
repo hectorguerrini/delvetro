@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { AppService } from 'src/app/app.service';
-import { Combo } from 'src/app/models/combo';
+import { AppService } from 'src/app/core/services/app.service';
+import { Combo } from 'src/app/shared/models/combo';
 import { CadastroServicosService } from './cadastro-servicos.service';
-import { Servico } from 'src/app/models/servico';
+import { Servico } from 'src/app/shared/models/servico';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
-import { MessageComponent } from 'src/app/dialogs/message/message.component';
+import { MessageComponent } from 'src/app/core/dialogs/message/message.component';
 import { distinctUntilChanged, debounceTime, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
@@ -36,17 +36,17 @@ export class CadastroServicosComponent implements OnInit {
 		private servicoService: CadastroServicosService,
 		private dialog: MatDialog
 	) {
-		appService
+		this.appService
 			.getCombo('tipo_servicos')
 			.subscribe((data: { query: string; json: Array<Combo> }) => {
 				this.comboTipo = data.json;
 			});
-		appService
+		this.appService
 			.getCombo('beneficiados')
 			.subscribe((data: { query: string; json: Array<Combo> }) => {
 				this.comboBeneficiados = data.json;
 			});
-		appService
+		this.appService
 			.getCombo('servicos')
 			.subscribe((data: { query: string; json: Array<Combo> }) => {
 				this.comboServicos = data.json;

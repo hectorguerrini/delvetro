@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { distinctUntilChanged, debounceTime, map } from 'rxjs/operators';
-import { Combo } from 'src/app/models/combo';
+import { Combo } from 'src/app/shared/models/combo';
 import { CadastroEstoqueService } from './cadastro-estoque.service';
-import { Estoque } from 'src/app/models/estoque';
+import { Estoque } from 'src/app/shared/models/estoque';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
-import { MessageComponent } from 'src/app/dialogs/message/message.component';
+import { MessageComponent } from 'src/app/core/dialogs/message/message.component';
 import { Observable } from 'rxjs';
-import { AppService } from 'src/app/app.service';
+import { AppService } from 'src/app/core/services/app.service';
 @Component({
 	selector: 'app-cadastro-estoque',
 	templateUrl: './cadastro-estoque.component.html',

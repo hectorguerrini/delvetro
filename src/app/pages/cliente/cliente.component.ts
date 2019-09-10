@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Chart } from 'angular-highcharts';
-import { ChartLine } from 'src/app/models/chart-line';
+import { ChartLine } from 'src/app/shared/models/chart-line';
 import { ClienteService } from './cliente.service';
 import * as moment from 'moment';
 import { ActivatedRoute, Router } from '@angular/router';
