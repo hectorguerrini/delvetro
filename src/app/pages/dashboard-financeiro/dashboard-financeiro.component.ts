@@ -34,6 +34,8 @@ export class DashboardFinanceiroComponent implements OnInit {
 	}
 
 	getListas(): void {
+		console.log(this.tabActive.filtros);
+		
 		this.financeiroService.getListaDespesas()
 			.subscribe((data: { query: string; json: Array<modelTabela> }) => {
 				if (data.json.length > 0 ) {

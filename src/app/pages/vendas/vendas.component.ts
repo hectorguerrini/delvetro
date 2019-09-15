@@ -1,14 +1,23 @@
+// Core
 import { Component, OnInit } from '@angular/core';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
-import { CadastroClienteComponent } from '../cadastro-cliente/cadastro-cliente.component';
+
+// Rxjs
 import { Observable } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
+
+// Services
 import { AppService } from 'src/app/core/services/app.service';
-import { Combo } from 'src/app/shared/models/combo';
 import { VendasService } from './vendas.service';
-import { VendasLista } from 'src/app/shared/models/vendasLista';
-import { CadastroVendaComponent } from '../cadastro-venda/cadastro-venda.component';
+
+// Models
+import { Combo } from 'src/app/shared/models/combo';
 import { Venda } from 'src/app/shared/models/venda';
+import { VendasLista } from 'src/app/shared/models/vendasLista';
+
+// Components
+import { CadastroClienteComponent } from '../cadastro/cadastro-cliente/cadastro-cliente.component';
+import { CadastroVendaComponent } from '../cadastro-venda/cadastro-venda.component';
 import { PagamentosComponent } from '../pagamentos/pagamentos.component';
 
 @Component({
