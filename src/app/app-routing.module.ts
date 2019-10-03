@@ -20,7 +20,7 @@ const routes: Routes = [
 	{ path: 'vendas', component: VendasComponent},
 	{ path: 'financeiro', component: FinanceiroComponent},
 	{ path: 'financeiro/calendario', component: DashboardFinanceiroComponent},
-	{ path: '**', redirectTo: '/dashboard', pathMatch: 'full' }
+	{ path: '**', redirectTo: '/vendas', pathMatch: 'full' }
 ];
 
 @NgModule({

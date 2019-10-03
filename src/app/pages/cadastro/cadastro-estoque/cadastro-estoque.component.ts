@@ -78,6 +78,9 @@ export class CadastroEstoqueComponent implements OnInit {
 			.valueChanges.pipe(distinctUntilChanged())
 			.subscribe(custo => {
 				let valor = '0,00';
+				if (typeof(custo) === 'number'){
+					custo = custo.toFixed(2)
+				}
 				if (custo) {
 					valor = custo
 					.replace(/\D/g, '')
@@ -88,7 +91,7 @@ export class CadastroEstoqueComponent implements OnInit {
 
 				this.estoqueForm
 					.get('CUSTO_ULTIMO_RECEBIMENTO')
-					.setValue(valor);
+					.setValue(valor, { emitEvent: false });
 				this.estoqueForm
 					.get('CUSTO_ULTIMO_RECEBIMENTO')
 					.updateValueAndValidity();
@@ -133,7 +136,7 @@ export class CadastroEstoqueComponent implements OnInit {
 		});
 	}
 
-	selectCliente(item: string): void {
+	selectEstoque(item: string): void {
 		const obj = this.comboEstoque.find(el => el.LABEL === item);
 		this.estoqueForm.get('ID_ESTOQUE').setValue(obj.VALOR);
 		this.estoqueService

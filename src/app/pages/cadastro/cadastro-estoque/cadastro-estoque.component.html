@@ -11,7 +11,7 @@
         <label>Descrição</label>
 
         <input  type="text" [ngClass]="{'error-label': submitted && estoqueForm.controls['DESCRICAO'].errors}" class="form-control" formControlName="DESCRICAO"
-        [ngbTypeahead]="search" [resultTemplate]="rt" [inputFormatter]="formatter" (selectItem)="selectCliente($event.item)">
+        [ngbTypeahead]="search" [resultTemplate]="rt" [inputFormatter]="formatter" (selectItem)="selectEstoque($event.item)">
 			</div>
       <div class="col-md-4 form-group">
 				<label>Tipo</label>

@@ -61,12 +61,15 @@ export class CadastroServicosComponent implements OnInit {
 			.get('CUSTO_POR_UNIDADE')
 			.valueChanges.pipe(distinctUntilChanged())
 			.subscribe(custo => {
+				if (typeof(custo) === 'number') {
+					custo = custo.toFixed(2);
+				}
 				let valor = custo
 					.replace(/\D/g, '')
 					.replace(/((\d{1,2})$)/g, ',$2')
 					.replace(/(^(0)+)/g, '');
 				valor = `${valor.replace(/^(\D)/g, '0$1')}`;
-				this.servicosForm.get('CUSTO_POR_UNIDADE').setValue(valor);
+				this.servicosForm.get('CUSTO_POR_UNIDADE').setValue(valor, { emitEvent: false });
 				this.servicosForm
 					.get('CUSTO_POR_UNIDADE')
 					.updateValueAndValidity();
@@ -108,7 +111,7 @@ export class CadastroServicosComponent implements OnInit {
 		});
 	}
 
-	selectCliente(item: string): void {
+	selectServico(item: string): void {
 		const obj = this.comboServicos.find(el => el.LABEL === item);
 		this.servicosForm.get('ID_SERVICO').setValue(obj.VALOR);
 		this.servicoService

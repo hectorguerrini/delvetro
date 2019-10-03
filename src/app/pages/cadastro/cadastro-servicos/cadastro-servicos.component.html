@@ -11,7 +11,7 @@
 				<label>Descrição</label>
 
 				<input type="text" class="form-control" formControlName="DESCRICAO" [ngbTypeahead]="search" [resultTemplate]="rt" [inputFormatter]="formatter"
-				(selectItem)="selectCliente($event.item)" [ngClass]="{'error-label': submitted && servicosForm.controls['DESCRICAO'].errors}">
+				(selectItem)="selectServico($event.item)" [ngClass]="{'error-label': submitted && servicosForm.controls['DESCRICAO'].errors}">
 			</div>
 			<div class="col-md-2 form-group">
 				<label>Tipo</label>
