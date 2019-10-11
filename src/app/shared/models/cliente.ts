@@ -18,6 +18,6 @@ export class Cliente {
 	RAZAO_SOCIAL: string;
 	NM_CONTATO: string;
 	CPF: string;
-	LOJISTA: string;
+	LOJISTA: number;
 	COMPLEMENTO: string;
 }

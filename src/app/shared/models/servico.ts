@@ -1,4 +1,4 @@
-export class Servico {
+export interface Servico {
 	ID_SERVICO: number;
 	ID_TIPO: number;
 	UNIDADE_CUSTO: string;

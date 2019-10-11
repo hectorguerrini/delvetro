@@ -1,9 +1,9 @@
 export class Funcionarios {
-    ID_FUNCIONARIO: number;	
+	ID_FUNCIONARIO: number;
 	NM_FUNCIONARIO: string;
 	RG: string;
 	CARGO: string;
-	SUPERVISOR: string;
+	SUPERVISOR: number;
 	USUARIO: string;
 	SENHA: string;
 	CPF: string;
@@ -13,11 +13,11 @@ export class Funcionarios {
 	DT_VENCIMENTO_FERIAS: string;
 }
 
-export class Beneficiados extends Funcionarios{
-    ID_BENEFICIADO: number;
+export class Beneficiados extends Funcionarios {
+	ID_BENEFICIADO: number;
 	NM_BENEFICIADO: string;
 	TIPO_BENEFICIADO: string;
 	CPF: string;
 	CNPJ: string;
-    RAZAO_SOCIAL: string;   
+	RAZAO_SOCIAL: string;
 }
