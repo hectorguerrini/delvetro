@@ -11,7 +11,7 @@
 			</div>
 			<div class="col-md-4 form-group">
 				<label>Razao Social</label>
-				<input type="text" class="form-control" formControlName="RAZAO_SOCIAL" 
+				<input type="text" class="form-control" formControlName="RAZAO_SOCIAL"
 					[ngClass]="{'error-label': submitted && beneficiadoForm.controls['RAZAO_SOCIAL'].errors}">
 			</div>
 			<div class="col-md-4 form-group">
@@ -56,18 +56,23 @@
 			</div>
 			<div class="col-md-3 form-group">
 				<label>Data Contratação</label>
-				<input type="text" class="form-control" formControlName="DT_CONTRATACAO">
+				<div class="input-group">
+					<input [matDatepicker]="pickerContratacao" placeholder="mm/dd/yyyy" formControlName="DT_CONTRATACAO"
+						class="form-control" [ngClass]="{'error-label': submitted && beneficiadoForm.controls['DT_CONTRATACAO'].errors}">
+					<mat-datepicker-toggle class="input-group-btn" matSuffix [for]="pickerContratacao"></mat-datepicker-toggle>
+				</div>
+				<mat-datepicker #pickerContratacao></mat-datepicker>
 			</div>
 			<div class="col-md-3 form-group">
 				<label>Nome Usuario</label>
 				<input type="text" class="form-control" formControlName="USUARIO"
 					[ngClass]="{'error-label': submitted && beneficiadoForm.controls['USUARIO'].errors}">
-			</div>		
+			</div>
 			<div class="col-md-3 form-group">
 				<label>Senha</label>
 				<input type="password" class="form-control" formControlName="SENHA"
 					[ngClass]="{'error-label': submitted && beneficiadoForm.controls['USUARIO'].errors}">
-			</div>		
+			</div>
 		</div>
 	</form>
 	<div class="col-md-12">
