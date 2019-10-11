@@ -7,7 +7,7 @@ import { MessageComponent } from '../dialogs/message/message.component';
 	providedIn: 'root'
 })
 export class AppService {
-	url = environment.url;	
+	url = environment.url;
 	constructor(public http: HttpClient, private dialog: MatDialog) {}
 
 	getCombo(tipo: String) {
@@ -32,7 +32,7 @@ export class AppService {
 		dialogConfig.data = { status: status, message: message };
 		const dialogRef = this.dialog.open(MessageComponent, dialogConfig);
 
-		dialogRef.afterClosed().subscribe(result => {			
+		dialogRef.afterClosed().subscribe(result => {
 		});
 	}
 }
