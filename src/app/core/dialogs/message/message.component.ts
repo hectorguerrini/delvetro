@@ -15,6 +15,6 @@ export class MessageComponent implements OnInit {
 	ngOnInit() {}
 	onNoClick(): void {
 		this.dialogRef.close();
-	  }
+	}	
 	
 }
