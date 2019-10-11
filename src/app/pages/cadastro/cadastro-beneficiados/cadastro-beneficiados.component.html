@@ -2,30 +2,82 @@
 	<div class="col-md-12">
 		<h2>Cadastro de Beneficiados</h2>
 	</div>
-	<form class="col-md-12">
+	<form class="col-md-12" [formGroup]="beneficiadoForm">
 		<div class="row">
 			<div class="col-md-4 form-group">
 				<label>Nome Beneficiado</label>
-				<input type="text" class="form-control">
+				<input type="text" class="form-control" formControlName="NM_BENEFICIADO"
+					[ngClass]="{'error-label': submitted && beneficiadoForm.controls['NM_BENEFICIADO'].errors}">
 			</div>
 			<div class="col-md-4 form-group">
-				<label>Razao de Social</label>
-				<input type="text" class="form-control">
+				<label>Razao Social</label>
+				<input type="text" class="form-control" formControlName="RAZAO_SOCIAL" 
+					[ngClass]="{'error-label': submitted && beneficiadoForm.controls['RAZAO_SOCIAL'].errors}">
 			</div>
 			<div class="col-md-4 form-group">
 				<label>Tipo Beneficiado</label>
-				<select class="form-control">
+				<select class="form-control" formControlName="TIPO_BENEFICIADO"
+					[ngClass]="{'error-label': submitted && beneficiadoForm.controls['TIPO_BENEFICIADO'].errors}">
 					<option>Funcionario</option>
+					<option>Outros</option>
 				</select>
 			</div>
 			<div class="col-md-4 form-group">
 				<label>CPF</label>
-				<input type="text" class="form-control">
+				<input type="text" class="form-control" formControlName="CPF"
+					[ngClass]="{'error-label': submitted && beneficiadoForm.controls['CPF'].errors}">
 			</div>
 			<div class="col-md-4 form-group">
 				<label>CNPJ</label>
-				<input type="text" class="form-control">
+				<input type="text" class="form-control" formControlName="CNPJ"
+					[ngClass]="{'error-label': submitted && beneficiadoForm.controls['CNPJ'].errors}">
+			</div>
+			<div class="col-md-4 form-group">
+				<label>RG</label>
+				<input type="text" class="form-control" formControlName="RG"
+					[ngClass]="{'error-label': submitted && beneficiadoForm.controls['RG'].errors}">
 			</div>
 		</div>
+		<div class="row" *ngIf="beneficiadoForm.get('TIPO_BENEFICIADO').value === 'Funcionario'">
+			<div class="col-md-3 form-group">
+				<label>Cargo</label>
+				<input type="text" class="form-control" formControlName="CARGO"
+					[ngClass]="{'error-label': submitted && beneficiadoForm.controls['CARGO'].errors}">
+			</div>
+			<div class="col-md-3 form-group">
+				<label>Supervisor</label>
+				<input type="text" class="form-control" formControlName="SUPERVISOR"
+					[ngClass]="{'error-label': submitted && beneficiadoForm.controls['SUPERVISOR'].errors}">
+			</div>
+			<div class="col-md-3 form-group">
+				<label>Salario</label>
+				<input type="text" class="form-control" formControlName="SALARIO"
+					[ngClass]="{'error-label': submitted && beneficiadoForm.controls['SALARIO'].errors}">
+			</div>
+			<div class="col-md-3 form-group">
+				<label>Data Contratação</label>
+				<input type="text" class="form-control" formControlName="DT_CONTRATACAO">
+			</div>
+			<div class="col-md-3 form-group">
+				<label>Nome Usuario</label>
+				<input type="text" class="form-control" formControlName="USUARIO"
+					[ngClass]="{'error-label': submitted && beneficiadoForm.controls['USUARIO'].errors}">
+			</div>		
+			<div class="col-md-3 form-group">
+				<label>Senha</label>
+				<input type="password" class="form-control" formControlName="SENHA"
+					[ngClass]="{'error-label': submitted && beneficiadoForm.controls['USUARIO'].errors}">
+			</div>		
+		</div>
 	</form>
+	<div class="col-md-12">
+		<button class="btn btn-delvetro" (click)="salvarBeneficiado()">
+			<span class="btn-label"><i class="fa fa-check"></i>
+			</span>Salvar
+		</button>
+		<button class="btn btn-delvetro" (click)="resetForm()">
+			<span class="btn-label"><i class="fa fa-refresh"></i>
+			</span>Limpar
+		</button>
+	</div>
 </div>
