@@ -14,11 +14,6 @@ import { CadastroClienteService } from './cadastro-cliente.service';
 import { Combo } from '../../../shared/models/combo';
 import { Cliente } from 'src/app/shared/models/cliente';
 
-// Components
-import { MessageComponent } from 'src/app/core/dialogs/message/message.component';
-
-// Angular Material
-import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 
 @Component({
 	selector: 'app-cadastro-cliente',
@@ -53,19 +48,19 @@ export class CadastroClienteComponent implements OnInit {
 		CPF: ['', Validators.required],
 		COMPLEMENTO: ['']
 	});
-
+	
 	comboClientes: Array<Combo> = [];
+	
 	constructor(
 		private fb: FormBuilder,
 		private cadastroService: CadastroClienteService,
-		private appService: AppService,
-		private dialog: MatDialog
+		private appService: AppService
 	) {	
 		this.appService
 			.getCombo('clientes')
 			.subscribe((data: { query: string; json: Array<Combo> }) => {
 				this.comboClientes = data.json;
-			});	
+			});					
 	}
 
 	ngOnInit() {
@@ -104,22 +99,7 @@ export class CadastroClienteComponent implements OnInit {
 					this.clienteForm.controls['NM_CLIENTE'].disable();
 				}
 			});
-	}
-
-	popup(status, message) {
-		const dialogConfig = new MatDialogConfig();
-
-		dialogConfig.disableClose = false;
-		dialogConfig.hasBackdrop = true;
-		dialogConfig.autoFocus = true;
-		dialogConfig.width = '260px';
-		dialogConfig.data = { status: status, message: message };
-		const dialogRef = this.dialog.open(MessageComponent, dialogConfig);
-
-		dialogRef.afterClosed().subscribe(result => {
-			this.submitted = false;
-		});
-	}
+	}	
 	submitCliente(): void {
 		this.submitted = true;
 		if (this.clienteForm.invalid) {
@@ -131,11 +111,12 @@ export class CadastroClienteComponent implements OnInit {
 		this.cadastroService
 			.cadastroCliente(json)
 			.subscribe((data: { query: string; json: Array<Cliente> }) => {
-				if (data.json.length > 0) {
-					this.popup('success', 'Cadastro Efetuado com sucesso');
+				this.submitted = false;
+				if (data.json.length > 0) {					
+					this.appService.popup('success', 'Cadastro Efetuado com sucesso');
 					this.resetForm();
 				} else {
-					this.popup('error', 'Error no cadastro');
+					this.appService.popup('error', 'Error no cadastro');
 				}
 			});
 	}
