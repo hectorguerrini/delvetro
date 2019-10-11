@@ -14,12 +14,6 @@ import { CadastroEstoqueService } from './cadastro-estoque.service';
 import { Combo } from 'src/app/shared/models/combo';
 import { Estoque } from 'src/app/shared/models/estoque';
 
-// Components
-import { MessageComponent } from 'src/app/core/dialogs/message/message.component';
-
-// Angular Material
-import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
-
 @Component({
 	selector: 'app-cadastro-estoque',
 	templateUrl: './cadastro-estoque.component.html',
@@ -41,10 +35,10 @@ export class CadastroEstoqueComponent implements OnInit {
 	});
 	comboTiposEstoque: Array<Combo>;
 	comboEstoque: Array<Combo>;
+	
 	constructor(
 		private fb: FormBuilder,
-		private estoqueService: CadastroEstoqueService,
-		private dialog: MatDialog,
+		private estoqueService: CadastroEstoqueService,		
 		private appService: AppService
 	) {
 		this.appService
@@ -56,7 +50,7 @@ export class CadastroEstoqueComponent implements OnInit {
 			.getCombo('estoque')
 			.subscribe((data: { query: string; json: Array<Combo> }) => {
 				this.comboEstoque = data.json;
-			});
+			});	
 	}
 
 	ngOnInit() {
@@ -113,29 +107,15 @@ export class CadastroEstoqueComponent implements OnInit {
 		this.estoqueService
 			.cadastroEstoque(json)
 			.subscribe((data: { query: string; json: Array<Estoque> }) => {
-				if (data.json.length > 0) {
-					this.popup('success', 'Cadastro Efetuado com sucesso');
+				this.submitted = false;
+				if (data.json.length > 0) {					
+					this.appService.popup('success', 'Cadastro Efetuado com sucesso');
 					this.resetForm();
 				} else {
-					this.popup('error', 'Error no cadastro');
+					this.appService.popup('error', 'Error no cadastro');
 				}
 			});
-	}
-	popup(status, message) {
-		const dialogConfig = new MatDialogConfig();
-
-		dialogConfig.disableClose = false;
-		dialogConfig.hasBackdrop = true;
-		dialogConfig.autoFocus = true;
-		dialogConfig.width = '260px';
-		dialogConfig.data = { status: status, message: message };
-		const dialogRef = this.dialog.open(MessageComponent, dialogConfig);
-
-		dialogRef.afterClosed().subscribe(result => {
-			this.submitted = false;
-		});
-	}
-
+	}	
 	selectEstoque(item: string): void {
 		const obj = this.comboEstoque.find(el => el.LABEL === item);
 		this.estoqueForm.get('ID_ESTOQUE').setValue(obj.VALOR);
