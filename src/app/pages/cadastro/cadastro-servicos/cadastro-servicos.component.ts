@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AppService } from 'src/app/core/services/app.service';
 import { Combo } from 'src/app/shared/models/combo';
-import { CadastroServicosService } from './cadastro-servicos.service';
 import { Servico } from 'src/app/shared/models/servico';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { MessageComponent } from 'src/app/core/dialogs/message/message.component';
 import { distinctUntilChanged, debounceTime, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { CadastroService } from 'src/app/core/services/cadastro.service';
 
 @Component({
 	selector: 'app-cadastro-servicos',
@@ -33,7 +33,7 @@ export class CadastroServicosComponent implements OnInit {
 	constructor(
 		private fb: FormBuilder,
 		private appService: AppService,
-		private servicoService: CadastroServicosService,
+		private cadastroService: CadastroService,
 		private dialog: MatDialog
 	) {
 		this.appService
@@ -80,41 +80,26 @@ export class CadastroServicosComponent implements OnInit {
 		if (this.servicosForm.invalid) {
 			return;
 		}
-		const servico = new Servico();
-		const json = Object.assign(servico, this.servicosForm.value);
-		json.CUSTO_POR_UNIDADE = json.CUSTO_POR_UNIDADE.replace(',', '.');
-		json.DESCRICAO = json.DESCRICAO ? json.DESCRICAO.toUpperCase() : '';
-		this.servicoService
-			.cadastroServico(json)
+		let servico: Servico;
+		servico = this.servicosForm.value;
+		servico.CUSTO_POR_UNIDADE = servico.CUSTO_POR_UNIDADE.replace(',', '.');
+		servico.DESCRICAO = servico.DESCRICAO ? servico.DESCRICAO.toUpperCase() : '';
+		this.cadastroService
+			.salvarServico(servico)
 			.subscribe((data: { query: string; json: Array<Servico> }) => {
 				if (data.json.length > 0) {
-					this.popup('success', 'Cadastro Efetuado com sucesso');
+					this.appService.popup('success', 'Cadastro Efetuado com sucesso');
 					this.resetForm();
 				} else {
-					this.popup('error', 'Error no cadastro');
+					this.appService.popup('error', 'Error no cadastro');
 				}
 			});
-	}
-
-	popup(status, message) {
-		const dialogConfig = new MatDialogConfig();
-
-		dialogConfig.disableClose = false;
-		dialogConfig.hasBackdrop = true;
-		dialogConfig.autoFocus = true;
-		dialogConfig.width = '260px';
-		dialogConfig.data = { status: status, message: message };
-		const dialogRef = this.dialog.open(MessageComponent, dialogConfig);
-
-		dialogRef.afterClosed().subscribe(result => {
-			this.submitted = false;
-		});
 	}
 
 	selectServico(item: string): void {
 		const obj = this.comboServicos.find(el => el.LABEL === item);
 		this.servicosForm.get('ID_SERVICO').setValue(obj.VALOR);
-		this.servicoService
+		this.cadastroService
 			.getServico(obj.VALOR)
 			.subscribe((data: { query: string; json: Array<Servico> }) => {
 				if (data.json.length > 0) {

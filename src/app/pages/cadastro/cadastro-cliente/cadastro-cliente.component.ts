@@ -8,11 +8,12 @@ import { debounceTime, map } from 'rxjs/operators';
 
 // Services
 import { AppService } from 'src/app/core/services/app.service';
-import { CadastroClienteService } from './cadastro-cliente.service';
+import { CadastroService } from 'src/app/core/services/cadastro.service';
 
 // Models
 import { Combo } from '../../../shared/models/combo';
 import { Cliente } from 'src/app/shared/models/cliente';
+
 
 
 @Component({
@@ -46,25 +47,24 @@ export class CadastroClienteComponent implements OnInit {
 		LOJISTA: ['', Validators.required],
 		RG: ['', Validators.required],
 		CPF: ['', Validators.required],
-		COMPLEMENTO: ['']
+		COMPLEMENTO: [null]
 	});
-	
+
 	comboClientes: Array<Combo> = [];
-	
+
 	constructor(
 		private fb: FormBuilder,
-		private cadastroService: CadastroClienteService,
+		private cadastroService: CadastroService,
 		private appService: AppService
-	) {	
+	) {
 		this.appService
 			.getCombo('clientes')
 			.subscribe((data: { query: string; json: Array<Combo> }) => {
 				this.comboClientes = data.json;
-			});					
+			});
 	}
 
 	ngOnInit() {
-		
 		this.onChanges();
 	}
 	onChanges(): void {
@@ -94,25 +94,25 @@ export class CadastroClienteComponent implements OnInit {
 			.subscribe((data: { query: string; json: Array<Cliente> }) => {
 				if (data.json.length > 0) {
 					const res = data.json[0];
-					res.TELEFONES = res.TELEFONES ? JSON.parse(res.TELEFONES) : [];
-					this.clienteForm.patchValue(res);
+					this.clienteForm.patchValue(res, { emitEvent: false });
 					this.clienteForm.controls['NM_CLIENTE'].disable();
 				}
 			});
-	}	
+	}
 	submitCliente(): void {
 		this.submitted = true;
 		if (this.clienteForm.invalid) {
 			return;
 		}
-		const cliente = new Cliente();
-		const json = Object.assign(cliente, this.clienteForm.value);
-		json.LOJISTA = json.LOJISTA * 1;
+		let cliente: Cliente;
+		cliente = this.clienteForm.value;
+		cliente.LOJISTA = cliente.LOJISTA * 1;
+
 		this.cadastroService
-			.cadastroCliente(json)
+			.salvarCliente(cliente)
 			.subscribe((data: { query: string; json: Array<Cliente> }) => {
 				this.submitted = false;
-				if (data.json.length > 0) {					
+				if (data.json.length > 0) {
 					this.appService.popup('success', 'Cadastro Efetuado com sucesso');
 					this.resetForm();
 				} else {
@@ -122,7 +122,7 @@ export class CadastroClienteComponent implements OnInit {
 	}
 	resetForm(): void {
 		this.clienteForm.controls['NM_CLIENTE'].enable();
-		this.clienteForm.reset();
+		this.clienteForm.reset({}, {emitEvent: false});
 	}
 	search = (text$: Observable<string>) =>
 		text$.pipe(
@@ -131,14 +131,14 @@ export class CadastroClienteComponent implements OnInit {
 				term === ''
 					? []
 					: this.comboClientes
-							.filter(
-								v =>
-									v.LABEL.toLowerCase().indexOf(
-										term.toLowerCase()
-									) > -1
-							)
-							.slice(0, 5)
-							.map(s => s.LABEL)
+						.filter(
+							v =>
+								v.LABEL.toLowerCase().indexOf(
+									term.toLowerCase()
+								) > -1
+						)
+						.slice(0, 5)
+						.map(s => s.LABEL)
 			)
 		)
 

@@ -12,6 +12,7 @@ import { CadastroServicosComponent } from './cadastro-servicos/cadastro-servicos
 import { CadastroClienteComponent } from './cadastro-cliente/cadastro-cliente.component';
 import { CadastroBeneficiadosComponent } from './cadastro-beneficiados/cadastro-beneficiados.component';
 
+import { MatDatepickerModule } from '@angular/material/datepicker';
 @NgModule({
 	declarations: [
 		CadastroClienteComponent,
@@ -25,7 +26,8 @@ import { CadastroBeneficiadosComponent } from './cadastro-beneficiados/cadastro-
 		NgbModule,
 		FormsModule,
 		ReactiveFormsModule,
-		CadastroRoutingModule
+		CadastroRoutingModule,
+		MatDatepickerModule
 	],
 	entryComponents: [
 		CadastroClienteComponent

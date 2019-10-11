@@ -13,10 +13,10 @@ const routes: Routes = [
 	{ path: 'dashboard', component: DashboardComponent },
 	{ path: 'cliente', component: ClienteComponent},
 	{ path: 'cliente/:id', component: ClienteComponent},
-	{ 
+	{
 		path: 'cadastro',
 		loadChildren: () => import('./pages/cadastro/cadastro.module').then(mod => mod.CadastroModule)
-	},	
+	},
 	{ path: 'vendas', component: VendasComponent},
 	{ path: 'financeiro', component: FinanceiroComponent},
 	{ path: 'financeiro/calendario', component: DashboardFinanceiroComponent},

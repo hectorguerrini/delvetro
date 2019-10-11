@@ -80,20 +80,6 @@ export class FinanceiroComponent implements OnInit, OnDestroy {
 					.updateValueAndValidity();
 			});
 	}
-	popup(status, message) {
-		const dialogConfig = new MatDialogConfig();
-
-		dialogConfig.disableClose = false;
-		dialogConfig.hasBackdrop = true;
-		dialogConfig.autoFocus = true;
-		dialogConfig.width = '260px';
-		dialogConfig.data = { status: status, message: message };
-		const dialogRef = this.dialog.open(MessageComponent, dialogConfig);
-
-		dialogRef.afterClosed().subscribe(result => {
-			this.submitted = false;
-		});
-	}
 	salvarDespesa(): void {
 		this.submitted = true;
 		if (this.despesaForm.invalid) {
@@ -106,10 +92,10 @@ export class FinanceiroComponent implements OnInit, OnDestroy {
 		this.financeiroService.salvarDespesa(despesa)
 			.subscribe((data: { query: string; json: Array<Despesa> }) => {
 				if (data.json.length > 0) {
-					this.popup('success', 'Cadastro Despesa efetuado com sucesso');
+					this.appService.popup('success', 'Cadastro Despesa efetuado com sucesso');
 					this.resetForm();
 				} else {
-					this.popup('error', 'Error no cadastro');
+					this.appService.popup('error', 'Error no cadastro');
 				}
 			});
 

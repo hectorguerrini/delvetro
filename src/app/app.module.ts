@@ -72,7 +72,7 @@ registerLocaleData(localePt);
 		MessageComponent,
 		VendasComponent,
 		CadastroVendaComponent,
-		OrcamentoComponent,		
+		OrcamentoComponent,
 		PagamentosComponent,
 		FinanceiroComponent,
 		DashboardFinanceiroComponent,

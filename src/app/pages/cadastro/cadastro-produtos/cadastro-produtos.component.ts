@@ -10,7 +10,6 @@ import { debounceTime, map, distinctUntilChanged } from 'rxjs/operators';
 import { AppService } from 'src/app/core/services/app.service';
 import { CadastroEstoqueService } from '../cadastro-estoque/cadastro-estoque.service';
 import { CadastroProdutosService } from './cadastro-produtos.service';
-import { CadastroServicosService } from '../cadastro-servicos/cadastro-servicos.service';
 
 // Models
 import { Combo } from 'src/app/shared/models/combo';
@@ -23,6 +22,7 @@ import { MessageComponent } from 'src/app/core/dialogs/message/message.component
 
 // Angular Material
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
+import { CadastroService } from 'src/app/core/services/cadastro.service';
 
 @Component({
 	selector: 'app-cadastro-produtos',
@@ -58,7 +58,7 @@ export class CadastroProdutosComponent implements OnInit {
 	constructor(
 		private fb: FormBuilder,
 		private appService: AppService,
-		private servicoService: CadastroServicosService,
+		private cadastroService: CadastroService,
 		private estoqueService: CadastroEstoqueService,
 		private produtoService: CadastroProdutosService,
 		private dialog: MatDialog
@@ -238,7 +238,7 @@ export class CadastroProdutosComponent implements OnInit {
 		if ( this.composicaoForm.get('TIPO').value === 'Serviço' ) {
 			const obj = this.comboServicos.find(el => el.LABEL === item);
 			this.composicaoForm.get('ID').setValue(obj.VALOR);
-			this.servicoService
+			this.cadastroService
 				.getServico(obj.VALOR)
 				.subscribe((data: { query: string; json: Array<Servico> }) => {
 					if (data.json.length > 0) {
