@@ -8,20 +8,13 @@ import { debounceTime, map, distinctUntilChanged } from 'rxjs/operators';
 
 // Services
 import { AppService } from 'src/app/core/services/app.service';
-import { CadastroProdutosService } from './cadastro-produtos.service';
+import { CadastroService } from 'src/app/core/services/cadastro.service';
 
 // Models
 import { Combo } from 'src/app/shared/models/combo';
 import { Estoque } from 'src/app/shared/models/estoque';
 import { Produto } from 'src/app/shared/models/produto';
 import { Servico } from 'src/app/shared/models/servico';
-
-// Components
-import { MessageComponent } from 'src/app/core/dialogs/message/message.component';
-
-// Angular Material
-import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
-import { CadastroService } from 'src/app/core/services/cadastro.service';
 
 @Component({
 	selector: 'app-cadastro-produtos',
@@ -44,7 +37,7 @@ export class CadastroProdutosComponent implements OnInit {
 	});
 	composicaoForm: FormGroup = this.fb.group({
 		TIPO: ['Serviço'],
-		ID: [null],
+		ID: [null, Validators.required],
 		DESCRICAO: [null, Validators.required],
 		QTDE_UTILIZADA: [null],
 		CUSTO: ['']
@@ -57,9 +50,7 @@ export class CadastroProdutosComponent implements OnInit {
 	constructor(
 		private fb: FormBuilder,
 		private appService: AppService,
-		private cadastroService: CadastroService,
-		private produtoService: CadastroProdutosService,
-		private dialog: MatDialog
+		private cadastroService: CadastroService
 	) {
 		this.appService
 			.getCombo('servicos')
@@ -125,7 +116,7 @@ export class CadastroProdutosComponent implements OnInit {
 				valor = `${valor.replace(/^(\D)/g, '0$1')}`;
 				this.produtosForm
 					.get('PRECO_UNITARIO')
-					.setValue(valor);
+					.setValue(valor, { emitEvent: false });
 				this.produtosForm
 					.get('PRECO_UNITARIO')
 					.updateValueAndValidity();
@@ -137,7 +128,7 @@ export class CadastroProdutosComponent implements OnInit {
 	selectProduto(item: string): void {
 		const obj = this.comboProdutos.find(el => el.LABEL === item);
 		this.produtosForm.get('ID_PRODUTO').setValue(obj.VALOR);
-		this.produtoService
+		this.cadastroService
 			.getProduto(obj.VALOR)
 			.subscribe((data: { query: string; json: Array<Produto> }) => {
 				if (data.json.length > 0) {
@@ -198,12 +189,12 @@ export class CadastroProdutosComponent implements OnInit {
 			return;
 		}
 
-		const produto = new Produto();
-		const json = Object.assign(produto, this.produtosForm.value);
-		json.PRECO_UNITARIO = json.PRECO_UNITARIO.replace(',', '.');
-		json.NM_PRODUTO = json.NM_PRODUTO ? json.NM_PRODUTO.toUpperCase() : '';
-		this.produtoService
-			.cadastroProdutos(json)
+		let produto: Produto;
+		produto = this.produtosForm.value;
+		produto.PRECO_UNITARIO = produto.PRECO_UNITARIO.replace(',', '.');
+		produto.NM_PRODUTO = produto.NM_PRODUTO ? produto.NM_PRODUTO.toUpperCase() : '';
+		this.cadastroService
+			.salvarProduto(produto)
 			.subscribe((data: { query: string; json: Array<Produto> }) => {
 				this.submitted = false;
 				if (data.json.length > 0) {

@@ -5,6 +5,7 @@ import { Cliente } from 'src/app/shared/models/cliente';
 import { Beneficiados } from 'src/app/shared/models/beneficiados';
 import { Servico } from 'src/app/shared/models/servico';
 import { Estoque } from 'src/app/shared/models/estoque';
+import { Produto } from 'src/app/shared/models/produto';
 
 @Injectable({
 	providedIn: 'root'
@@ -72,6 +73,22 @@ export class CadastroService {
 	}
 	getEstoque(id_estoque: number) {
 		const url = `${this.url}/estoque/${id_estoque}`;
+
+		return this.http.get(url, {
+			headers: new HttpHeaders().set('Content-Type', 'application/json')
+		});
+	}
+
+	// Cadastro Produto
+	salvarProduto(produto: Produto) {
+		const url = `${this.url}/produto`;
+
+		return this.http.post(url, produto, {
+			headers: new HttpHeaders().set('Content-Type', 'application/json')
+		});
+	}
+	getProduto(id_produto: number) {
+		const url = `${this.url}/produto/${id_produto}`;
 
 		return this.http.get(url, {
 			headers: new HttpHeaders().set('Content-Type', 'application/json')

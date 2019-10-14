@@ -1,4 +1,4 @@
-export class Estoque {
+export interface Estoque {
 	ID_ESTOQUE: number;
 	ID_TIPO: number;
 	DESCRICAO: string;

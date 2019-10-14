@@ -3,7 +3,7 @@ interface Telefone {
 	TELEFONE: string;
 }
 
-export class Cliente {
+export interface Cliente {
 	ID_CLIENTE: number;
 	NM_CLIENTE: string;
 	ENDERECO: string;
