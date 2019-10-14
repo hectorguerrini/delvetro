@@ -8,5 +8,5 @@ export class Estoque {
 	LOCALIZACAO: string;
 	ESTOQUE_MIN: number;
 	ESTOQUE_MAX: number;
-	CUSTO_ULTIMO_RECEBIMENTO: number;
+	CUSTO_ULTIMO_RECEBIMENTO: string;
 }

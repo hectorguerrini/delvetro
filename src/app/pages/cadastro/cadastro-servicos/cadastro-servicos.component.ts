@@ -3,8 +3,6 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AppService } from 'src/app/core/services/app.service';
 import { Combo } from 'src/app/shared/models/combo';
 import { Servico } from 'src/app/shared/models/servico';
-import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
-import { MessageComponent } from 'src/app/core/dialogs/message/message.component';
 import { distinctUntilChanged, debounceTime, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { CadastroService } from 'src/app/core/services/cadastro.service';
@@ -33,8 +31,7 @@ export class CadastroServicosComponent implements OnInit {
 	constructor(
 		private fb: FormBuilder,
 		private appService: AppService,
-		private cadastroService: CadastroService,
-		private dialog: MatDialog
+		private cadastroService: CadastroService
 	) {
 		this.appService
 			.getCombo('tipo_servicos')

@@ -8,11 +8,12 @@ import { distinctUntilChanged, debounceTime, map } from 'rxjs/operators';
 
 // Services
 import { AppService } from 'src/app/core/services/app.service';
-import { CadastroEstoqueService } from './cadastro-estoque.service';
+import { CadastroService } from 'src/app/core/services/cadastro.service';
 
 // Models
 import { Combo } from 'src/app/shared/models/combo';
 import { Estoque } from 'src/app/shared/models/estoque';
+
 
 @Component({
 	selector: 'app-cadastro-estoque',
@@ -35,10 +36,10 @@ export class CadastroEstoqueComponent implements OnInit {
 	});
 	comboTiposEstoque: Array<Combo>;
 	comboEstoque: Array<Combo>;
-	
+
 	constructor(
 		private fb: FormBuilder,
-		private estoqueService: CadastroEstoqueService,		
+		private cadastroService: CadastroService,
 		private appService: AppService
 	) {
 		this.appService
@@ -50,7 +51,7 @@ export class CadastroEstoqueComponent implements OnInit {
 			.getCombo('estoque')
 			.subscribe((data: { query: string; json: Array<Combo> }) => {
 				this.comboEstoque = data.json;
-			});	
+			});
 	}
 
 	ngOnInit() {
@@ -72,14 +73,14 @@ export class CadastroEstoqueComponent implements OnInit {
 			.valueChanges.pipe(distinctUntilChanged())
 			.subscribe(custo => {
 				let valor = '0,00';
-				if (typeof(custo) === 'number'){
-					custo = custo.toFixed(2)
+				if (typeof (custo) === 'number') {
+					custo = custo.toFixed(2);
 				}
 				if (custo) {
 					valor = custo
-					.replace(/\D/g, '')
-					.replace(/((\d{1,2})$)/g, ',$2')
-					.replace(/(^(0)+)/g, '');
+						.replace(/\D/g, '')
+						.replace(/((\d{1,2})$)/g, ',$2')
+						.replace(/(^(0)+)/g, '');
 					valor = `${valor.replace(/^(\D)/g, '0$1')}`;
 				}
 
@@ -97,30 +98,27 @@ export class CadastroEstoqueComponent implements OnInit {
 			return;
 		}
 
-		const estoque = new Estoque();
-		const json = Object.assign(estoque, this.estoqueForm.value);
-		json.CUSTO_ULTIMO_RECEBIMENTO = json.CUSTO_ULTIMO_RECEBIMENTO.replace(
-			',',
-			'.'
-		)*1;
-		json.DESCRICAO = json.DESCRICAO ? json.DESCRICAO.toUpperCase() : json.DESCRICAO;
-		this.estoqueService
-			.cadastroEstoque(json)
+		let estoque: Estoque;
+		estoque = this.estoqueForm.value;
+		estoque.CUSTO_ULTIMO_RECEBIMENTO = estoque.CUSTO_ULTIMO_RECEBIMENTO.replace(',', '.');
+		estoque.DESCRICAO = estoque.DESCRICAO ? estoque.DESCRICAO.toUpperCase() : '';
+		this.cadastroService
+			.salvarEstoque(estoque)
 			.subscribe((data: { query: string; json: Array<Estoque> }) => {
 				this.submitted = false;
-				if (data.json.length > 0) {					
+				if (data.json.length > 0) {
 					this.appService.popup('success', 'Cadastro Efetuado com sucesso');
 					this.resetForm();
 				} else {
 					this.appService.popup('error', 'Error no cadastro');
 				}
 			});
-	}	
+	}
 	selectEstoque(item: string): void {
 		const obj = this.comboEstoque.find(el => el.LABEL === item);
 		this.estoqueForm.get('ID_ESTOQUE').setValue(obj.VALOR);
-		this.estoqueService
-			.getServico(obj.VALOR)
+		this.cadastroService
+			.getEstoque(obj.VALOR)
 			.subscribe((data: { query: string; json: Array<Estoque> }) => {
 				if (data.json.length > 0) {
 					this.estoqueForm.patchValue(data.json[0]);
@@ -145,14 +143,14 @@ export class CadastroEstoqueComponent implements OnInit {
 				term === ''
 					? []
 					: this.comboEstoque
-							.filter(
-								v =>
-									v.LABEL.toLowerCase().indexOf(
-										term.toLowerCase()
-									) > -1
-							)
-							.slice(0, 5)
-							.map(s => s.LABEL)
+						.filter(
+							v =>
+								v.LABEL.toLowerCase().indexOf(
+									term.toLowerCase()
+								) > -1
+						)
+						.slice(0, 5)
+						.map(s => s.LABEL)
 			)
 		)
 

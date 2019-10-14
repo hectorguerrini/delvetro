@@ -8,7 +8,6 @@ import { debounceTime, map, distinctUntilChanged } from 'rxjs/operators';
 
 // Services
 import { AppService } from 'src/app/core/services/app.service';
-import { CadastroEstoqueService } from '../cadastro-estoque/cadastro-estoque.service';
 import { CadastroProdutosService } from './cadastro-produtos.service';
 
 // Models
@@ -59,7 +58,6 @@ export class CadastroProdutosComponent implements OnInit {
 		private fb: FormBuilder,
 		private appService: AppService,
 		private cadastroService: CadastroService,
-		private estoqueService: CadastroEstoqueService,
 		private produtoService: CadastroProdutosService,
 		private dialog: MatDialog
 	) {
@@ -202,35 +200,19 @@ export class CadastroProdutosComponent implements OnInit {
 
 		const produto = new Produto();
 		const json = Object.assign(produto, this.produtosForm.value);
-		json.PRECO_UNITARIO = json.PRECO_UNITARIO.replace(
-			',',
-			'.'
-		);
+		json.PRECO_UNITARIO = json.PRECO_UNITARIO.replace(',', '.');
 		json.NM_PRODUTO = json.NM_PRODUTO ? json.NM_PRODUTO.toUpperCase() : '';
 		this.produtoService
 			.cadastroProdutos(json)
 			.subscribe((data: { query: string; json: Array<Produto> }) => {
+				this.submitted = false;
 				if (data.json.length > 0) {
-					this.popup('success', 'Cadastro Efetuado com sucesso');
+					this.appService.popup('success', 'Cadastro Efetuado com sucesso');
+					this.resetForm();
 				} else {
-					this.popup('error', 'Error no cadastro do produto');
+					this.appService.popup('error', 'Error no cadastro do produto');
 				}
 			});
-	}
-	popup(status, message) {
-		const dialogConfig = new MatDialogConfig();
-
-		dialogConfig.disableClose = false;
-		dialogConfig.hasBackdrop = true;
-		dialogConfig.autoFocus = true;
-		dialogConfig.width = '260px';
-		dialogConfig.data = { status: status, message: message };
-		const dialogRef = this.dialog.open(MessageComponent, dialogConfig);
-
-		dialogRef.afterClosed().subscribe(result => {
-			this.submitted = false;
-
-		});
 	}
 
 	selectComposicao(item: string): void {
@@ -253,8 +235,8 @@ export class CadastroProdutosComponent implements OnInit {
 		} else {
 			const obj = this.comboEstoque.find(el => el.LABEL === item);
 			this.composicaoForm.get('ID').setValue(obj.VALOR);
-			this.estoqueService
-				.getServico(obj.VALOR)
+			this.cadastroService
+				.getEstoque(obj.VALOR)
 				.subscribe((data: { query: string; json: Array<Estoque> }) => {
 					if (data.json.length > 0) {
 						this.composicao = data.json[0];

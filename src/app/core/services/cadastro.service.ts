@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Cliente } from 'src/app/shared/models/cliente';
 import { Beneficiados } from 'src/app/shared/models/beneficiados';
 import { Servico } from 'src/app/shared/models/servico';
+import { Estoque } from 'src/app/shared/models/estoque';
 
 @Injectable({
 	providedIn: 'root'
@@ -55,6 +56,22 @@ export class CadastroService {
 	}
 	getServico(id_servico: number) {
 		const url = `${this.url}/servico/${id_servico}`;
+
+		return this.http.get(url, {
+			headers: new HttpHeaders().set('Content-Type', 'application/json')
+		});
+	}
+
+	// Cadastro Estoque
+	salvarEstoque(estoque: Estoque) {
+		const url = `${this.url}/estoque`;
+
+		return this.http.post(url, estoque, {
+			headers: new HttpHeaders().set('Content-Type', 'application/json')
+		});
+	}
+	getEstoque(id_estoque: number) {
+		const url = `${this.url}/estoque/${id_estoque}`;
 
 		return this.http.get(url, {
 			headers: new HttpHeaders().set('Content-Type', 'application/json')
