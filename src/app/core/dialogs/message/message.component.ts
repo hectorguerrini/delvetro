@@ -10,11 +10,11 @@ export class MessageComponent implements OnInit {
 	constructor(
 		public dialogRef: MatDialogRef<MessageComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: Dialogdata
-	) {}
+	) { }
 
-	ngOnInit() {}
+	ngOnInit() { }
 	onNoClick(): void {
 		this.dialogRef.close();
-	}	
-	
+	}
+
 }

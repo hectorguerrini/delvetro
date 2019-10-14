@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CalendarEvent, DAYS_OF_WEEK } from 'angular-calendar';
 import * as moment from 'moment';
 import { FinanceiroService } from '../financeiro/financeiro.service';
-import { Tabela, modelTabela } from 'src/app/shared/models/tabela';
+import { Tabela, ModelTabela } from 'src/app/shared/models/tabela';
 
 @Component({
 	selector: 'app-dashboard-financeiro',
@@ -16,17 +16,17 @@ export class DashboardFinanceiroComponent implements OnInit {
 
 	events: CalendarEvent[] = [];
 	tabActive: Tabela;
-	tabela: Array<modelTabela>;
+	tabela: Array<ModelTabela>;
 	constructor(
 		private financeiroService: FinanceiroService
 	) { }
 
 	ngOnInit() {
-		this.tabActive = new Tabela('despesas',7);
+		this.tabActive = new Tabela('despesas', 7);
 		this.tabActive.addCol('s');
 		this.tabActive.addCol('s');
-		this.tabActive.addCol('d', moment(),moment());
-		this.tabActive.addCol('d', moment(),moment());
+		this.tabActive.addCol('d', moment(), moment());
+		this.tabActive.addCol('d', moment(), moment());
 		this.tabActive.addCol('$');
 		this.tabActive.addCol('s');
 
@@ -35,10 +35,10 @@ export class DashboardFinanceiroComponent implements OnInit {
 
 	getListas(): void {
 		console.log(this.tabActive.filtros);
-		
+
 		this.financeiroService.getListaDespesas()
-			.subscribe((data: { query: string; json: Array<modelTabela> }) => {
-				if (data.json.length > 0 ) {
+			.subscribe((data: { query: string; json: Array<ModelTabela> }) => {
+				if (data.json.length > 0) {
 					this.tabela = data.json;
 				} else {
 					this.tabela = [];

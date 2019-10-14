@@ -12,7 +12,7 @@ export interface ColunaTipoDinheiro {
 	tipo: String;
 	valor: String;
 }
-export interface modelTabela {
+export interface ModelTabela {
 	ID: number;
 	COLUNA1: string;
 	COLUNA2: string;
@@ -27,7 +27,7 @@ export interface modelTabela {
 export class Tabela {
 	public nome: string;
 	public colspan: Number;
-	public filtros: Array<{tipo: String,valorMin?: any,valorMax?: any,filter?: boolean}>;
+	public filtros: Array<{ tipo: String, valorMin?: any, valorMax?: any, filter?: boolean }>;
 	constructor(nome: string, size: Number) {
 		this.nome = nome;
 		this.colspan = size;
