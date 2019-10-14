@@ -5,7 +5,7 @@ import { Combo } from 'src/app/shared/models/combo';
 import { Servico } from 'src/app/shared/models/servico';
 import { distinctUntilChanged, debounceTime, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { CadastroService } from 'src/app/core/services/cadastro.service';
+import { CadastroService } from 'src/app/pages/cadastro/cadastro.service';
 
 @Component({
 	selector: 'app-cadastro-servicos',

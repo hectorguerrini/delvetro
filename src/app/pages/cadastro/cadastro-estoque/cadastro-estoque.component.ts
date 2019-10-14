@@ -8,7 +8,7 @@ import { distinctUntilChanged, debounceTime, map } from 'rxjs/operators';
 
 // Services
 import { AppService } from 'src/app/core/services/app.service';
-import { CadastroService } from 'src/app/core/services/cadastro.service';
+import { CadastroService } from 'src/app/pages/cadastro/cadastro.service';
 
 // Models
 import { Combo } from 'src/app/shared/models/combo';

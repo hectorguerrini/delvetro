@@ -3,7 +3,7 @@ import { Beneficiados } from '../../../shared/models/beneficiados';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AppService } from 'src/app/core/services/app.service';
 import { distinctUntilChanged } from 'rxjs/operators';
-import { CadastroService } from 'src/app/core/services/cadastro.service';
+import { CadastroService } from 'src/app/pages/cadastro/cadastro.service';
 @Component({
 	selector: 'app-cadastro-beneficiados',
 	templateUrl: './cadastro-beneficiados.component.html',
