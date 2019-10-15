@@ -27,7 +27,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 // Components
 import { AppComponent } from './app.component';
-import { CadastroVendaComponent } from './pages/cadastro-venda/cadastro-venda.component';
 import { ClienteComponent } from './pages/cliente/cliente.component';
 import { DashboardFinanceiroComponent } from './pages/dashboard-financeiro/dashboard-financeiro.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
@@ -37,7 +36,6 @@ import { MainComponent } from './main/main.component';
 import { OrcamentoComponent } from './core/dialogs/orcamento/orcamento.component';
 import { PagamentosComponent } from './pages/pagamentos/pagamentos.component';
 import { TabelaComponent } from './pages/tabela/tabela.component';
-import { VendasComponent } from './pages/vendas/vendas.component';
 
 // Plugins
 import { ChartModule, HIGHCHARTS_MODULES } from 'angular-highcharts';
@@ -55,6 +53,7 @@ import * as moment from 'moment';
 
 // Pipe
 import { FilterTablePipe } from './shared/pipes/filter-table.pipe';
+import { VendaModule } from './pages/venda/venda.module';
 
 
 export function momentAdapterFactory() {
@@ -70,8 +69,6 @@ registerLocaleData(localePt);
 		DashboardComponent,
 		ClienteComponent,
 		MessageComponent,
-		VendasComponent,
-		CadastroVendaComponent,
 		OrcamentoComponent,
 		PagamentosComponent,
 		FinanceiroComponent,
@@ -97,6 +94,7 @@ registerLocaleData(localePt);
 		MatFormFieldModule,
 		MatInputModule,
 		CadastroModule,
+		VendaModule,
 		CalendarModule.forRoot(
 			{
 				provide: DateAdapter,
@@ -120,8 +118,7 @@ registerLocaleData(localePt);
 	entryComponents: [
 		MessageComponent,
 		OrcamentoComponent,
-		PagamentosComponent,
-		CadastroVendaComponent
+		PagamentosComponent
 	]
 
 })

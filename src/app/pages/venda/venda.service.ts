@@ -6,20 +6,20 @@ import { Venda } from 'src/app/shared/models/venda';
 @Injectable({
 	providedIn: 'root'
 })
-export class VendasService {
+export class VendaService {
 
 	url = environment.url;
 	constructor(public http: HttpClient) { }
 
 	getVendasCliente(id_cliente: number) {
-		const url = `${this.url}/cadastro/lista_vendas/${id_cliente}`;
+		const url = `${this.url}/listaVendas/${id_cliente}`;
 
 		return this.http.get(url, {
 			headers: new HttpHeaders().set('Content-Type', 'application/json')
 		});
 	}
 	salvarVenda(venda: Venda) {
-		const url = `${this.url}/cadastro/venda`;
+		const url = `${this.url}/venda`;
 
 		return this.http.post(url, venda, {
 			headers: new HttpHeaders().set('Content-Type', 'application/json')
@@ -27,7 +27,7 @@ export class VendasService {
 
 	}
 	getVenda(id_venda: number) {
-		const url = `${this.url}/cadastro/venda/${id_venda}`;
+		const url = `${this.url}/venda/${id_venda}`;
 
 		return this.http.get(url, {
 			headers: new HttpHeaders().set('Content-Type', 'application/json')

@@ -8,7 +8,7 @@ import { debounceTime, map } from 'rxjs/operators';
 
 // Services
 import { AppService } from 'src/app/core/services/app.service';
-import { VendasService } from './vendas.service';
+import { VendaService } from '../venda.service';
 
 // Models
 import { Combo } from 'src/app/shared/models/combo';
@@ -16,9 +16,9 @@ import { Venda } from 'src/app/shared/models/venda';
 import { VendasLista } from 'src/app/shared/models/vendasLista';
 
 // Components
-import { CadastroClienteComponent } from '../cadastro/cadastro-cliente/cadastro-cliente.component';
+import { CadastroClienteComponent } from '../../cadastro/cadastro-cliente/cadastro-cliente.component';
 import { CadastroVendaComponent } from '../cadastro-venda/cadastro-venda.component';
-import { PagamentosComponent } from '../pagamentos/pagamentos.component';
+import { PagamentosComponent } from '../../pagamentos/pagamentos.component';
 
 @Component({
 	selector: 'app-vendas',
@@ -32,7 +32,7 @@ export class VendasComponent implements OnInit {
 	venda = new Venda();
 	constructor(
 		private appService: AppService,
-		private vendasService: VendasService,
+		private vendasService: VendaService,
 		private dialog: MatDialog
 	) { }
 
@@ -61,7 +61,7 @@ export class VendasComponent implements OnInit {
 			}
 		});
 	}
-	editarVenda(ID_VENDA: number):  void {
+	editarVenda(ID_VENDA: number): void {
 		this.venda.ID_VENDA = ID_VENDA;
 		const dialogConfig = new MatDialogConfig();
 

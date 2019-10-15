@@ -5,7 +5,6 @@ import { Routes, RouterModule } from '@angular/router';
 // Components
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { ClienteComponent } from './pages/cliente/cliente.component';
-import { VendasComponent } from './pages/vendas/vendas.component';
 import { FinanceiroComponent } from './pages/financeiro/financeiro.component';
 import { DashboardFinanceiroComponent } from './pages/dashboard-financeiro/dashboard-financeiro.component';
 
@@ -17,10 +16,13 @@ const routes: Routes = [
 		path: 'cadastro',
 		loadChildren: () => import('./pages/cadastro/cadastro.module').then(mod => mod.CadastroModule)
 	},
-	{ path: 'vendas', component: VendasComponent},
+	{
+		path: 'venda',
+		loadChildren: () => import('./pages/venda/venda.module').then(mod => mod.VendaModule)
+	},
 	{ path: 'financeiro', component: FinanceiroComponent},
 	{ path: 'financeiro/calendario', component: DashboardFinanceiroComponent},
-	{ path: '**', redirectTo: '/vendas', pathMatch: 'full' }
+	{ path: '**', redirectTo: '/venda', pathMatch: 'full' }
 ];
 
 @NgModule({

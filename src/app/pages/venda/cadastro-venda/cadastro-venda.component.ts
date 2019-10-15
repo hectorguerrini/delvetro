@@ -4,11 +4,11 @@ import { AppService } from 'src/app/core/services/app.service';
 import { Combo } from 'src/app/shared/models/combo';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
-import { debounceTime, map, distinctUntilChanged } from 'rxjs/operators';
-import { VendasService } from '../vendas/vendas.service';
-import { MessageComponent } from 'src/app/core/dialogs/message/message.component';
+import { debounceTime, map } from 'rxjs/operators';
+import { VendaService } from '../venda.service';
 import { OrcamentoComponent } from 'src/app/core/dialogs/orcamento/orcamento.component';
 import { Venda } from 'src/app/shared/models/venda';
+
 class Calculo {
 	qtde: number;
 	altura: number;
@@ -65,7 +65,7 @@ export class CadastroVendaComponent implements OnInit {
 	constructor(
 		private fb: FormBuilder,
 		private appService: AppService,
-		private vendasService: VendasService,
+		private vendasService: VendaService,
 		public dialogRef: MatDialogRef<CadastroVendaComponent>,
 		private dialog: MatDialog,
 		@Inject(MAT_DIALOG_DATA) public data: Venda
@@ -102,21 +102,6 @@ export class CadastroVendaComponent implements OnInit {
 	openServicosExtras(index: number): void {
 		this.openExtra = this.openExtra === index ? -1 : index;
 	}
-	popup(status, message) {
-		const dialogConfig = new MatDialogConfig();
-
-		dialogConfig.disableClose = false;
-		dialogConfig.hasBackdrop = true;
-		dialogConfig.autoFocus = true;
-		dialogConfig.width = '260px';
-		dialogConfig.data = { status: status, message: message };
-		const dialogRef = this.dialog.open(MessageComponent, dialogConfig);
-
-		dialogRef.afterClosed().subscribe(result => {
-			this.submitted = false;
-		});
-	}
-
 	calculoPrecoFinal(valor: number, soma: boolean): void {
 		const preco = soma ? this.vendaForm.get('PRECO_FINAL').value + valor : this.vendaForm.get('PRECO_FINAL').value - valor;
 		this.vendaForm.get('PRECO_FINAL').setValue(preco);
@@ -162,21 +147,18 @@ export class CadastroVendaComponent implements OnInit {
 						this.getItensArray.push(item);
 					});
 
-					// setTimeout(()=>{
-					// 	this.vendaForm.get('ITENS').setValue(data.json[0].ITENS);
-					// },)
-
 				} else {
-					this.popup('error', 'Erro ao carregar Venda');
+					this.appService.popup('error', 'Erro ao carregar Venda');
 				}
 			});
 	}
 
 	salvarVenda(status: string): void {
 		this.vendaForm.get('STATUS_VENDA').setValue(status);
-		let venda = <Venda>{};
 
-		venda = Object.assign(venda, this.vendaForm.value);
+		let venda: Venda;
+
+		venda = this.vendaForm.value;
 		venda.QTD_PRODUTOS = venda.ITENS.length;
 		venda.PRODUTOS = [];
 		venda.ITENS.forEach(el => {
@@ -192,15 +174,14 @@ export class CadastroVendaComponent implements OnInit {
 				venda.PRODUTOS.push(el);
 			}
 		});
-		console.log('Venda ', venda);
 
 		this.vendasService.salvarVenda(venda)
 			.subscribe((data: {query: string, json: Array<any>}) => {
 				if (data.json.length > 0) {
-					this.popup('success', 'Cadastro Efetuado com sucesso');
+					this.appService.popup('success', 'Cadastro Efetuado com sucesso');
 					this.dialogRef.close(true);
 				} else {
-					this.popup('error', 'Error no cadastro');
+					this.appService.popup('error', 'Error no cadastro');
 				}
 			});
 
@@ -280,17 +261,17 @@ export class CadastroVendaComponent implements OnInit {
 
 			calculo.valor = calculo.qtde * (calculo.area_considerada * this.itensForm.get('PRECO_UNITARIO').value);
 
-			console.log(`
-				altura: ${calculo.altura}
-				largura: ${calculo.largura}
-				area: ${calculo.area}
+			// console.log(`
+			// 	altura: ${calculo.altura}
+			// 	largura: ${calculo.largura}
+			// 	area: ${calculo.area}
 
-				altura considerada: ${calculo.altura_considerada}
-				largura considerada: ${calculo.largura_considerada}
-				area considerada: ${calculo.area_considerada}
+			// 	altura considerada: ${calculo.altura_considerada}
+			// 	largura considerada: ${calculo.largura_considerada}
+			// 	area considerada: ${calculo.area_considerada}
 
-				valor: ${calculo.valor}
-			`);
+			// 	valor: ${calculo.valor}
+			// `);
 		}
 
 
@@ -362,7 +343,7 @@ export class CadastroVendaComponent implements OnInit {
 		const compExtras = composicao.controls[id].get('EXTRAS') as FormArray;
 
 		const obj = this.extraForm.value;
-		console.log(obj);
+
 		const extras: FormGroup = this.fb.group({
 			ID_PRODUTO: [obj.ID_PRODUTO],
 			ID_ITEM_VENDIDO: [null],
