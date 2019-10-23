@@ -34,7 +34,7 @@ import { FinanceiroComponent } from './pages/financeiro/financeiro.component';
 import { MessageComponent } from './core/dialogs/message/message.component';
 import { MainComponent } from './main/main.component';
 import { OrcamentoComponent } from './core/dialogs/orcamento/orcamento.component';
-import { PagamentosComponent } from './pages/pagamentos/pagamentos.component';
+import { PagamentosComponent } from './pages/venda/pagamentos/pagamentos.component';
 import { TabelaComponent } from './pages/tabela/tabela.component';
 
 // Plugins
@@ -69,8 +69,7 @@ registerLocaleData(localePt);
 		DashboardComponent,
 		ClienteComponent,
 		MessageComponent,
-		OrcamentoComponent,
-		PagamentosComponent,
+		OrcamentoComponent,		
 		FinanceiroComponent,
 		DashboardFinanceiroComponent,
 		MainComponent
@@ -117,8 +116,7 @@ registerLocaleData(localePt);
 	bootstrap: [AppComponent],
 	entryComponents: [
 		MessageComponent,
-		OrcamentoComponent,
-		PagamentosComponent
+		OrcamentoComponent
 	]
 
 })
