@@ -1,15 +1,16 @@
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { AppService } from 'src/app/core/services/app.service';
-import { MatDialogRef, MatDialog, MAT_DIALOG_DATA, MatDialogConfig } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Venda } from 'src/app/shared/models/venda';
 import { Combo } from 'src/app/shared/models/combo';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import * as moment from 'moment';
-import { PagamentosService } from './pagamentos.service';
-import { MessageComponent } from 'src/app/core/dialogs/message/message.component';
+import { VendaService } from '../venda.service';
+import { Pagamento } from 'src/app/shared/models/pagamento';
+import { detalheVenda } from 'src/app/shared/models/detalhe-venda';
 
 @Component({
 	selector: 'app-pagamentos',
@@ -39,9 +40,8 @@ export class PagamentosComponent implements OnInit, OnDestroy {
 	constructor(
 		private fb: FormBuilder,
 		private appService: AppService,
-		public dialogRef: MatDialogRef<PagamentosComponent>,
-		private dialog: MatDialog,
-		private pagamentosService: PagamentosService,
+		public dialogRef: MatDialogRef<PagamentosComponent>,		
+		private vendaService: VendaService,
 		@Inject(MAT_DIALOG_DATA) public data: Venda
 	) {
 		this.appService
@@ -55,8 +55,8 @@ export class PagamentosComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
-		this.pagamentosService.getVendaCliente(this.data.ID_CLIENTE, this.data.ID_VENDA)
-			.subscribe((data: { query: string; json: Array<any> }) => {
+		this.vendaService.getVendaCliente(this.data.ID_CLIENTE, this.data.ID_VENDA)
+			.subscribe((data: { query: string; json: Array<detalheVenda> }) => {
 				if (data.json.length > 0 ) {
 					this.pagamentoForm.get('CREDITO_CONSUMO').setValue(data.json[0].CREDITO_CONSUMO);
 					this.pagamentoForm.get('VL_TOTAL').setValue(data.json[0].VL_TOTAL);
@@ -72,25 +72,11 @@ export class PagamentosComponent implements OnInit, OnDestroy {
 		this.unsubscription.next();
 		this.unsubscription.complete();
 	}
-
-	popup(status, message) {
-		const dialogConfig = new MatDialogConfig();
-
-		dialogConfig.disableClose = false;
-		dialogConfig.hasBackdrop = true;
-		dialogConfig.autoFocus = true;
-		dialogConfig.width = '260px';
-		dialogConfig.data = { status: status, message: message };
-		const dialogRef = this.dialog.open(MessageComponent, dialogConfig);
-
-		dialogRef.afterClosed().subscribe(result => {
-
-		});
-	}
-
+	
 	calculoValor(valor, taxa): number {
 		return valor * taxa;
 	}
+
 	onChange(): void {
 		this.pgtoForm
 			.get('ID_FORMA_PGTO')
@@ -112,14 +98,15 @@ export class PagamentosComponent implements OnInit, OnDestroy {
 	}
 
 	salvarPagamento(): void {
-		const pagamento = Object.assign({}, this.pagamentoForm.value);
-		this.pagamentosService.salvarPagamento(pagamento)
-			.subscribe((data: {query: string, json: Array<any>}) => {
+		let pagamento: Pagamento;
+		pagamento = this.pagamentoForm.value;
+		this.vendaService.salvarPagamento(pagamento)
+			.subscribe((data: {query: string, json: Array<Pagamento>}) => {
 				if (data.json.length > 0) {
-					this.popup('success', 'Pagamento Efetuado com sucesso');
+					this.appService.popup('success', 'Pagamento Efetuado com sucesso');
 					this.dialogRef.close(true);
 				} else {
-					this.popup('error', 'Error no cadastro');
+					this.appService.popup('error', 'Error no cadastro');
 				}
 			});
 
@@ -154,7 +141,7 @@ export class PagamentosComponent implements OnInit, OnDestroy {
 			this.pagamentoForm.get('VL_PAGO_TOTAL').setValue(vl_pgto_total);
 		} else {
 			const vl_aberto = vl_pgto_total - this.pagamentoForm.get('VL_TOTAL').value;
-			this.popup('info', `Valor de pagamento maior que o em aberto. Gerado saldo de R$ ${vl_aberto.toFixed(2)} em Credito Consumo`);
+			this.appService.popup('info', `Valor de pagamento maior que o em aberto. Gerado saldo de R$ ${vl_aberto.toFixed(2)} em Credito Consumo`);
 			this.pagamentoForm.get('VL_PAGO_TOTAL').setValue(this.pagamentoForm.get('VL_TOTAL').value);
 			this.pagamentoForm.get('CREDITO_CONSUMO').setValue(vl_aberto + this.pagamentoForm.get('CREDITO_CONSUMO').value);
 		}

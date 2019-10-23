@@ -39,4 +39,20 @@ export class VendaService {
 		uploadData.append('file', file, file.name);
 		return this.http.post(url, uploadData);
 	}
+	getVendaCliente(id_cliente: number, id_venda: number) {
+		const url = `${this.url}/detalhesVenda/${id_cliente}/${id_venda}`;
+
+		return this.http.get(url, {
+			headers: new HttpHeaders().set('Content-Type', 'application/json')
+		});
+	}
+	salvarPagamento(pagamento: any) {
+		const url = `${this.url}/pagamento`;
+
+		return this.http.post(url, pagamento, {
+			headers: new HttpHeaders().set('Content-Type', 'application/json')
+		});
+
+	}
+
 }

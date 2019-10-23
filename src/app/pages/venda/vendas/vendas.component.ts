@@ -18,7 +18,7 @@ import { VendasLista } from 'src/app/shared/models/vendasLista';
 // Components
 import { CadastroClienteComponent } from '../../cadastro/cadastro-cliente/cadastro-cliente.component';
 import { CadastroVendaComponent } from '../cadastro-venda/cadastro-venda.component';
-import { PagamentosComponent } from '../../pagamentos/pagamentos.component';
+import { PagamentosComponent } from '../pagamentos/pagamentos.component';
 
 @Component({
 	selector: 'app-vendas',
