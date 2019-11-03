@@ -12,18 +12,31 @@ export class FinanceiroService {
 	constructor(public http: HttpClient) { }
 
 	salvarDespesa(despesa: Despesa) {
-		const url = `${this.url}/cadastro/despesa`;
+		const url = `${this.url}/despesa`;
 
 		return this.http.post(url, despesa, {
 			headers: new HttpHeaders().set('Content-Type', 'application/json')
 		});
 	}
+	getDespesa(ID_DESPESA: number) {
+		const url = `${this.url}/despesa/${ID_DESPESA}`;
 
+		return this.http.get(url, {
+			headers: new HttpHeaders().set('Content-Type', 'application/json')
+		});
+	}
 	getListaDespesas() {
-		const url = `${this.url}/cadastro/lista_despesas`;
+		const url = `${this.url}/listaDespesas`;
 
 		return this.http.post(url, {}, {
 			headers: new HttpHeaders().set('Content-Type', 'application/json')
 		});
 	}
+	getEventosCalendario(Date: Date) {
+		const url = `${this.url}/eventosCalendario`;
+
+		return this.http.post(url, {data: Date}, {
+			headers: new HttpHeaders().set('Content-Type', 'application/json')
+		});
+	} 
 }

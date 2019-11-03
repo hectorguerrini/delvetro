@@ -1,14 +1,14 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { Combo } from 'src/app/shared/models/combo';
 import { AppService } from 'src/app/core/services/app.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { distinctUntilChanged, takeUntil, debounceTime, map } from 'rxjs/operators';
+import { Subject, Observable } from 'rxjs';
 import * as moment from 'moment';
 import { Despesa } from 'src/app/shared/models/despesa';
 import { FinanceiroService } from './financeiro.service';
-import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
-import { MessageComponent } from 'src/app/core/dialogs/message/message.component';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+
 @Component({
 	selector: 'app-financeiro',
 	templateUrl: './financeiro.component.html',
@@ -31,12 +31,13 @@ export class FinanceiroComponent implements OnInit, OnDestroy {
 	comboBeneficiados: Array<Combo>;
 	comboFormaPgto: Array<Combo>;
 	comboCategoria: Array<Combo>;
+	comboDespesas: Array<Combo>;
 	unsubscription = new Subject<void>();
 	constructor(
-		private fb: FormBuilder,
-		private dialog: MatDialog,
+		private fb: FormBuilder,		
 		private appService: AppService,
-		private financeiroService: FinanceiroService
+		private financeiroService: FinanceiroService,
+		@Inject(MAT_DIALOG_DATA) public ID_DESPESA: number
 	) {
 		this.appService
 			.getCombo('beneficiados')
@@ -53,9 +54,17 @@ export class FinanceiroComponent implements OnInit, OnDestroy {
 			.subscribe((data: { query: string; json: Array<Combo> }) => {
 				this.comboCategoria = data.json;
 			});
+		this.appService
+			.getCombo('despesas')
+			.subscribe((data: { query: string; json: Array<Combo> }) => {
+				this.comboDespesas = data.json;
+			});
 	}
 
 	ngOnInit() {
+		if (this.ID_DESPESA) {
+			this.getDespesa(this.ID_DESPESA);
+		}
 		this.onChanges();
 	}
 	ngOnDestroy() {
@@ -69,6 +78,9 @@ export class FinanceiroComponent implements OnInit, OnDestroy {
 				distinctUntilChanged(),
 				takeUntil(this.unsubscription)
 			).subscribe(custo => {
+				if (typeof(custo) === 'number') {
+					custo = custo.toFixed(2);
+				}
 				let valor = custo
 					.replace(/\D/g, '')
 					.replace(/((\d{1,2})$)/g, ',$2')
@@ -78,6 +90,19 @@ export class FinanceiroComponent implements OnInit, OnDestroy {
 				this.despesaForm
 					.get('VL_DESPESA')
 					.updateValueAndValidity();
+			});
+	}
+	selectDespesa(item): void {
+		const obj = this.comboDespesas.find(el => el.LABEL === item);
+		this.despesaForm.get('ID_DESPESA').setValue(obj.VALOR);
+		this.getDespesa(obj.VALOR);
+	}
+	getDespesa(ID_DESPESA: number): void {
+		this.financeiroService.getDespesa(ID_DESPESA)
+			.subscribe((data: { query: string; json: Array<Despesa> }) => {
+				if (data.json.length > 0 ) {
+					this.despesaForm.patchValue(data.json[0]);
+				}
 			});
 	}
 	salvarDespesa(): void {
@@ -108,4 +133,23 @@ export class FinanceiroComponent implements OnInit, OnDestroy {
 			ID_FORMA_PGTO: 1
 		});
 	}
+	search = (text$: Observable<string>) =>
+		text$.pipe(
+			debounceTime(200),
+			map(term =>
+				term === ''
+					? []
+					: this.comboDespesas
+						.filter(
+							v =>
+								v.LABEL.toLowerCase().indexOf(
+									term.toLowerCase()
+								) > -1
+						)
+						.slice(0, 5)
+						.map(s => s.LABEL)
+			)
+		)
+
+	formatter = (LABEL: string) => LABEL;
 }
