@@ -15,7 +15,7 @@ import { CadastroModule } from './pages/cadastro/cadastro.module';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatMomentDateModule, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
@@ -54,6 +54,7 @@ import * as moment from 'moment';
 // Pipe
 import { FilterTablePipe } from './shared/pipes/filter-table.pipe';
 import { VendaModule } from './pages/venda/venda.module';
+import { LoginComponent } from './login/login.component';
 
 
 export function momentAdapterFactory() {
@@ -72,7 +73,8 @@ registerLocaleData(localePt);
 		OrcamentoComponent,		
 		FinanceiroComponent,
 		DashboardFinanceiroComponent,
-		MainComponent
+		MainComponent,
+		LoginComponent
 	],
 	imports: [
 		AppRoutingModule,
@@ -111,7 +113,8 @@ registerLocaleData(localePt);
 		{ provide: LOCALE_ID, useValue: 'pt' },
 		{ provide: HIGHCHARTS_MODULES, useFactory: () => [more, exporting] },
 		{ provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
-		{ provide: MOMENT, useValue: moment }
+		{ provide: MOMENT, useValue: moment },
+		{ provide: MAT_DIALOG_DATA, useValue: []}
 	],
 	bootstrap: [AppComponent],
 	entryComponents: [
