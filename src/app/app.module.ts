@@ -56,6 +56,9 @@ import { FilterTablePipe } from './shared/pipes/filter-table.pipe';
 import { VendaModule } from './pages/venda/venda.module';
 import { LoginComponent } from './login/login.component';
 
+import { AuthModule, AUTH_SERVICE, PUBLIC_FALLBACK_PAGE_URI, PROTECTED_FALLBACK_PAGE_URI } from 'ngx-auth';
+import { AuthenticationService } from './core/services/authentication.service';
+
 
 export function momentAdapterFactory() {
 	return adapterFactory(moment);
@@ -81,6 +84,7 @@ registerLocaleData(localePt);
 		BrowserModule,
 		HttpClientModule,
 		FormsModule,
+		AuthModule,
 		NgbModule,
 		ChartModule,
 		MatPaginatorModule,
@@ -114,7 +118,10 @@ registerLocaleData(localePt);
 		{ provide: HIGHCHARTS_MODULES, useFactory: () => [more, exporting] },
 		{ provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
 		{ provide: MOMENT, useValue: moment },
-		{ provide: MAT_DIALOG_DATA, useValue: []}
+		{ provide: MAT_DIALOG_DATA, useValue: 0},
+		{ provide: PROTECTED_FALLBACK_PAGE_URI, useValue: '/' },
+    	{ provide: PUBLIC_FALLBACK_PAGE_URI, useValue: '/login' },
+    	{ provide: AUTH_SERVICE, useClass: AuthenticationService }
 	],
 	bootstrap: [AppComponent],
 	entryComponents: [

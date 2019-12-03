@@ -1,0 +1,25 @@
+.login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;    
+    form {        
+        width: 40%;
+        padding: 2% 4%;
+        border: 1px solid transparent;
+        box-shadow: 2px -1px 20px #888888;
+        border-radius: 10px;
+        .msgError {
+            color: red;
+        }
+        .button {
+            text-align: center;
+            width: 100%;
+            .btn {
+                width: 30%;
+                font-size: 20px;
+            }
+        }    
+        
+    }
+}

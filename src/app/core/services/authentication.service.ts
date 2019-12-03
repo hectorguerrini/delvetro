@@ -1,14 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from 'ngx-auth';
 import { HttpClient, HttpErrorResponse, HttpRequest } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { TokenStorageService } from './token-storage.service';
 import { map, switchMap, tap, catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-interface AccessData {
-  accessToken: string;
-  refreshToken: string;
-}
+import { AccessData } from 'src/app/shared/models/accessData';
 
 @Injectable({
   providedIn: 'root'
@@ -49,7 +46,7 @@ export class AuthenticationService implements AuthService {
       .getRefreshToken()
       .pipe(
         switchMap((refreshToken: string) =>
-          this.http.post(`http://localhost:3000/refresh`, { refreshToken })
+          this.http.post(`${environment.url}/refreshToken`, { refreshToken })
         ),
         tap((tokens: AccessData) => this.saveAccessData(tokens)),
         catchError((err) => {
@@ -78,18 +75,22 @@ export class AuthenticationService implements AuthService {
    * @returns {boolean}
    */
   public verifyTokenRequest(url: string): boolean {
-    return url.endsWith('/refresh');
+    return url.endsWith('/refreshToken');
   }
 
   /**
    * EXTRA AUTH METHODS
    */
 
-  public login(): Observable<any> {
-    return this.http.post(`http://localhost:3000/login`, {})
-      .pipe(tap((tokens: AccessData) => this.saveAccessData(tokens)));
+  public login(usuario): Observable<any> {
+    return this.http.post(`${environment.url}/login`, usuario)
+      .pipe(
+        tap((tokens: AccessData) => {
+          this.setIdUsuario(tokens.id_usuario);
+          this.saveAccessData(tokens);
+        })
+      );
   }
-
   /**
    * Logout
    */
@@ -108,6 +109,15 @@ export class AuthenticationService implements AuthService {
     this.tokenStorage
       .setAccessToken(accessToken)
       .setRefreshToken(refreshToken);
+  }
+
+  public setIdUsuario(id: string) {
+    localStorage.setItem('id_usuario', id);
+    return this;
+  }
+  public getIdUsuario(): Observable<string> {
+    const token: string = <string>localStorage.getItem('id_usuario');
+    return of(token);
   }
 
 }

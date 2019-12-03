@@ -1,4 +1,4 @@
-<div class="navbar">
+<div class="navbar" *ngIf="path !== '/login'" >
 	<img src="assets/logo_branco_nfundo.png" alt="logo">
 	<mat-divider></mat-divider>
 	<div class="cadastros">
@@ -27,9 +27,9 @@
 
 	<span [routerLink]="'dashboard'"><i class="fa fa-bar-chart"></i>Relatorio</span>
 	<span [routerLink]="'cliente'"><i class="fa fa-user-circle-o"></i>Cliente</span>
-
+	
 </div>
 
-<div class="main">
+<div [ngClass]="{'main': path !== '/login', 'login': path === '/login'}">
 	<router-outlet></router-outlet>
 </div>

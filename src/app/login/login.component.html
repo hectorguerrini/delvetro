@@ -1,3 +1,25 @@
-<p>
-  login works!
-</p>
+<div class="login">
+	<form [formGroup]="loginForm">
+		<div class="text-center">
+			<img src="assets/logo2.png" alt="Logo delvetro" width="100px" class="text-center">
+		</div>		
+		<div class="form-group">
+			<label>Usuario:</label>
+			<input type="text" class="form-control" formControlName="usuario">
+			<p *ngIf="submitted && loginForm.get('usuario').invalid" class="msgError">Preencha o campo</p>
+		</div>
+		<div class="form-group">
+			<label>Senha:</label>
+			<input type="password" class="form-control" formControlName="password">
+			<p *ngIf="submitted && loginForm.get('password').invalid" class="msgError">Preencha o campo da </p>
+		</div>		
+		<div class="button">
+			<button type="submit" class="btn btn-delvetro" (click)="login()">Login</button>
+		</div>
+		
+		
+		
+	</form>
+
+
+</div>

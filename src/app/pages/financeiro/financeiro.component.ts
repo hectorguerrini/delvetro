@@ -63,6 +63,7 @@ export class FinanceiroComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		if (this.ID_DESPESA) {
+			console.log(this.ID_DESPESA)
 			this.getDespesa(this.ID_DESPESA);
 		}
 		this.onChanges();
