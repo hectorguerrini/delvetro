@@ -56,6 +56,7 @@ export class VendasComponent implements OnInit {
 		const dialogRef = this.dialog.open(PagamentosComponent, dialogConfig);
 
 		dialogRef.afterClosed().subscribe(result => {
+			this.venda.ID_VENDA = 0;
 			if (result) {
 				this.getVendaLista();
 			}

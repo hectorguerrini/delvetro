@@ -215,7 +215,7 @@ export class PagamentosComponent implements OnInit, OnDestroy {
 					}
 				}
 				const valor_final = `${(valor_real / forma_pgto.PRECO).toFixed(2).replace('.', ',').replace(/^(\D)/g, '0$1')}`;
-				this.pgtoForm.get('VL_PGTO_CONSID').setValue(valor);
+				this.pgtoForm.get('VL_PGTO_CONSID').setValue(valor , {emitEvent: false});
 				this.pgtoForm
 					.get('VL_PGTO_CONSID')
 					.updateValueAndValidity();

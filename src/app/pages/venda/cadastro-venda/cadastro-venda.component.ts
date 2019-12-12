@@ -103,7 +103,9 @@ export class CadastroVendaComponent implements OnInit {
 		this.openExtra = this.openExtra === index ? -1 : index;
 	}
 	calculoPrecoFinal(valor: number, soma: boolean): void {
+		console.log(soma,valor);
 		const preco = soma ? this.vendaForm.get('PRECO_FINAL').value + valor : this.vendaForm.get('PRECO_FINAL').value - valor;
+		console.log(preco);
 		this.vendaForm.get('PRECO_FINAL').setValue(preco);
 		this.vendaForm
 					.get('PRECO_FINAL')
@@ -202,17 +204,17 @@ export class CadastroVendaComponent implements OnInit {
 		this.onChangesCalc();
 	}
 	onChangesCalc(): void {
-
+		this.itensForm.get('QTDE')
+			.valueChanges
+			.subscribe(el => {
+				const calculo = this.calculoCustoVenda();
+				this.itensForm.get('PRECO_FINAL').setValue(calculo.valor);
+				this.itensForm
+					.get('PRECO_FINAL')
+					.updateValueAndValidity();
+		});
 		if ( this.itensForm.get('TIPO').value === 'Chaparia' ) {
-			this.itensForm.get('QTDE')
-				.valueChanges
-				.subscribe(el => {
-					const calculo = this.calculoCustoVenda();
-					this.itensForm.get('PRECO_FINAL').setValue(calculo.valor);
-					this.itensForm
-						.get('PRECO_FINAL')
-						.updateValueAndValidity();
-			});
+			
 			this.itensForm.get('ALTURA')
 				.valueChanges
 				.subscribe(el => {
@@ -231,23 +233,16 @@ export class CadastroVendaComponent implements OnInit {
 						.get('PRECO_FINAL')
 						.updateValueAndValidity();
 			});
-		} else {
-			this.itensForm.get('QTDE')
-				.valueChanges
-				.subscribe(el => {
-					const valor = this.itensForm.get('PRECO_UNITARIO').value * el;
-					this.itensForm.get('PRECO_FINAL').setValue(valor);
-					this.itensForm
-						.get('PRECO_FINAL')
-						.updateValueAndValidity();
-			});
 		}
 
 	}
+	
+	// Validar mais tarde, falta 2 unidades
 	calculoCustoVenda(): Calculo {
 		const calculo = new Calculo();
 		calculo.valor = 0;
-		if (this.itensForm.get('UNIDADE').value === 'Metro Quadrado') {
+		const unidade = this.itensForm.get('UNIDADE').value;
+		if (unidade === 'Metro Quadrado') {
 			calculo.altura = this.itensForm.get('ALTURA').value * 1;
 			calculo.largura = this.itensForm.get('LARGURA').value * 1;
 			calculo.qtde = this.itensForm.get('QTDE').value * 1;
@@ -272,6 +267,10 @@ export class CadastroVendaComponent implements OnInit {
 
 			// 	valor: ${calculo.valor}
 			// `);
+		} else if(unidade === 'Unitario') {
+			calculo.qtde = this.itensForm.get('QTDE').value * 1;
+
+			calculo.valor = calculo.qtde * this.itensForm.get('PRECO_UNITARIO').value;
 		}
 
 
