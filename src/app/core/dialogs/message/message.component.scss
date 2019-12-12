@@ -1,11 +1,16 @@
-.status {
-	position: relative;
-	left: calc(50% - 48px);
-	label {
-		font-family: 'Times New Roman', Times, serif;
-	}
+div{
+	display: flex;
+	flex-direction: column;
 }
 
+
+.status {
+	display: flex;	
+	justify-content: center;	
+}
+label {	
+	font-family: 'Times New Roman', Times, serif;
+}
 .success:before {
 	color: green;
 	font-family: FontAwesome;
