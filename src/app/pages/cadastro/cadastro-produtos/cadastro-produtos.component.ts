@@ -52,6 +52,14 @@ export class CadastroProdutosComponent implements OnInit {
 		private appService: AppService,
 		private cadastroService: CadastroService
 	) {
+		
+	}
+
+	ngOnInit() {
+		this.getCombos();
+		this.onChange();
+	}
+	getCombos(): void {
 		this.appService
 			.getCombo('servicos')
 			.subscribe((data: { query: string; json: Array<Combo> }) => {
@@ -68,11 +76,6 @@ export class CadastroProdutosComponent implements OnInit {
 				this.comboProdutos = data.json;
 			});
 	}
-
-	ngOnInit() {
-		this.onChange();
-	}
-
 	onChange() {
 		this.composicaoForm
 			.get('TIPO')
@@ -200,6 +203,7 @@ export class CadastroProdutosComponent implements OnInit {
 				if (data.json.length > 0) {
 					this.appService.popup('success', 'Cadastro Efetuado com sucesso');
 					this.resetForm();
+					this.getCombos();
 				} else {
 					this.appService.popup('error', 'Error no cadastro do produto');
 				}
@@ -243,7 +247,8 @@ export class CadastroProdutosComponent implements OnInit {
 		this.produtosForm.controls['NM_PRODUTO'].enable();
 		const composicao = this.produtosForm.get('COMPOSICAO') as FormArray;
 		console.log(composicao.length);
-		for (let i = 0; i <= composicao.length; i++) {
+		const len = composicao.length;
+		for (let i = 0; i < len; i++) {
 			composicao.removeAt(0);
 		}
 

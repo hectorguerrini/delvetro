@@ -1,16 +1,20 @@
 export interface ColunaTipoData {
-	tipo: String;
+	tipo: string;
 	valorMin: null;
 	valorMax: null;
 	filter?: boolean;
 }
 export interface ColunaTipoString {
-	tipo: String;
-	valor: String;
+	tipo: string;
+	valor: string;
 }
 export interface ColunaTipoDinheiro {
-	tipo: String;
-	valor: String;
+	tipo: string;
+	valor: string;
+}
+export interface ColunaTipoCombo {
+	tipo: string;
+	valor: number;
 }
 export interface ModelTabela {
 	ID: number;
@@ -18,23 +22,39 @@ export interface ModelTabela {
 	COLUNA2: string;
 	COLUNA3: string;
 	COLUNA4: string;
-	COLUNA5: string;
+	COLUNA5: number;
 	COLUNA6: string;
 	COLUNA7: string;
 }
+export interface valoresTotal {
+	valorTotal: number;
+}
 
-
+export interface filtro {
+	tipo?: string, 
+	valor?: any,
+	valorMin?: any, 
+	valorMax?: any, 
+	filter?: boolean
+}
+export interface filtroItens {
+	'ID': filtro, 'Cliente': filtro, 'Descricao': filtro, 'Dt_venda': filtro, 'Status': filtro, 'Financeiro': filtro
+}
 export class Tabela {
 	public nome: string;
 	public colspan: Number;
-	public filtros: Array<{ tipo: String, valorMin?: any, valorMax?: any, filter?: boolean }>;
+	public filtros: Array<filtro>;
+	public total: valoresTotal;
 	constructor(nome: string, size: Number) {
 		this.nome = nome;
 		this.colspan = size;
 		this.filtros = [];
+		this.total = {
+			valorTotal: 0
+		}
 	}
 	addCol(
-		tipo: String,
+		tipo: string,
 		valorMin?: any,
 		valorMax?: any,
 		filter?: boolean
@@ -55,6 +75,11 @@ export class Tabela {
 			const obj = <ColunaTipoDinheiro>{};
 			obj.tipo = tipo;
 			obj.valor = '';
+			this.filtros.push(obj);
+		} else if (tipo === 'c') {
+			const obj = <ColunaTipoCombo>{};
+			obj.tipo = tipo;
+			obj.valor = null;
 			this.filtros.push(obj);
 		}
 	}

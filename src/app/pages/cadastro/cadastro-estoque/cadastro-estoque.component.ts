@@ -42,6 +42,14 @@ export class CadastroEstoqueComponent implements OnInit {
 		private cadastroService: CadastroService,
 		private appService: AppService
 	) {
+		
+	}
+	
+	ngOnInit() {
+		this.getCombos();
+		this.onChanges();
+	}
+	getCombos(): void {
 		this.appService
 			.getCombo('tipo_estoque')
 			.subscribe((data: { query: string; json: Array<Combo> }) => {
@@ -52,10 +60,6 @@ export class CadastroEstoqueComponent implements OnInit {
 			.subscribe((data: { query: string; json: Array<Combo> }) => {
 				this.comboEstoque = data.json;
 			});
-	}
-
-	ngOnInit() {
-		this.onChanges();
 	}
 	onChanges(): void {
 		this.estoqueForm.get('ID_TIPO').valueChanges.subscribe(tipo => {
@@ -109,6 +113,7 @@ export class CadastroEstoqueComponent implements OnInit {
 				if (data.json.length > 0) {
 					this.appService.popup('success', 'Cadastro Efetuado com sucesso');
 					this.resetForm();
+					this.getCombos();
 				} else {
 					this.appService.popup('error', 'Error no cadastro');
 				}

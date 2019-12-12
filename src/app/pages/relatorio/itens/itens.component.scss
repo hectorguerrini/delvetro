@@ -1,0 +1,38 @@
+.itens {
+	margin-top: 5vh;
+	padding: 1%;
+	display: flex;
+	// flex-wrap: wrap;
+	flex-direction: column;
+	justify-content: space-around;
+	.headerTable {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-around;
+		h3 {
+			flex: 1 0 60%;
+		}
+		div {
+			flex: 1 0 40%;
+			display: flex;
+			img {
+				width: 1.5vw;
+				cursor: pointer;
+
+			}
+			justify-content: flex-end;
+			padding: 0 1%;			
+		}
+		
+	}
+    table {
+		
+		td,th {
+			border: 1px solid #dee2e6;
+			padding: 8px;
+		}
+		.filter > input, .filter > select{
+			font-size: 12px;				
+		}
+	}
+}

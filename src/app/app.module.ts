@@ -58,6 +58,7 @@ import { LoginComponent } from './login/login.component';
 
 import { AuthModule, AUTH_SERVICE, PUBLIC_FALLBACK_PAGE_URI, PROTECTED_FALLBACK_PAGE_URI } from 'ngx-auth';
 import { AuthenticationService } from './core/services/authentication.service';
+import { RelatorioModule } from './pages/relatorio/relatorio.module';
 
 
 export function momentAdapterFactory() {
@@ -100,6 +101,7 @@ registerLocaleData(localePt);
 		MatInputModule,
 		CadastroModule,
 		VendaModule,
+		RelatorioModule,
 		CalendarModule.forRoot(
 			{
 				provide: DateAdapter,

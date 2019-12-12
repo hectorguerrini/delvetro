@@ -27,6 +27,11 @@ const routes: Routes = [
 	},
 	{ path: 'financeiro', canActivate: [ ProtectedGuard ], component: FinanceiroComponent },
 	{ path: 'financeiro/calendario', canActivate: [ ProtectedGuard ], component: DashboardFinanceiroComponent},	
+	{
+		path: 'relatorio',
+		canActivate: [ ProtectedGuard ],
+		loadChildren: () => import('./pages/relatorio/relatorio.module').then(mod => mod.RelatorioModule)
+	},
 	{ path: 'login', canActivate: [ PublicGuard ], component: LoginComponent},
 	{ path: '**', redirectTo: '/venda', pathMatch: 'full' }
 ];

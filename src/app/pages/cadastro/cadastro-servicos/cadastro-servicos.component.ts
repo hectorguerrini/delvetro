@@ -33,6 +33,14 @@ export class CadastroServicosComponent implements OnInit {
 		private appService: AppService,
 		private cadastroService: CadastroService
 	) {
+		
+	}
+
+	ngOnInit() {
+		this.getCombos();
+		this.onChange();
+	}
+	getCombos(): void {
 		this.appService
 			.getCombo('tipo_servicos')
 			.subscribe((data: { query: string; json: Array<Combo> }) => {
@@ -49,11 +57,7 @@ export class CadastroServicosComponent implements OnInit {
 				this.comboServicos = data.json;
 			});
 	}
-
-	ngOnInit() {
-		this.onChanges();
-	}
-	onChanges(): void {
+	onChange(): void {
 		this.servicosForm
 			.get('CUSTO_POR_UNIDADE')
 			.valueChanges.pipe(distinctUntilChanged())
@@ -84,9 +88,11 @@ export class CadastroServicosComponent implements OnInit {
 		this.cadastroService
 			.salvarServico(servico)
 			.subscribe((data: { query: string; json: Array<Servico> }) => {
+				this.submitted = false;
 				if (data.json.length > 0) {
 					this.appService.popup('success', 'Cadastro Efetuado com sucesso');
 					this.resetForm();
+					this.getCombos();
 				} else {
 					this.appService.popup('error', 'Error no cadastro');
 				}
