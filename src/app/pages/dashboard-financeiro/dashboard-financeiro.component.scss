@@ -2,7 +2,9 @@
 	margin-top: 5vh;
 	padding: 1%;
 	display: flex;
-	flex-wrap: wrap;
+	// flex-wrap: wrap;
+	flex-direction: column;
+	justify-content: space-around;
 	.btn {
 		margin-top: 0.5rem
 	}
@@ -13,15 +15,34 @@
 			padding: 0 1%;
 		}
 	}
+	.headerTable {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-around;
+		h3 {
+			flex: 1 0 60%;
+		}
+		h4 {
+			flex: 1 0 10%;
+			margin: auto;
 
+		}
+		div {
+			flex: 1 0 30%;
+		}
+		.filter > input{
+			margin: 0 5px;	
+		}
+		
+	}
 	table {
 		
 		td,th {
 			border: 1px solid #dee2e6;
 			padding: 8px;
 		}
-		.filter > input{
-			font-size: 12px;	
+		.filter > input, .filter > select{
+			font-size: 12px;				
 		}
 	}
 }

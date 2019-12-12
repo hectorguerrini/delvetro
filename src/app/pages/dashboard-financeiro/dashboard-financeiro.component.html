@@ -17,8 +17,21 @@
 </div>
 
 <div class="dashFinanceiro styleCadastro">
-	<h3>Tabela de Despesas</h3>
-	<table class="table">
+	
+	<div class="headerTable">
+		<h3>Tabela de Despesas</h3>
+		
+		<div class="input-group filter" *ngIf="tabActive.filtros[2].tipo == 'd'">						
+			<span><i class="fa fa-calendar-o" aria-hidden="true"></i></span>
+			<input class="form-control"  [matDatepicker]="picker1Min" placeholder="mm/dd/yyyy" [(ngModel)]="tabActive.filtros[2].valorMin" 
+				(dateChange)="changeFilters()" (click)="picker1Min.open()">						
+			<mat-datepicker #picker1Min></mat-datepicker>
+			<input class="form-control" [matDatepicker]="picker1Max" placeholder="mm/dd/yyyy" [(ngModel)]="tabActive.filtros[2].valorMax"
+				(dateChange)="changeFilters()" (click)="picker1Max.open()">						
+			<mat-datepicker #picker1Max></mat-datepicker>
+		</div>
+	</div>
+	<table class="table table-striped">
 		<colgroup>
 			<col width="20%">
 			<col width="15%">
@@ -31,15 +44,22 @@
 			<tr>
 				<th>
 					<div class="filter" *ngIf="tabActive.filtros[0].tipo == 's'">						
-						<input class="form-control" type="text" placeholder="Pesquisa" [(ngModel)]="tabActive.filtros[0].valor">
+						<input class="form-control" type="text" placeholder="Pesquisa" [(ngModel)]="tabActive.filtros[0].valor"  (ngModelChange)="changeFilters()">
 					</div>
 				</th>
 				<th>
 					<div class="filter" *ngIf="tabActive.filtros[1].tipo == 's'">						
-						<input class="form-control" type="text" placeholder="Pesquisa" [(ngModel)]="tabActive.filtros[1].valor">
+						<input class="form-control" type="text" placeholder="Pesquisa" [(ngModel)]="tabActive.filtros[1].valor"  (ngModelChange)="changeFilters()">
+					</div>
+					<div class="filter" *ngIf="tabActive.filtros[1].tipo == 'c'">														
+						<select class="form-control" [(ngModel)]="tabActive.filtros[1].valor" (ngModelChange)="changeFilters()">
+							<option value="null">Todos</option>
+							<option *ngFor="let item of comboCategoria" [ngValue]="item.VALOR">{{item.LABEL}}</option>
+						</select>
 					</div>
 				</th>
-				<th>
+				<th colspan="2"></th>
+				<!-- <th>
 					<div class="input-group filter" *ngIf="tabActive.filtros[2].tipo == 'd'">						
 						<input class="form-control" [matDatepicker]="picker1Min" placeholder="mm/dd/yyyy" [(ngModel)]="tabActive.filtros[2].valorMin" 
 							(dateChange)="getListas()" (click)="picker1Min.open()">						
@@ -52,15 +72,27 @@
 				<th>
 					<div class="input-group filter" *ngIf="tabActive.filtros[3].tipo == 'd'">						
 						<input class="form-control" [matDatepicker]="picker2Min" placeholder="mm/dd/yyyy" [(ngModel)]="tabActive.filtros[3].valorMin" 
-							(dateChange)="getListas()" (click)="picker2Min.open()">						
+							(dateChange)="getListas()" (click)="picker2Min.open()" disabled>						
 						<mat-datepicker #picker2Min></mat-datepicker>
 						<input class="form-control" [matDatepicker]="picker2Max" placeholder="mm/dd/yyyy" [(ngModel)]="tabActive.filtros[3].valorMax"
 							(dateChange)="getListas()" (click)="picker2Max.open()">						
 						<mat-datepicker #picker2Max></mat-datepicker>
 					</div>
+				</th> -->
+				<th>
+					<div>
+						{{tabActive.total.valorTotal | currency: 'BRL'}}
+					</div>
 				</th>
-				<th></th>
-				<th></th>
+				<th>
+					<div class="filter" *ngIf="tabActive.filtros[5].tipo === 'c'">														
+						<select class="form-control" [(ngModel)]="tabActive.filtros[5].valor" (ngModelChange)="changeFilters()">
+							<option [ngValue]="null">Todos</option>
+							<option value="Pago">Pago</option>
+							<option value="Aguardando Pagamento">Aguardando Pagamento</option>
+						</select>
+					</div>
+				</th>
 			</tr>
 			<tr>
 				<th>Despesa</th>

@@ -5,6 +5,8 @@ import { FinanceiroService } from '../financeiro/financeiro.service';
 import { Tabela, ModelTabela } from 'src/app/shared/models/tabela';
 import { MatDialogConfig, MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FinanceiroComponent } from '../financeiro/financeiro.component';
+import { AppService } from 'src/app/core/services/app.service';
+import { Combo } from 'src/app/shared/models/combo';
 
 @Component({
 	selector: 'app-dashboard-financeiro',
@@ -27,14 +29,20 @@ export class DashboardFinanceiroComponent implements OnInit {
 		yellow: {
 		  primary: '#e3bc08',
 		  secondary: '#FDF1BA'
+		},
+		green: {
+			primary: '#34eb40',
+			secondary: '#98eb9e'
 		}
 	  };
 //	events: CalendarEvent[] = [];
 	tabActive: Tabela;
 	tabela: Array<ModelTabela>;
+	comboCategoria: Array<Combo>;
 	constructor(
 		private financeiroService: FinanceiroService,
-		private dialog: MatDialog
+		private dialog: MatDialog,
+		private appService: AppService
 	) { }
 
 	events: CalendarEvent[] = [	
@@ -68,15 +76,23 @@ export class DashboardFinanceiroComponent implements OnInit {
 	ngOnInit() {
 		this.tabActive = new Tabela('despesas', 7);
 		this.tabActive.addCol('s');
-		this.tabActive.addCol('s');
-		this.tabActive.addCol('d', moment(), moment());
-		this.tabActive.addCol('d', moment(), moment());
+		this.tabActive.addCol('c');
+		this.tabActive.addCol('d', moment().startOf('month'), moment().endOf('month'));
+		this.tabActive.addCol('d', moment().startOf('month'), moment().endOf('month'));
 		this.tabActive.addCol('$');
-		this.tabActive.addCol('s');
+		this.tabActive.addCol('c');
 
 		this.getListas();
 		this.getEventos();
+		this.getCombos();
 		
+	}
+	getCombos(): void {
+		this.appService
+			.getCombo('categoria_despesa')
+			.subscribe((data: { query: string; json: Array<Combo> }) => {
+				this.comboCategoria = data.json;
+			});
 	}
 	dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
 		if (moment(this.viewDate).month() === moment(date).month()) {
@@ -92,10 +108,11 @@ export class DashboardFinanceiroComponent implements OnInit {
 		}
 	}
 	getListas(): void {
-		this.financeiroService.getListaDespesas()
+		this.financeiroService.getListaDespesas(this.tabActive.filtros)
 			.subscribe((data: { query: string; json: Array<ModelTabela> }) => {
 				if (data.json.length > 0) {
 					this.tabela = data.json;
+					this.tabActive.total.valorTotal = this.tabela.reduce((acc: number, cur) => acc + cur.COLUNA5,0);												
 				} else {
 					this.tabela = [];
 				}
@@ -110,12 +127,26 @@ export class DashboardFinanceiroComponent implements OnInit {
 				data.json.forEach(el => {
 					el.start = moment(el.start).toDate();
 					el.actions = this.actions;
+					el.color = this.getColorEvent(el.STATUS_PGTO, el.start);
 					this.events.push(el);
 				});		
 			} else {
 				this.events = [];
 			}
 		});
+	}
+	getColorEvent(status: string, data: string): {primary: string, secondary: string} {
+		let color;
+
+		if (status === 'Pago') {
+			color = this.colors.green;
+		} else if (moment(data).isAfter(moment())) {
+			color = this.colors.blue;
+		} else {
+			color = this.colors.red;
+		}
+
+		return color;
 	}
 	editarEvento(ID_DESPESA: number): void {
 		const dialogConfig = new MatDialogConfig();
@@ -129,10 +160,16 @@ export class DashboardFinanceiroComponent implements OnInit {
 		const dialogRef = this.dialog.open(FinanceiroComponent, dialogConfig);
 
 		dialogRef.afterClosed().subscribe(result => {
-			
-			if (result) {
-				this.getEventos();
-			}
+			this.getEventos();
+			this.getListas();
+			// if (result) {
+			// 	this.getEventos();
+			// }
 		});
+	}
+
+	changeFilters(): void {
+		this.tabActive.filtros[3] = this.tabActive.filtros[2];
+		this.getListas();
 	}
 }
