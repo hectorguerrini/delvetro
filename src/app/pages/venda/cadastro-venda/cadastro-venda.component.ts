@@ -102,10 +102,8 @@ export class CadastroVendaComponent implements OnInit {
 	openServicosExtras(index: number): void {
 		this.openExtra = this.openExtra === index ? -1 : index;
 	}
-	calculoPrecoFinal(valor: number, soma: boolean): void {
-		console.log(soma,valor);
-		const preco = soma ? this.vendaForm.get('PRECO_FINAL').value + valor : this.vendaForm.get('PRECO_FINAL').value - valor;
-		console.log(preco);
+	calculoPrecoFinal(valor: number, soma: boolean): void {		
+		const preco = soma ? this.vendaForm.get('PRECO_FINAL').value + valor : this.vendaForm.get('PRECO_FINAL').value - valor;		
 		this.vendaForm.get('PRECO_FINAL').setValue(preco);
 		this.vendaForm
 					.get('PRECO_FINAL')
