@@ -106,5 +106,12 @@ export class CadastroService {
 			)
 		});
 	}
+	getBeneficiado(id_beneficiado: number) {
+		const url = `${this.url}/beneficiado/${id_beneficiado}`;
+
+		return this.http.get(url, {
+			headers: new HttpHeaders().set('Content-Type', 'application/json')
+		});
+	}
 
 }
