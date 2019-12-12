@@ -16,10 +16,8 @@
 			</div>
 			<div class="col-md-3 form-group">
 				<label>Beneficiado</label>
-				<select class="form-control" formControlName="ID_BENEFICIADO"
-					[ngClass]="{'error-label': submitted && despesaForm.controls['ID_BENEFICIADO'].errors}">
-					<option *ngFor="let item of comboBeneficiados" [ngValue]="item.VALOR">{{item.LABEL}}</option>
-				</select>
+				<input type="text" class="form-control" formControlName="NM_BENEFICIADO"  [ngbTypeahead]="searchBeneficiado" [resultTemplate]="rt" [inputFormatter]="formatter"
+					[ngClass]="{'error-label': submitted && despesaForm.controls['NM_BENEFICIADO'].errors}" (selectItem)="selectBeneficiado($event.item)">
 			</div>
 			<div class="col-md-3 form-group">
 				<label>Categoria</label>
@@ -36,16 +34,7 @@
 					<mat-datepicker-toggle class="input-group-btn" matSuffix [for]="pickerVencimento"></mat-datepicker-toggle>
 				</div>
 				<mat-datepicker #pickerVencimento></mat-datepicker>
-			</div>
-			<div class="col-md-3 form-group">
-				<label>Data de Pagamento</label>
-				<div class="input-group">
-					<input [matDatepicker]="pickerPagamento" placeholder="mm/dd/yyyy" formControlName="DT_PGTO"
-						class="form-control">
-					<mat-datepicker-toggle class="input-group-btn" matSuffix [for]="pickerPagamento"></mat-datepicker-toggle>
-				</div>
-				<mat-datepicker #pickerPagamento></mat-datepicker>
-			</div>
+			</div>			
 			<div class="col-md-3 form-group">
 				<label>Forma de Pagamento</label>
 				<select class="form-control" formControlName="ID_FORMA_PGTO"
@@ -65,7 +54,15 @@
 					<option value="Pago">Pago</option>
 				</select>
 			</div>
-
+			<div class="col-md-3 form-group" *ngIf="despesaForm.get('STATUS_PGTO').value === 'Pago'">
+				<label>Data de Pagamento</label>
+				<div class="input-group" >
+					<input [matDatepicker]="pickerPagamento" placeholder="mm/dd/yyyy" formControlName="DT_PGTO" [ngClass]="{'error-label': submitted && despesaForm.controls['DT_PGTO'].errors}"
+						class="form-control">
+					<mat-datepicker-toggle class="input-group-btn" matSuffix [for]="pickerPagamento"></mat-datepicker-toggle>
+				</div>
+				<mat-datepicker #pickerPagamento></mat-datepicker>
+			</div>
 		</div>
 	</form>
 	<div class="col-md-12">

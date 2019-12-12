@@ -22,12 +22,13 @@ export class FinanceiroComponent implements OnInit, OnDestroy {
 		VL_DESPESA: ['0,00'],
 		ID_CATEGORIA: [null, Validators.required],
 		ID_BENEFICIADO: [null, Validators.required],
+		NM_BENEFICIADO: ['', Validators.required],
 		DT_VENCIMENTO: [moment(), Validators.required],
 		DT_PGTO: [null],
 		ID_FORMA_PGTO: [1, Validators.required],
 		STATUS_PGTO: [null, Validators.required]
 	});
-
+	NM_BENEFICIADO: string = '';
 	comboBeneficiados: Array<Combo>;
 	comboFormaPgto: Array<Combo>;
 	comboCategoria: Array<Combo>;
@@ -39,6 +40,23 @@ export class FinanceiroComponent implements OnInit, OnDestroy {
 		private financeiroService: FinanceiroService,
 		@Inject(MAT_DIALOG_DATA) public ID_DESPESA: number
 	) {
+		
+	}
+
+	ngOnInit() {
+		this.getCombos();
+		this.onChanges();
+		if (this.ID_DESPESA) {
+			console.log(this.ID_DESPESA)
+			this.getDespesa(this.ID_DESPESA);
+		}		
+	}
+	ngOnDestroy() {
+		this.unsubscription.next();
+		this.unsubscription.complete();
+	}
+
+	getCombos(): void {
 		this.appService
 			.getCombo('beneficiados')
 			.subscribe((data: { query: string; json: Array<Combo> }) => {
@@ -60,18 +78,6 @@ export class FinanceiroComponent implements OnInit, OnDestroy {
 				this.comboDespesas = data.json;
 			});
 	}
-
-	ngOnInit() {
-		if (this.ID_DESPESA) {
-			console.log(this.ID_DESPESA)
-			this.getDespesa(this.ID_DESPESA);
-		}
-		this.onChanges();
-	}
-	ngOnDestroy() {
-		this.unsubscription.next();
-		this.unsubscription.complete();
-	}
 	onChanges(): void {
 		this.despesaForm
 			.get('VL_DESPESA')
@@ -92,6 +98,23 @@ export class FinanceiroComponent implements OnInit, OnDestroy {
 					.get('VL_DESPESA')
 					.updateValueAndValidity();
 			});
+		this.despesaForm
+			.get('STATUS_PGTO')
+			.valueChanges.pipe(
+				distinctUntilChanged(),
+				takeUntil(this.unsubscription)
+			).subscribe(status => {
+				if (status === 'Pago') {
+					this.despesaForm.get('DT_PGTO').setValidators([Validators.required]);
+					this.despesaForm.get('DT_PGTO').updateValueAndValidity();
+				} else {
+					this.despesaForm.get('DT_PGTO').setValidators(null);
+					this.despesaForm.get('DT_PGTO').updateValueAndValidity();
+				}
+
+
+
+			})
 	}
 	selectDespesa(item): void {
 		const obj = this.comboDespesas.find(el => el.LABEL === item);
@@ -103,6 +126,8 @@ export class FinanceiroComponent implements OnInit, OnDestroy {
 			.subscribe((data: { query: string; json: Array<Despesa> }) => {
 				if (data.json.length > 0 ) {
 					this.despesaForm.patchValue(data.json[0]);
+					const obj = this.comboBeneficiados.find(el => el.VALOR === data.json[0].ID_BENEFICIADO);
+					this.despesaForm.get('NM_BENEFICIADO').setValue(obj.LABEL);	
 				}
 			});
 	}
@@ -117,15 +142,17 @@ export class FinanceiroComponent implements OnInit, OnDestroy {
 
 		this.financeiroService.salvarDespesa(despesa)
 			.subscribe((data: { query: string; json: Array<Despesa> }) => {
+				this.submitted = false;
 				if (data.json.length > 0) {
 					this.appService.popup('success', 'Cadastro Despesa efetuado com sucesso');
 					this.resetForm();
+					this.getCombos();
 				} else {
 					this.appService.popup('error', 'Error no cadastro');
 				}
 			});
 
-		this.submitted = false;
+		
 	}
 	resetForm(): void {
 		this.despesaForm.reset({
@@ -133,6 +160,11 @@ export class FinanceiroComponent implements OnInit, OnDestroy {
 			DT_VENCIMENTO: moment(),
 			ID_FORMA_PGTO: 1
 		});
+	}
+
+	selectBeneficiado(item: string): void {
+		const obj = this.comboBeneficiados.find(el => el.LABEL === item);
+		this.despesaForm.get('ID_BENEFICIADO').setValue(obj.VALOR);				
 	}
 	search = (text$: Observable<string>) =>
 		text$.pipe(
@@ -151,6 +183,22 @@ export class FinanceiroComponent implements OnInit, OnDestroy {
 						.map(s => s.LABEL)
 			)
 		)
-
+	searchBeneficiado = (text$: Observable<string>) =>
+		text$.pipe(
+			debounceTime(200),
+			map(term =>
+				term === ''
+					? []
+					: this.comboBeneficiados
+						.filter(
+							v =>
+								v.LABEL.toLowerCase().indexOf(
+									term.toLowerCase()
+								) > -1
+						)
+						.slice(0, 5)
+						.map(s => s.LABEL)
+			)
+		)								
 	formatter = (LABEL: string) => LABEL;
 }

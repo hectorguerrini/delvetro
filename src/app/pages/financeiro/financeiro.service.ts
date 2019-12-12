@@ -25,10 +25,10 @@ export class FinanceiroService {
 			headers: new HttpHeaders().set('Content-Type', 'application/json')
 		});
 	}
-	getListaDespesas() {
+	getListaDespesas(filtro: any) {
 		const url = `${this.url}/listaDespesas`;
 
-		return this.http.post(url, {}, {
+		return this.http.post(url, filtro, {
 			headers: new HttpHeaders().set('Content-Type', 'application/json')
 		});
 	}
