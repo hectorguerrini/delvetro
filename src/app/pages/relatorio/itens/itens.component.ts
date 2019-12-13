@@ -8,6 +8,9 @@ import { filtroItens } from 'src/app/shared/models/tabela';
 import * as moment from 'moment';
 import { PageEvent } from '@angular/material/paginator';
 import { Paginacao } from 'src/app/shared/models/paginacao';
+import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
+import { SelectionComponent } from 'src/app/core/dialogs/selection/selection.component';
 
 @Component({
 	selector: 'app-itens',
@@ -25,9 +28,11 @@ export class ItensComponent implements OnInit {
 	color: ThemePalette = 'primary';
 	tabela: Array<Itens>;
 	comboStatusItens: Array<Combo>;
+	comboServicoExterno: Array<Combo>;
 	constructor(
 		private relatorioService: RelatorioService,
-		private appService: AppService
+		private appService: AppService,
+		private dialog: MatDialog
 	) { 
 		this.filtrosTabela = {
 			'ID': { valor: '' }, 
@@ -57,6 +62,11 @@ export class ItensComponent implements OnInit {
 			.getCombo('status_itens')
 			.subscribe((data: { query: string; json: Array<Combo> }) => {
 				this.comboStatusItens = data.json;
+			});
+		this.appService
+			.getCombo('serviço_externo')
+			.subscribe((data: { query: string; json: Array<Combo> }) => {
+				this.comboServicoExterno = data.json;
 			});
 	}
 	getItens(): void {
@@ -97,7 +107,7 @@ export class ItensComponent implements OnInit {
 				if (data.json.length > 0) {
 					this.appService.popup('success', 'Itens Entregue');
 					this.getItens();
-					this.gerarRelatorio(itensChecked);
+					this.gerarRelatorio(itensChecked, {tipo:'Venda',ID: itensChecked[0].ID_CLIENTE, descricao: itensChecked[0].NM_CLIENTE });
 				} else {
 					this.appService.popup('error', 'Erro ao atualizar o status de Itens Entregue');
 				}
@@ -105,16 +115,44 @@ export class ItensComponent implements OnInit {
 			
 	}
 	
-	gerarRelatorio(itens: Array<Itens>): void {
-		this.relatorioService.gerarRelatorio(itens)
+	gerarRelatorio(itens: Array<Itens>, dados: {tipo: string, ID: number, descricao: string, }): void {
+		this.relatorioService.gerarRelatorio(itens, dados)
 			.subscribe((data: { path: string, status: boolean}) => {
 				if (data.status){
+					this.appService.popup('success', 'Relatorio Gerado');
 					window.open(
 						data.path,
 						"_blank"
 					)
+
 				}
 				
 			})
+	}
+	selectAll($event: MatCheckboxChange): void {		
+		this.tabela.map(item => {
+			item.check = $event.checked;
+		})		
+	} 
+
+	romaneio(): void {
+		const dialogConfig = new MatDialogConfig();
+		
+		dialogConfig.disableClose = false;
+		dialogConfig.hasBackdrop = true;
+		dialogConfig.autoFocus = true;
+		dialogConfig.width = '260px';
+		dialogConfig.data = { title: 'Serviço Externo', data: this.comboServicoExterno };
+		const dialogRef = this.dialog.open(SelectionComponent, dialogConfig);
+
+		dialogRef.afterClosed().subscribe((result: Combo) => {
+			if (result){
+				const itensChecked = this.tabela.filter(t => t.check);				
+				this.gerarRelatorio(itensChecked, {tipo:'Serviço',ID: result.VALOR, descricao: result.LABEL });
+
+			}
+		});
+
+
 	}
 }

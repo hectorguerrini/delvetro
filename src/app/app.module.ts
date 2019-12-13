@@ -21,7 +21,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatMomentDateModule, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-
+import { MatSelectModule } from '@angular/material/select';
 // Angular bootstrap
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -59,6 +59,7 @@ import { LoginComponent } from './login/login.component';
 import { AuthModule, AUTH_SERVICE, PUBLIC_FALLBACK_PAGE_URI, PROTECTED_FALLBACK_PAGE_URI } from 'ngx-auth';
 import { AuthenticationService } from './core/services/authentication.service';
 import { RelatorioModule } from './pages/relatorio/relatorio.module';
+import { SelectionComponent } from './core/dialogs/selection/selection.component';
 
 
 export function momentAdapterFactory() {
@@ -78,7 +79,8 @@ registerLocaleData(localePt);
 		FinanceiroComponent,
 		DashboardFinanceiroComponent,
 		MainComponent,
-		LoginComponent
+		LoginComponent,
+		SelectionComponent
 	],
 	imports: [
 		AppRoutingModule,
@@ -99,6 +101,7 @@ registerLocaleData(localePt);
 		MatMomentDateModule,
 		MatFormFieldModule,
 		MatInputModule,
+		MatSelectModule,
 		CadastroModule,
 		VendaModule,
 		RelatorioModule,
@@ -128,7 +131,8 @@ registerLocaleData(localePt);
 	bootstrap: [AppComponent],
 	entryComponents: [
 		MessageComponent,
-		OrcamentoComponent
+		OrcamentoComponent,
+		SelectionComponent
 	]
 
 })

@@ -2,8 +2,8 @@
     <div class="headerTable">
       <h3>Itens Vendidos</h3>      
       <div>
-        <!-- <span><i class="fa fa-flag-checkered"></i></span> -->        
-        <img src="assets/customer.svg" alt="Icon made by Pixel perfect from www.flaticon.com" (click)="entrega()">
+        <i class="fa fa-truck" placement="top" ngbTooltip="Enviar para Serviço Externo" (click)="romaneio()"></i>
+        <img src="assets/customer.svg" alt="Icon made by Pixel perfect from www.flaticon.com" (click)="entrega()" placement="top" ngbTooltip="Entregrar para Cliente">
       </div>
       
     </div>
@@ -71,7 +71,7 @@
             </th>
           </tr>       
           <tr>
-            <th></th>
+            <th class="text-center"><mat-checkbox class="example-margin" [color]="color" (change)="selectAll($event)"></mat-checkbox></th>
             <th>ID</th>
             <th>Cliente</th>
             <th>Descrição</th>

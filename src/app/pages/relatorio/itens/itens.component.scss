@@ -18,7 +18,14 @@
 			img {
 				width: 1.5vw;
 				cursor: pointer;
-
+				margin: 0 1%;
+			}
+			i {
+				font-size: 1.5vw;
+				cursor: pointer;
+				margin: 0 1%;
+				display: flex;
+				align-items: center;
 			}
 			justify-content: flex-end;
 			padding: 0 1%;			

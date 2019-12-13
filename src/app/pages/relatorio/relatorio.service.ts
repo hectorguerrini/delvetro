@@ -34,10 +34,10 @@ export class RelatorioService {
 			)
 		});
 	}
-	gerarRelatorio(itens: Array<Itens>){
-		const url = `${this.url}/itens/entrega`;
+	gerarRelatorio(itens: Array<Itens>, dados: {tipo: string, ID: number, descricao: string, }){
+		const url = `${this.url}/itens/relatorio`;
 
-		return this.http.post(url, itens, {
+		return this.http.post(url, {itens, dados }, {
 			headers: new HttpHeaders().set(
 				'Content-Type',
 				'application/json'

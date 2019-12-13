@@ -1,0 +1,16 @@
+<h1 mat-dialog-title>{{modal.title}},</h1>
+<div mat-dialog-content>
+  
+  <mat-form-field>
+    <mat-label>Serviço</mat-label>
+    <mat-select  [(ngModel)]="servico">
+      <mat-option *ngFor="let item of modal.data" [value]="item">
+        {{item.LABEL}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancelar</button>
+  <button mat-button [mat-dialog-close]="servico" cdkFocusInitial>Enviar</button>
+</div>
