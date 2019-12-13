@@ -89,5 +89,26 @@ body{
 	.styleCadastro{
 		margin-top: 0;
 	}
+	.table {
+		display: block;
+		table-layout: fixed;
+		max-height: 70vh;
+		overflow: auto;
+	}
+	.title {
+		display: flex;
+		flex-direction: row;		
+		h2 {
+			flex: 0 0 99%;
+		}
+		span::before {
+			flex: 0 0 1%;
+			color: #888888;
+			font-family: FontAwesome;
+			font-size: 20px;
+			content: "\f00d";
+			cursor: pointer;
+		}
+	}
 
 }
