@@ -1,7 +1,10 @@
 <div class="pagamentos styleCadastro">
-
-	<div class="col-md-6">
+	<div class="col-md-12 title">
 		<h2>{{data.NM_CLIENTE}}</h2>
+		<span (click)="onNoClick()"></span>
+	</div>
+	<div class="col-md-6">
+		
 		<p *ngIf="data.ID_VENDA">
 			Nº Venda: {{data.ID_VENDA}}<br>
 			Credito Consumo do Cliente: {{pagamentoForm.get('CREDITO_CONSUMO').value | currency: 'BRL'}}<br>

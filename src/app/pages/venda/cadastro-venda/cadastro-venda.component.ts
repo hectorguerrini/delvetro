@@ -26,7 +26,7 @@ class Calculo {
 })
 export class CadastroVendaComponent implements OnInit {
 	@ViewChild('imageInput', {static: false}) imageinput: ElementRef;
-
+	
 	submittedProduto = false;
 	// submittedPagamento = false;
 	submittedExtras = false;
@@ -87,6 +87,9 @@ export class CadastroVendaComponent implements OnInit {
 		}
 	}
 	onChanges(): void {
+	}
+	onNoClick(): void {
+		this.dialogRef.close();
 	}
 	processFile(event: any) {
 		const file: File = this.imageinput.nativeElement.files[0];

@@ -72,7 +72,9 @@ export class PagamentosComponent implements OnInit, OnDestroy {
 		this.unsubscription.next();
 		this.unsubscription.complete();
 	}
-	
+	onNoClick(): void {
+		this.dialogRef.close();
+	}
 	calculoValor(valor, taxa): number {
 		return valor * taxa;
 	}
