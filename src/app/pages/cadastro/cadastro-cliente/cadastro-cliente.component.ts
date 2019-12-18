@@ -14,8 +14,6 @@ import { CadastroService } from 'src/app/pages/cadastro/cadastro.service';
 import { Combo } from '../../../shared/models/combo';
 import { Cliente } from 'src/app/shared/models/cliente';
 
-
-
 @Component({
 	selector: 'app-cadastro-cliente',
 	templateUrl: './cadastro-cliente.component.html',
@@ -51,11 +49,12 @@ export class CadastroClienteComponent implements OnInit {
 	});
 
 	comboClientes: Array<Combo> = [];
-
+	
 	constructor(
 		private fb: FormBuilder,
 		private cadastroService: CadastroService,
-		private appService: AppService
+		private appService: AppService,
+		// public dialogRef: MatDialogRef<CadastroClienteComponent>,
 	) {
 		this.appService
 			.getCombo('clientes')
@@ -66,7 +65,11 @@ export class CadastroClienteComponent implements OnInit {
 
 	ngOnInit() {
 		this.onChanges();
+		
 	}
+	// onNoClick(): void {
+	//  this.dialogRef.close();
+	// }
 	onChanges(): void {
 		this.clienteForm.get('CEP').valueChanges.subscribe(cep => {
 			if (cep.length === 8) {

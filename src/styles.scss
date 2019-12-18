@@ -102,10 +102,10 @@ div,td {
 		display: flex;
 		flex-direction: row;		
 		h2 {
-			flex: 0 0 99%;
+			flex: 0 0 98%;
 		}
 		span::before {
-			flex: 0 0 1%;
+			flex: 0 0 2%;
 			color: #888888;
 			font-family: FontAwesome;
 			font-size: 20px;

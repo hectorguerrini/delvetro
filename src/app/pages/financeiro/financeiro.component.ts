@@ -38,6 +38,7 @@ export class FinanceiroComponent implements OnInit, OnDestroy {
 		private fb: FormBuilder,		
 		private appService: AppService,
 		private financeiroService: FinanceiroService,
+		// public dialogRef: MatDialogRef<FinanceiroComponent>,
 		@Inject(MAT_DIALOG_DATA) public ID_DESPESA: number
 	) {
 		
@@ -55,7 +56,9 @@ export class FinanceiroComponent implements OnInit, OnDestroy {
 		this.unsubscription.next();
 		this.unsubscription.complete();
 	}
-
+	// onNoClick(): void {
+	// 	this.dialogRef.close();
+	// }
 	getCombos(): void {
 		this.appService
 			.getCombo('beneficiados')
