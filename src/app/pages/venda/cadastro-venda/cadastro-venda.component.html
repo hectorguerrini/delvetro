@@ -21,8 +21,8 @@
 						<col width="10%">
 						<col width="10%">
 						<col width="10%">
-						<col width="15%">
-						<col width="20%">
+						<col width="10%">
+						<col width="30%">
 
 					</colgroup>
 					<thead>
@@ -40,10 +40,13 @@
 							<tr>
 								<td class="colExtra">
 									{{item.NM_PRODUTO}}
+									<ul *ngIf="openOBS !== i && item.OBS">
+										<li>Obs: {{item.OBS}}</li>
+									</ul>
 									<ul *ngIf="openExtra !== i">
 										<li *ngFor="let extras of item.EXTRAS">
 											{{extras.QUANTIDADE}} {{extras.DESCRICAO}}
-										</li>
+										</li>										
 									</ul>
 								</td>
 								<td class="text-center">{{item.QTDE}}</td>
@@ -70,12 +73,17 @@
 											<i class="fa" [ngClass]="{'fa-plus': openExtra !== i, 'fa-minus': openExtra === i}"></i>
 										</span>
 									</button>
-									<button [hidden]="vendaForm.get('STATUS_VENDA').value === 'Pedido Fechado' || item.TIPO !== 'Chaparia'"
-										class="btn btn-primary input" (click)="imageInput.click()">
+									<button *ngIf="vendaForm.get('STATUS_VENDA').value === 'Pedido Fechado' && item.TIPO === 'Chaparia'"
+										class="btn btn-primary upload" (click)="imageInput.click()">
 										<span class="btn-label">
 											<i class="fa fa-paperclip"></i>
 										</span>
-										<input #imageInput type="file" (change)="processFile($event)">
+										<input #imageInput type="file" (change)="processFile(item)">
+									</button>
+									<button class="btn btn-primary" (click)="openObservacao(i)" [hidden]="vendaForm.get('STATUS_VENDA').value === 'Pedido Fechado'">
+										<span class="btn-label">
+											Obs
+										</span>										
 									</button>
 								</td>
 							</tr>
@@ -113,6 +121,17 @@
 										</div>
 
 									</form>
+								</td>
+							</tr>
+							<tr *ngIf="openOBS == i">
+								<td colspan="5">																
+									<textarea class="form-control" rows="1" [(ngModel)]="obs" name="obs" placeholder="Observação"></textarea>									
+								</td>
+								<td>
+									<button class="btn btn-success" type="submit" (click)="addObservacao(i)" ngbPopover="Adicionar Observaçãp"
+										placement="top" triggers="mouseenter:mouseleave">
+										<i class="fa fa-plus"></i>
+									</button>
 								</td>
 							</tr>
 						</ng-template>

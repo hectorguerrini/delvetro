@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
 import { VendaService } from '../venda.service';
 import { OrcamentoComponent } from 'src/app/core/dialogs/orcamento/orcamento.component';
-import { Venda } from 'src/app/shared/models/venda';
+import { Venda, ItensVendidos } from 'src/app/shared/models/venda';
 
 class Calculo {
 	qtde: number;
@@ -32,6 +32,8 @@ export class CadastroVendaComponent implements OnInit {
 	submittedExtras = false;
 	submitted = false;
 	openExtra = -1;
+	openOBS = -1;
+	obs: string = '';
 	itensForm: FormGroup = this.fb.group({
 		ID_PRODUTO: [null],
 		TIPO: [''],
@@ -41,7 +43,10 @@ export class CadastroVendaComponent implements OnInit {
 		LARGURA: [''],
 		ALTURA: [''],
 		PRECO_FINAL: [''],
-		PRECO_UNITARIO: ['']
+		PRECO_UNITARIO: [''],
+		OBS: [''],
+		FILE: [null]
+
 	});
 
 	extraForm: FormGroup = this.fb.group({
@@ -85,25 +90,40 @@ export class CadastroVendaComponent implements OnInit {
 			this.vendaForm.controls['ID_CLIENTE'].setValue(this.data.ID_CLIENTE);
 			this.vendaForm.controls['NM_CLIENTE'].setValue(this.data.NM_CLIENTE);
 		}
+		this.onChangesCalc();
 	}
 	onChanges(): void {
 	}
 	onNoClick(): void {
 		this.dialogRef.close();
 	}
-	processFile(event: any) {
+	processFile(item: ItensVendidos) {
 		const file: File = this.imageinput.nativeElement.files[0];
-		console.log('file: ', this.imageinput.nativeElement.files[0]);
-		// this.vendasService.onUpload(file, this.vendaForm.get('ID_CLIENTE').value)
-		// 	.subscribe(data => {
-		// 		console.log(data);
-		// 	});
+		console.log('file: ', file);
+	
+		this.vendasService.onUpload(file, this.vendaForm.get('ID_CLIENTE').value, item.ID_ITEM_VENDIDO)
+			.subscribe(data => {
+				console.log(data);
+				this.appService.popup('success','Arquivo salvo');
+			});
 	}
 	get getItensArray(): FormArray {
 		return this.vendaForm.get('ITENS') as FormArray;
 	}
 	openServicosExtras(index: number): void {
+		this.openOBS = -1;
 		this.openExtra = this.openExtra === index ? -1 : index;
+	}
+	openObservacao(index: number): void {
+		this.openExtra = -1;
+		this.openOBS = this.openOBS === index ? -1 : index;
+	}
+	addObservacao(i: number): void {
+		const composicao = this.vendaForm.get('ITENS') as FormArray;
+		composicao.controls[i].get('OBS').setValue(this.obs);
+		console.log(this.vendaForm)
+		this.obs = '';		
+		this.openOBS = -1;
 	}
 	calculoPrecoFinal(valor: number, soma: boolean): void {		
 		const preco = soma ? this.vendaForm.get('PRECO_FINAL').value + valor : this.vendaForm.get('PRECO_FINAL').value - valor;		
@@ -200,9 +220,11 @@ export class CadastroVendaComponent implements OnInit {
 			UNIDADE: obj.UNIDADE,
 			QTDE: 1,
 			LARGURA: obj.TIPO === 'Chaparia' ? 1000 : null,
-			ALTURA: obj.TIPO === 'Chaparia' ? 1000 : null
+			ALTURA: obj.TIPO === 'Chaparia' ? 1000 : null,
+			OBS: '',
+			FILE: null
 		});
-		this.onChangesCalc();
+		
 	}
 	onChangesCalc(): void {
 		this.itensForm.get('QTDE')
@@ -213,29 +235,25 @@ export class CadastroVendaComponent implements OnInit {
 				this.itensForm
 					.get('PRECO_FINAL')
 					.updateValueAndValidity();
-		});
-		if ( this.itensForm.get('TIPO').value === 'Chaparia' ) {
-			
-			this.itensForm.get('ALTURA')
-				.valueChanges
-				.subscribe(el => {
-					const calculo = this.calculoCustoVenda();
-					this.itensForm.get('PRECO_FINAL').setValue(calculo.valor);
-					this.itensForm
-						.get('PRECO_FINAL')
-						.updateValueAndValidity();
 			});
-			this.itensForm.get('LARGURA')
-				.valueChanges
-				.subscribe(el => {
-					const calculo = this.calculoCustoVenda();
-					this.itensForm.get('PRECO_FINAL').setValue(calculo.valor);
-					this.itensForm
-						.get('PRECO_FINAL')
-						.updateValueAndValidity();
+		this.itensForm.get('ALTURA')
+			.valueChanges
+			.subscribe(el => {
+				const calculo = this.calculoCustoVenda();
+				this.itensForm.get('PRECO_FINAL').setValue(calculo.valor);
+				this.itensForm
+					.get('PRECO_FINAL')
+					.updateValueAndValidity();
 			});
-		}
-
+		this.itensForm.get('LARGURA')
+			.valueChanges
+			.subscribe(el => {
+				const calculo = this.calculoCustoVenda();
+				this.itensForm.get('PRECO_FINAL').setValue(calculo.valor);
+				this.itensForm
+					.get('PRECO_FINAL')
+					.updateValueAndValidity();
+			});
 	}
 	
 	// Validar mais tarde, falta 2 unidades
@@ -299,6 +317,8 @@ export class CadastroVendaComponent implements OnInit {
 			AREA_CONSIDERADA: [calculo.area_considerada],
 			PRECO_FINAL: [obj.PRECO_FINAL],
 			PRECO_UNITARIO: [obj.PRECO_UNITARIO],
+			OBS: [obj.OBS],
+			FILE: [obj.FILE],
 			EXTRAS: this.fb.array([])
 		});
 

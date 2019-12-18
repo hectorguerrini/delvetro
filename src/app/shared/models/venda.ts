@@ -14,7 +14,8 @@ interface ServicosExtras {
 // 	VL_PGTO: number;
 // }
 
-interface ItensVendidos {
+export interface ItensVendidos {
+	ID_ITEM_VENDIDO: number;
 	ID_PRODUTO: number;
 	TIPO: string;
 	NM_PRODUTO: string;
@@ -27,6 +28,7 @@ interface ItensVendidos {
 	AREA_CONSIDERADA: number;
 	PRECO_FINAL: number;
 	PRECO_UNITARIO: number;
+	OBS: string;
 	EXTRAS: Array<ServicosExtras>;
 }
 
