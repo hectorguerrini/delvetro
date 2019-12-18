@@ -10,6 +10,9 @@
 				{{item.QTDE}} {{item.NM_PRODUTO}}
 				{{item.TIPO === 'Chaparia' ? item.LARGURA + ' x ' + item.ALTURA + ' | ' + item.AREA_CONSIDERADA + ' m²'   : ''}}
 				{{item.PRECO_FINAL | currency: 'BRL'}}
+				<ul *ngIf="item.OBS !== ''">
+					<li>Obs: {{item.OBS}}</li>
+				</ul>
 				<ul *ngIf="item.TIPO === 'Chaparia'">
 					<li *ngFor="let extra of item.EXTRAS">
 						{{extra.QUANTIDADE}} {{extra.DESCRICAO}} {{extra.PRECO_FINAL | currency: 'BRL'}}
