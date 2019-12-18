@@ -33,7 +33,13 @@
 		
 	}
     table {
-		
+		.id {
+			cursor: pointer;
+			&:hover {
+				color: #0081ff;
+    			text-decoration: underline;
+			}
+		}
 		td,th {
 			border: 1px solid #dee2e6;
 			padding: 8px;

@@ -11,6 +11,7 @@ import { Paginacao } from 'src/app/shared/models/paginacao';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { SelectionComponent } from 'src/app/core/dialogs/selection/selection.component';
+import { DetalhesItemComponent } from 'src/app/core/dialogs/detalhes-item/detalhes-item.component';
 
 @Component({
 	selector: 'app-itens',
@@ -136,6 +137,14 @@ export class ItensComponent implements OnInit {
 	} 
 
 	romaneio(): void {
+
+		const itensChecked = this.tabela.filter(t => t.check);	
+		if (itensChecked.length === 0) {
+			this.appService.popup('error', 'Para envio a tempera selecione ao menos 1 item');
+			return
+		}
+
+
 		const dialogConfig = new MatDialogConfig();
 		
 		dialogConfig.disableClose = false;
@@ -147,12 +156,38 @@ export class ItensComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe((result: Combo) => {
 			if (result){
-				const itensChecked = this.tabela.filter(t => t.check);				
-				this.gerarRelatorio(itensChecked, {tipo:'Serviço',ID: result.VALOR, descricao: result.LABEL });
-
+				
+				const itensEntrega = itensChecked.map(itens => {
+					return { 'ID_ITEM_VENDIDO':itens.ID_ITEM_VENDIDO, 'STATUS': 'Tempera' }			
+				})
+				
+				this.relatorioService.salvarEntrega(itensEntrega)
+					.subscribe((data: { query: string; json: Array<{ID_ITEM_VENDIDO: number, STATUS: string}> })=>{
+						if (data.json.length > 0) {
+							this.appService.popup('success', 'Itens enviado a tempera');
+							this.getItens();							
+							this.gerarRelatorio(itensChecked, {tipo:'Serviço',ID: result.VALOR, descricao: result.LABEL });
+						} else {
+							this.appService.popup('error', 'Erro ao atualizar o status de tempera');
+						}
+					})
 			}
 		});
+	}
 
+	abrirDetalhes(item: Itens): void {
+		const dialogConfig = new MatDialogConfig();
+		
+		dialogConfig.disableClose = false;
+		dialogConfig.hasBackdrop = true;
+		dialogConfig.autoFocus = true;
+		dialogConfig.width = '70vw';
+		dialogConfig.data = item;
+		dialogConfig.panelClass = 'model-cadastro';
+		const dialogRef = this.dialog.open(DetalhesItemComponent, dialogConfig);
+
+		dialogRef.afterClosed().subscribe(result => {			
+		});
 
 	}
 }

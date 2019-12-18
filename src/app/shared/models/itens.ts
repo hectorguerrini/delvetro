@@ -14,4 +14,5 @@ export interface Itens extends CheckBox{
     ID_CLIENTE: number;
     NM_CLIENTE: string;
     STATUS_FINANCEIRO: string;
+    ARQUIVO_DESENHO: string;
 }

@@ -72,7 +72,7 @@
           </tr>       
           <tr>
             <th class="text-center"><mat-checkbox class="example-margin" [color]="color" (change)="selectAll($event)"></mat-checkbox></th>
-            <th>ID</th>
+            <th class="text-center">ID</th>
             <th>Cliente</th>
             <th>Descrição</th>
             <th>Dimensões</th>
@@ -84,11 +84,11 @@
         </thead>
         <tbody>
           <tr *ngFor="let item of tabela">
-            <td class="text-center" ><mat-checkbox class="example-margin" [color]="color" [(ngModel)]="item.check"></mat-checkbox></td>
-            <td>{{item.ID_ITEM_VENDIDO}}</td>
+            <td class="text-center"><mat-checkbox class="example-margin" [color]="color" [(ngModel)]="item.check"></mat-checkbox></td>
+            <td class="id text-center" (click)="abrirDetalhes(item)" >{{item.ID_ITEM_VENDIDO}}</td>
             <td>{{item.NM_CLIENTE}}</td>
             <td>{{item.NM_PRODUTO}}</td>
-            <td>{{item.ALTURA ? item.ALTURA +'X'+item.LARGURA : ''}}</td>
+            <td class="text-center">{{item.ALTURA ? item.ALTURA +' X '+item.LARGURA : ''}}</td>
             <td class="text-center">{{item.QTDE}}</td>
             <td class="text-center">{{item.DT_VENDA | date: 'dd/MM/yyyy'}}</td>
             <td>{{item.STATUS}}</td>

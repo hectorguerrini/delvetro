@@ -60,6 +60,7 @@ import { AuthModule, AUTH_SERVICE, PUBLIC_FALLBACK_PAGE_URI, PROTECTED_FALLBACK_
 import { AuthenticationService } from './core/services/authentication.service';
 import { RelatorioModule } from './pages/relatorio/relatorio.module';
 import { SelectionComponent } from './core/dialogs/selection/selection.component';
+import { DetalhesItemComponent } from './core/dialogs/detalhes-item/detalhes-item.component';
 
 
 export function momentAdapterFactory() {
@@ -80,7 +81,8 @@ registerLocaleData(localePt);
 		DashboardFinanceiroComponent,
 		MainComponent,
 		LoginComponent,
-		SelectionComponent
+		SelectionComponent,
+		DetalhesItemComponent
 	],
 	imports: [
 		AppRoutingModule,
@@ -132,7 +134,8 @@ registerLocaleData(localePt);
 	entryComponents: [
 		MessageComponent,
 		OrcamentoComponent,
-		SelectionComponent
+		SelectionComponent,
+		DetalhesItemComponent
 	]
 
 })

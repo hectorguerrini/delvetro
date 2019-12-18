@@ -1,0 +1,27 @@
+<div class="detItem styleCadastro">
+    <div class="col-md-12 title">
+      <h2>Detalhes do Item</h2>
+      <span (click)="onNoClick()"></span>
+    </div>
+    <div class="body">
+      <div class="info">
+        <ul>
+          <li><strong>Cliente: </strong>{{data.ID_CLIENTE}} - {{data.NM_CLIENTE}}</li>
+          <li><strong>Item Vendido: </strong>{{data.ID_PRODUTO}} - {{data.NM_PRODUTO}}</li>       
+          <li><strong>Quantidade: </strong>{{data.QTDE}}</li>   
+          <li *ngIf="data.ALTURA"><strong>Dimensões: </strong>{{data.LARGURA}} X {{data.ALTURA}}</li>
+          <li><strong>Status Financeiro: </strong>{{data.STATUS_FINANCEIRO}}</li>
+          <li><strong>Status do Produto: </strong>{{data.STATUS}}</li>          
+          <li><strong>Anexo: </strong> 
+            <button class="btn" (click)="openDesenho()" *ngIf="data.ARQUIVO_DESENHO"><i class="fa fa-paperclip"></i></button>
+            <span [hidden]="data.ARQUIVO_DESENHO">Nenhum Arquivo Salvo</span>
+          </li>
+        </ul> 
+      </div>
+      <div class="track">        
+        <ul>
+          <li *ngFor="let item of tracking">{{item.DT_ALTERACAO | date: 'dd/MM/yyyy hh:mm'}} {{item.NOVO_STATUS}}</li>
+        </ul>
+      </div>
+    </div>
+</div>
