@@ -38,7 +38,21 @@ export interface filtro {
 	filter?: boolean
 }
 export interface filtroItens {
-	'ID': filtro, 'Cliente': filtro, 'Descricao': filtro, 'Dt_venda': filtro, 'Status': filtro, 'Financeiro': filtro
+	ID: filtro, 
+	Cliente: filtro, 
+	Descricao: filtro, 
+	Dt_venda: filtro, 
+	Status: filtro, 
+	Financeiro: filtro
+}
+export interface filtroEstoque {
+	ID: filtro, 
+	Descricao: filtro, 
+	Localizacao: filtro, 
+	Qtde: filtro, 
+	Estoque_min: filtro, 
+	Estoque_max: filtro, 
+	Tipo: filtro
 }
 export class Tabela {
 	public nome: string;

@@ -1,0 +1,60 @@
+<div class="estoque styleCadastro">
+	<div class="headerTable">
+		<h3>Controle de Estoque</h3>
+	</div>
+	<table class="table table-striped">
+		<colgroup>
+			<col width="25%">
+			<col width="20%">
+			<col width="10%">
+			<col width="10%">
+			<col width="10%">
+			<col width="25%">
+		</colgroup>
+		<thead>
+			<tr>
+				<th>
+					<div class="filter">
+						<input class="form-control" type="text" placeholder="Estoque" [(ngModel)]="filtrosTabela.ID.valor" (ngModelChange)="getEstoque()" >
+					</div>
+				</th>
+				<th></th>
+				<th></th>
+				<th></th>
+				<th></th>
+				<th class="filtroSelect">					
+					<mat-form-field>							
+						<mat-label>Tipo Estoque</mat-label>
+						<mat-select [(ngModel)]="filtrosTabela.Tipo.valor" (ngModelChange)="getEstoque()">
+							<mat-option>Todos</mat-option>
+							<mat-option *ngFor="let item of comboTiposEstoque" [value]="item.VALOR">{{item.LABEL}}</mat-option>
+						</mat-select>	
+					</mat-form-field>									
+				</th>
+			</tr>
+			<tr>
+				<th>Descrição</th>
+				<th>Localização</th>
+				<th>Quantidade</th>
+				<th>Qtde Minima</th>
+				<th>Qtde Maxima</th>
+				<th>Tipo</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr *ngFor="let item of tabela">
+				<td class="openDialog" (click)="abrirDetalhes(item)">{{item.DESCRICAO}}</td>
+				<td>{{item.LOCALIZACAO}}</td>
+				<td class="text-center">{{item.QTDE}}</td>
+				<td class="text-center">{{item.ESTOQUE_MIN}}</td>
+				<td class="text-center">{{item.ESTOQUE_MAX}}</td>
+				<td>{{item.TIPO}}</td>
+			</tr>
+		</tbody>
+
+	</table>
+	<mat-paginator *ngIf="tabela" [length]="paginaState.length" [pageSize]="paginaState.pageSize"
+        [pageSizeOptions]="paginacaoConfig.pageSizeOptions" (page)="pageEvent($event)">
+		</mat-paginator>
+
+</div>

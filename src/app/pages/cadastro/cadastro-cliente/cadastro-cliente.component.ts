@@ -49,7 +49,7 @@ export class CadastroClienteComponent implements OnInit {
 	});
 
 	comboClientes: Array<Combo> = [];
-	
+
 	constructor(
 		private fb: FormBuilder,
 		private cadastroService: CadastroService,
@@ -65,7 +65,7 @@ export class CadastroClienteComponent implements OnInit {
 
 	ngOnInit() {
 		this.onChanges();
-		
+
 	}
 	// onNoClick(): void {
 	//  this.dialogRef.close();

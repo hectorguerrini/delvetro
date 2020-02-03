@@ -1,0 +1,58 @@
+<div class="detEstoque styleCadastro">
+	<div class="col-md-12 title">
+		<h2>Detalhes do Estoque</h2>
+		<span (click)="onNoClick()"></span>
+	</div>
+	<div class="body">
+		<div class="info">
+			<ul>
+				<li><strong>Descrição: </strong>{{data.ID_ESTOQUE}} - {{data.DESCRICAO}}</li>
+				<li><strong>Tipo: </strong>{{data.ID_TIPO}} - {{data.TIPO}}</li>
+				<li><strong>Localização: </strong>{{data.LOCALIZACAO}}</li>
+				<li><strong>Quantidade Atual: </strong>{{data.QTDE}}</li>
+				<li><strong>Quantidade Minima: </strong>{{data.ESTOQUE_MIN}}</li>
+				<li><strong>Quantidade Maxima: </strong>{{data.ESTOQUE_MAX}}</li>
+				<li><strong>Custo do Ultimo Recebimento: </strong>{{data.CUSTO_ULTIMO_RECEBIMENTO | currency: 'BRL'}}
+				</li>
+			</ul>
+			<div>
+
+				<div class="row">
+					<div class="col-md-9 form-estoque">
+						<select class="form-control col-md-5" [(ngModel)]="formAtt.MOTIVO">
+							<option value="Compra">Compra</option>
+							<option value="Recontagem">Recontagem</option>
+						</select>
+						<input type="number" class="form-control col-md-5" placeholder="Valor" [(ngModel)]="formAtt.VALOR">
+
+					</div>
+				</div>
+				<button class="btn btn-delvetro" (click)="updateQtdeEstoque()">Atualizar Estoque</button>
+			</div>
+
+		</div>
+		<div class="log">
+			<table class="table table-striped">
+				<colgroup>
+					<col width="35%">
+					<col width="35%">
+					<col width="30%">
+				</colgroup>
+				<thead>
+					<tr>
+						<th>Data Log</th>
+						<th>Motivo</th>
+						<th>Variação</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngFor="let item of logEstoque">
+						<td>{{item.DT_ALTERACAO | date:'dd/MM/yyyy'}}</td>
+						<td>{{item.MOTIVO}}</td>
+						<td>{{item.DELTA}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

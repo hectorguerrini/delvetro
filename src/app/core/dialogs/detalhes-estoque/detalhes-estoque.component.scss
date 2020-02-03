@@ -1,0 +1,34 @@
+.detEstoque {
+    padding: 1vw;
+    min-height: 30vh;
+    overflow-y: auto;
+    .body{
+        display: flex;
+        flex-direction: row;
+        padding: 0 15px;
+        .info {
+            ul{
+                list-style-type: none;
+            }
+            flex: 0 0 50%;
+            display: flex;
+			flex-direction: column;
+			.form-estoque {
+				display: flex;
+				margin: 1rem 0;
+				:nth-child(n){
+					margin-right: 5px;
+				}
+			}
+        }
+        .log {
+            flex: 0 0 50%;
+            display: flex;
+            flex-direction: column;            
+            .table {				
+				justify-content: center;
+				display: table;
+			}
+        }
+    }
+}

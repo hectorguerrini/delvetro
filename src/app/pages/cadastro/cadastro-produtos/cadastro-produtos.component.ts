@@ -52,7 +52,7 @@ export class CadastroProdutosComponent implements OnInit {
 		private appService: AppService,
 		private cadastroService: CadastroService
 	) {
-		
+
 	}
 
 	ngOnInit() {

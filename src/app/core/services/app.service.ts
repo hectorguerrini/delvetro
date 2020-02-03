@@ -3,6 +3,7 @@ import { environment } from 'src/environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { MessageComponent } from '../dialogs/message/message.component';
+import { attQtdeEstoque } from 'src/app/shared/models/attQtdeEstoque';
 @Injectable({
 	providedIn: 'root'
 })
@@ -19,6 +20,20 @@ export class AppService {
 	}
 	getTracking(id_item: number){
 		const url = `${this.url}/itens/tracking/${id_item}`;
+
+		return this.http.get(url, {
+			headers: new HttpHeaders().set('Content-Type', 'application/json')
+		});
+	}
+	updateQtdeEstoque(attQtde: attQtdeEstoque){
+		const url = `${this.url}/acompanhamento/estoque/qtde`;
+
+		return this.http.post(url, attQtde, {
+			headers: new HttpHeaders().set('Content-Type', 'application/json')
+		});
+	}
+	getLogEstoque(id_estoque: number) {
+		const url = `${this.url}/acompanhamento/estoque/log/${id_estoque}`;
 
 		return this.http.get(url, {
 			headers: new HttpHeaders().set('Content-Type', 'application/json')

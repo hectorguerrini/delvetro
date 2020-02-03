@@ -1,0 +1,29 @@
+.estoque {
+    margin-top: 5vh;
+	padding: 1%;
+	display: flex;	
+	flex-direction: column;
+	justify-content: space-around;
+    table {
+		.openDialog {
+			cursor: pointer;
+			&:hover {
+				color: #0081ff;
+    			text-decoration: underline;
+			}
+        }
+        .filtroSelect {
+            padding: 0 1%;
+            mat-form-field {
+                width: 100%;
+            }
+        }
+		td,th {
+			border: 1px solid #dee2e6;
+			padding: 8px;
+		}
+		.filter > input, .filter > select{
+			font-size: 12px;				
+		}
+	}
+}

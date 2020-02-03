@@ -17,22 +17,22 @@ const routes: Routes = [
 	{ path: 'cliente/:id', canActivate: [ProtectedGuard], component: ClienteComponent },
 	{
 		path: 'cadastro',
-		canActivate: [ ProtectedGuard ], 
+		canActivate: [ProtectedGuard],
 		loadChildren: () => import('./pages/cadastro/cadastro.module').then(mod => mod.CadastroModule)
 	},
 	{
 		path: 'venda',
-		canActivate: [ ProtectedGuard ],
+		canActivate: [ProtectedGuard],
 		loadChildren: () => import('./pages/venda/venda.module').then(mod => mod.VendaModule)
 	},
-	{ path: 'financeiro', canActivate: [ ProtectedGuard ], component: FinanceiroComponent },
-	{ path: 'financeiro/calendario', canActivate: [ ProtectedGuard ], component: DashboardFinanceiroComponent},	
+	{ path: 'financeiro', canActivate: [ProtectedGuard], component: FinanceiroComponent },
+	{ path: 'financeiro/calendario', canActivate: [ProtectedGuard], component: DashboardFinanceiroComponent },
 	{
 		path: 'relatorio',
-		canActivate: [ ProtectedGuard ],
+		canActivate: [ProtectedGuard],
 		loadChildren: () => import('./pages/relatorio/relatorio.module').then(mod => mod.RelatorioModule)
 	},
-	{ path: 'login', canActivate: [ PublicGuard ], component: LoginComponent},
+	{ path: 'login', canActivate: [PublicGuard], component: LoginComponent },
 	{ path: '**', redirectTo: '/venda', pathMatch: 'full' }
 ];
 

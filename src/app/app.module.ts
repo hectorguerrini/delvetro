@@ -61,6 +61,7 @@ import { AuthenticationService } from './core/services/authentication.service';
 import { RelatorioModule } from './pages/relatorio/relatorio.module';
 import { SelectionComponent } from './core/dialogs/selection/selection.component';
 import { DetalhesItemComponent } from './core/dialogs/detalhes-item/detalhes-item.component';
+import { DetalhesEstoqueComponent } from './core/dialogs/detalhes-estoque/detalhes-estoque.component';
 
 
 export function momentAdapterFactory() {
@@ -76,13 +77,14 @@ registerLocaleData(localePt);
 		DashboardComponent,
 		ClienteComponent,
 		MessageComponent,
-		OrcamentoComponent,		
+		OrcamentoComponent,
 		FinanceiroComponent,
 		DashboardFinanceiroComponent,
 		MainComponent,
 		LoginComponent,
 		SelectionComponent,
-		DetalhesItemComponent
+		DetalhesItemComponent,
+		DetalhesEstoqueComponent
 	],
 	imports: [
 		AppRoutingModule,
@@ -104,9 +106,6 @@ registerLocaleData(localePt);
 		MatFormFieldModule,
 		MatInputModule,
 		MatSelectModule,
-		CadastroModule,
-		VendaModule,
-		RelatorioModule,
 		CalendarModule.forRoot(
 			{
 				provide: DateAdapter,
@@ -127,15 +126,16 @@ registerLocaleData(localePt);
 		{ provide: MOMENT, useValue: moment },
 		{ provide: MAT_DIALOG_DATA, useValue: 0},
 		{ provide: PROTECTED_FALLBACK_PAGE_URI, useValue: '/' },
-    	{ provide: PUBLIC_FALLBACK_PAGE_URI, useValue: '/login' },
-    	{ provide: AUTH_SERVICE, useClass: AuthenticationService }
+		{ provide: PUBLIC_FALLBACK_PAGE_URI, useValue: '/login' },
+		{ provide: AUTH_SERVICE, useClass: AuthenticationService }
 	],
 	bootstrap: [AppComponent],
 	entryComponents: [
 		MessageComponent,
 		OrcamentoComponent,
 		SelectionComponent,
-		DetalhesItemComponent
+		DetalhesItemComponent,
+		DetalhesEstoqueComponent
 	]
 
 })

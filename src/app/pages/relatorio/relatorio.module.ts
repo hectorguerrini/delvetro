@@ -8,18 +8,21 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { EstoqueComponent } from './estoque/estoque.component';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
-  declarations: [ItensComponent],
-  imports: [
-    CommonModule,
-    RelatorioRoutingModule,
-    NgbModule,
+	declarations: [ItensComponent, EstoqueComponent],
+	imports: [
+		CommonModule,
+		RelatorioRoutingModule,
+		NgbModule,
 		FormsModule,
-    ReactiveFormsModule,
-    MatDatepickerModule,
-    MatCheckboxModule,
-    MatPaginatorModule
-  ]
+		ReactiveFormsModule,
+		MatDatepickerModule,
+		MatCheckboxModule,
+		MatPaginatorModule,
+		MatSelectModule
+	]
 })
 export class RelatorioModule { }
