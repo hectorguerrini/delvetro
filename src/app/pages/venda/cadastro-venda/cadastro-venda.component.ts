@@ -25,7 +25,7 @@ class Calculo {
 	styleUrls: ['./cadastro-venda.component.scss']
 })
 export class CadastroVendaComponent implements OnInit {
-	@ViewChild('imageInput', {static: false}) imageinput: ElementRef;
+	@ViewChild('imageInput') imageinput: ElementRef;
 	
 	submittedProduto = false;
 	// submittedPagamento = false;
