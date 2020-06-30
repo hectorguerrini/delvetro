@@ -31,28 +31,28 @@ export interface valoresTotal {
 }
 
 export interface filtro {
-	tipo?: string, 
-	valor?: any,
-	valorMin?: any, 
-	valorMax?: any, 
-	filter?: boolean
+	tipo?: string;
+	valor?: any;
+	valorMin?: any;
+	valorMax?: any;
+	filter?: boolean;
 }
 export interface filtroItens {
-	ID: filtro, 
-	Cliente: filtro, 
-	Descricao: filtro, 
-	Dt_venda: filtro, 
-	Status: filtro, 
-	Financeiro: filtro
+	ID: filtro;
+	Cliente: filtro;
+	Descricao: filtro;
+	Dt_venda: filtro;
+	Status: filtro;
+	Financeiro: filtro;
 }
 export interface filtroEstoque {
-	ID: filtro, 
-	Descricao: filtro, 
-	Localizacao: filtro, 
-	Qtde: filtro, 
-	Estoque_min: filtro, 
-	Estoque_max: filtro, 
-	Tipo: filtro
+	ID: filtro;
+	Descricao: filtro;
+	Localizacao: filtro;
+	Qtde: filtro;
+	Estoque_min: filtro;
+	Estoque_max: filtro;
+	Tipo: filtro;
 }
 export class Tabela {
 	public nome: string;
@@ -65,7 +65,7 @@ export class Tabela {
 		this.filtros = [];
 		this.total = {
 			valorTotal: 0
-		}
+		};
 	}
 	addCol(
 		tipo: string,

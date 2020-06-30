@@ -28,29 +28,29 @@ export class FinanceiroComponent implements OnInit, OnDestroy {
 		ID_FORMA_PGTO: [1, Validators.required],
 		STATUS_PGTO: [null, Validators.required]
 	});
-	NM_BENEFICIADO: string = '';
+	NM_BENEFICIADO = '';
 	comboBeneficiados: Array<Combo>;
 	comboFormaPgto: Array<Combo>;
 	comboCategoria: Array<Combo>;
 	comboDespesas: Array<Combo>;
 	unsubscription = new Subject<void>();
 	constructor(
-		private fb: FormBuilder,		
+		private fb: FormBuilder,
 		private appService: AppService,
 		private financeiroService: FinanceiroService,
 		// public dialogRef: MatDialogRef<FinanceiroComponent>,
 		@Inject(MAT_DIALOG_DATA) public ID_DESPESA: number
 	) {
-		
+
 	}
 
 	ngOnInit() {
 		this.getCombos();
 		this.onChanges();
 		if (this.ID_DESPESA) {
-			console.log(this.ID_DESPESA)
+			console.log(this.ID_DESPESA);
 			this.getDespesa(this.ID_DESPESA);
-		}		
+		}
 	}
 	ngOnDestroy() {
 		this.unsubscription.next();
@@ -117,7 +117,7 @@ export class FinanceiroComponent implements OnInit, OnDestroy {
 
 
 
-			})
+			});
 	}
 	selectDespesa(item): void {
 		const obj = this.comboDespesas.find(el => el.LABEL === item);
@@ -130,7 +130,7 @@ export class FinanceiroComponent implements OnInit, OnDestroy {
 				if (data.json.length > 0 ) {
 					this.despesaForm.patchValue(data.json[0]);
 					const obj = this.comboBeneficiados.find(el => el.VALOR === data.json[0].ID_BENEFICIADO);
-					this.despesaForm.get('NM_BENEFICIADO').setValue(obj.LABEL);	
+					this.despesaForm.get('NM_BENEFICIADO').setValue(obj.LABEL);
 				}
 			});
 	}
@@ -155,7 +155,7 @@ export class FinanceiroComponent implements OnInit, OnDestroy {
 				}
 			});
 
-		
+
 	}
 	resetForm(): void {
 		this.despesaForm.reset({
@@ -167,7 +167,7 @@ export class FinanceiroComponent implements OnInit, OnDestroy {
 
 	selectBeneficiado(item: string): void {
 		const obj = this.comboBeneficiados.find(el => el.LABEL === item);
-		this.despesaForm.get('ID_BENEFICIADO').setValue(obj.VALOR);				
+		this.despesaForm.get('ID_BENEFICIADO').setValue(obj.VALOR);
 	}
 	search = (text$: Observable<string>) =>
 		text$.pipe(
@@ -202,6 +202,6 @@ export class FinanceiroComponent implements OnInit, OnDestroy {
 						.slice(0, 5)
 						.map(s => s.LABEL)
 			)
-		)								
+		)
 	formatter = (LABEL: string) => LABEL;
 }

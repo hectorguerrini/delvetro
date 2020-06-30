@@ -18,14 +18,14 @@ export class AppService {
 			headers: new HttpHeaders().set('Content-Type', 'application/json')
 		});
 	}
-	getTracking(id_item: number){
+	getTracking(id_item: number) {
 		const url = `${this.url}/itens/tracking/${id_item}`;
 
 		return this.http.get(url, {
 			headers: new HttpHeaders().set('Content-Type', 'application/json')
 		});
 	}
-	updateQtdeEstoque(attQtde: attQtdeEstoque){
+	updateQtdeEstoque(attQtde: attQtdeEstoque) {
 		const url = `${this.url}/acompanhamento/estoque/qtde`;
 
 		return this.http.post(url, attQtde, {

@@ -41,13 +41,13 @@ export class CadastroBeneficiadosComponent implements OnInit {
 		this.getCombos();
 		this.onChange();
 	}
-	getCombos(): void {	
+	getCombos(): void {
 		this.appService
 			.getCombo('beneficiados')
 			.subscribe((data: { query: string; json: Array<Combo> }) => {
 				this.comboBeneficiados = data.json;
 			});
-	
+
 	}
 	onChange(): void {
 		this.beneficiadoForm.get('TIPO_BENEFICIADO')
@@ -91,7 +91,7 @@ export class CadastroBeneficiadosComponent implements OnInit {
 	salvarBeneficiado(): void {
 		this.submitted = true;
 
-		if (this.beneficiadoForm.invalid && (this.beneficiadoForm.get('CPF').invalid && this.beneficiadoForm.get('CNPJ').invalid)) {			
+		if (this.beneficiadoForm.invalid && (this.beneficiadoForm.get('CPF').invalid && this.beneficiadoForm.get('CNPJ').invalid)) {
 			return;
 		}
 		let beneficiado: Beneficiados;

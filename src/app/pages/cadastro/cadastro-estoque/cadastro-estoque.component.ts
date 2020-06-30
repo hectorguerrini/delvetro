@@ -42,9 +42,9 @@ export class CadastroEstoqueComponent implements OnInit {
 		private cadastroService: CadastroService,
 		private appService: AppService
 	) {
-		
+
 	}
-	
+
 	ngOnInit() {
 		this.getCombos();
 		this.onChanges();

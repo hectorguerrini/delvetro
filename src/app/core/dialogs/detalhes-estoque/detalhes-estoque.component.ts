@@ -19,8 +19,8 @@ export class DetalhesEstoqueComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
-		console.log(this.data)
-		this.formAtt = { 
+		console.log(this.data);
+		this.formAtt = {
 			ID_ESTOQUE: this.data.ID_ESTOQUE,
 			MOTIVO: null,
 			VALOR: null
@@ -33,15 +33,15 @@ export class DetalhesEstoqueComponent implements OnInit {
 	}
 
 	updateQtdeEstoque(): void {
-		if (!this.formAtt.MOTIVO || !this.formAtt.VALOR){
-			this.appService.popup('error','Insira Valores Validos');
-			return
+		if (!this.formAtt.MOTIVO || !this.formAtt.VALOR) {
+			this.appService.popup('error', 'Insira Valores Validos');
+			return;
 		}
 		this.appService.updateQtdeEstoque(this.formAtt)
 			.subscribe((data: { query: string; json: Array<any>}) => {
 				if (data.json.length > 0) {
 					this.dialogRef.close(true);
-					this.appService.popup('success','Estoque Atualizado.');
+					this.appService.popup('success', 'Estoque Atualizado.');
 				}
 
 			});

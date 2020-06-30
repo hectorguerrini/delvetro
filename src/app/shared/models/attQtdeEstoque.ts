@@ -1,10 +1,10 @@
-export interface attQtdeEstoque {
+export interface AttQtdeEstoque {
 	ID_ESTOQUE: number;
 	MOTIVO: string;
-	VALOR: number;	
+	VALOR: number;
 }
 
-export interface logEstoque {
+export interface LogEstoque {
 	ID_LOG_ESTOQUE: number;
 	DT_ALTERACAO: string;
 	MOTIVO: string;

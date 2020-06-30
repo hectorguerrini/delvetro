@@ -33,7 +33,7 @@ export class CadastroServicosComponent implements OnInit {
 		private appService: AppService,
 		private cadastroService: CadastroService
 	) {
-		
+
 	}
 
 	ngOnInit() {

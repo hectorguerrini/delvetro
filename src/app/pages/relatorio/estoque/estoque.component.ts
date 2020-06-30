@@ -16,7 +16,7 @@ import { DetalhesEstoqueComponent } from 'src/app/core/dialogs/detalhes-estoque/
 })
 export class EstoqueComponent implements OnInit {
 	paginacaoConfig: Paginacao = new Paginacao();
-	paginaState: PageEvent = { 
+	paginaState: PageEvent = {
 		pageIndex: 0,
 		pageSize: this.paginacaoConfig.pageSize,
 		length: 0
@@ -28,16 +28,16 @@ export class EstoqueComponent implements OnInit {
 		private relatorioService: RelatorioService,
 		private appService: AppService,
 		private dialog: MatDialog
-	) { 
+	) {
 		this.filtrosTabela = {
-			ID: { valor: '' }, 		
-			Descricao: { valor: '' },			
-			Localizacao: { valor: ''},
-			Qtde: { valor: null},
-			Estoque_max: { valor: null},
-			Estoque_min: { valor: null},
-			Tipo: { valor: null}
-		}
+			ID: { valor: '' },
+			Descricao: { valor: '' },
+			Localizacao: { valor: '' },
+			Qtde: { valor: null },
+			Estoque_max: { valor: null },
+			Estoque_min: { valor: null },
+			Tipo: { valor: null }
+		};
 	}
 
 	ngOnInit() {
@@ -50,7 +50,7 @@ export class EstoqueComponent implements OnInit {
 			.subscribe((data: { query: string; json: Array<Combo> }) => {
 				this.comboTiposEstoque = data.json;
 			});
-	
+
 	}
 	getEstoque(): void {
 		this.relatorioService.getEstoque(this.filtrosTabela, this.paginaState)
@@ -58,21 +58,21 @@ export class EstoqueComponent implements OnInit {
 				if (data.json.length > 0) {
 					this.paginaState.length = data.tableSize;
 					this.tabela = data.json;
-					
+
 				} else {
-					this.tabela = []
+					this.tabela = [];
 				}
 
-			})
+			});
 	}
-	pageEvent($event: PageEvent): void {		
+	pageEvent($event: PageEvent): void {
 		this.paginaState = $event;
 		this.getEstoque();
 	}
 
 	abrirDetalhes(item: ControleEstoque): void {
 		const dialogConfig = new MatDialogConfig();
-		
+
 		dialogConfig.disableClose = false;
 		dialogConfig.hasBackdrop = true;
 		dialogConfig.autoFocus = true;
@@ -81,7 +81,7 @@ export class EstoqueComponent implements OnInit {
 		dialogConfig.panelClass = 'model-cadastro';
 		const dialogRef = this.dialog.open(DetalhesEstoqueComponent, dialogConfig);
 
-		dialogRef.afterClosed().subscribe(result => {			
+		dialogRef.afterClosed().subscribe(result => {
 			if (result) {
 				this.getEstoque();
 			}

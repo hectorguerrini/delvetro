@@ -38,5 +38,5 @@ export class FinanceiroService {
 		return this.http.post(url, {data: Date}, {
 			headers: new HttpHeaders().set('Content-Type', 'application/json')
 		});
-	} 
+	}
 }

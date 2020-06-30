@@ -3,7 +3,7 @@ export class Paginacao {
 	index: number;
 	pageSize: number;
 	pageSizeOptions: Array<number>;
-	lista: Array<any>;	
+	lista: Array<any>;
 	constructor() {
 		this.index = 0;
 		this.pageSize = 10;

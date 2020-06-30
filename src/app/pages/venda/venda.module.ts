@@ -28,7 +28,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 		MatDatepickerModule
 	],
 	entryComponents: [
-		CadastroVendaComponent,		
+		CadastroVendaComponent,
 		PagamentosComponent
 	]
 })

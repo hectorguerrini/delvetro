@@ -15,27 +15,27 @@ import { Combo } from 'src/app/shared/models/combo';
 })
 export class DashboardFinanceiroComponent implements OnInit {
 	view = 'month';
-	activeDayIsOpen: boolean = false;
+	activeDayIsOpen = false;
 	viewDate: Date = new Date();
 	colors: any = {
 		red: {
-		  primary: '#ad2121',
-		  secondary: '#FAE3E3'
+			primary: '#ad2121',
+			secondary: '#FAE3E3'
 		},
 		blue: {
-		  primary: '#1e90ff',
-		  secondary: '#D1E8FF'
+			primary: '#1e90ff',
+			secondary: '#D1E8FF'
 		},
 		yellow: {
-		  primary: '#e3bc08',
-		  secondary: '#FDF1BA'
+			primary: '#e3bc08',
+			secondary: '#FDF1BA'
 		},
 		green: {
 			primary: '#34eb40',
 			secondary: '#98eb9e'
 		}
-	  };
-//	events: CalendarEvent[] = [];
+	};
+	// 	events: CalendarEvent[] = [];
 	tabActive: Tabela;
 	tabela: Array<ModelTabela>;
 	comboCategoria: Array<Combo>;
@@ -45,7 +45,7 @@ export class DashboardFinanceiroComponent implements OnInit {
 		private appService: AppService
 	) { }
 
-	events: CalendarEvent[] = [	
+	events: CalendarEvent[] = [
 		// {
 		//   start: moment().toDate(),
 		//   title: 'An event with no end date',
@@ -63,16 +63,16 @@ export class DashboardFinanceiroComponent implements OnInit {
 		//   },
 		//   draggable: true
 		// }
-	  ];
+	];
 	actions: CalendarEventAction[] = [
 		{
 			label: '<i class="fa fa-fw fa-pencil"></i>',
 			onClick: ({ event }: { event: any }): void => {
-				this.editarEvento(event.ID_DESPESA)
+				this.editarEvento(event.ID_DESPESA);
 			}
 		}
 	];
-	
+
 	ngOnInit() {
 		this.tabActive = new Tabela('despesas', 7);
 		this.tabActive.addCol('s');
@@ -85,7 +85,7 @@ export class DashboardFinanceiroComponent implements OnInit {
 		this.getListas();
 		this.getEventos();
 		this.getCombos();
-		
+
 	}
 	getCombos(): void {
 		this.appService
@@ -112,7 +112,7 @@ export class DashboardFinanceiroComponent implements OnInit {
 			.subscribe((data: { query: string; json: Array<ModelTabela> }) => {
 				if (data.json.length > 0) {
 					this.tabela = data.json;
-					this.tabActive.total.valorTotal = this.tabela.reduce((acc: number, cur) => acc + cur.COLUNA5,0);												
+					this.tabActive.total.valorTotal = this.tabela.reduce((acc: number, cur) => acc + cur.COLUNA5, 0);
 				} else {
 					this.tabela = [];
 				}
@@ -121,21 +121,21 @@ export class DashboardFinanceiroComponent implements OnInit {
 
 	getEventos(): void {
 		this.financeiroService.getEventosCalendario(this.viewDate)
-		.subscribe((data: { query: string; json: Array<any> }) => {
-			if (data.json.length > 0) {
-				this.events = [];
-				data.json.forEach(el => {
-					el.start = moment(el.start).toDate();
-					el.actions = this.actions;
-					el.color = this.getColorEvent(el.STATUS_PGTO, el.start);
-					this.events.push(el);
-				});		
-			} else {
-				this.events = [];
-			}
-		});
+			.subscribe((data: { query: string; json: Array<any> }) => {
+				if (data.json.length > 0) {
+					this.events = [];
+					data.json.forEach(el => {
+						el.start = moment(el.start).toDate();
+						el.actions = this.actions;
+						el.color = this.getColorEvent(el.STATUS_PGTO, el.start);
+						this.events.push(el);
+					});
+				} else {
+					this.events = [];
+				}
+			});
 	}
-	getColorEvent(status: string, data: string): {primary: string, secondary: string} {
+	getColorEvent(status: string, data: string): { primary: string, secondary: string } {
 		let color;
 
 		if (status === 'Pago') {

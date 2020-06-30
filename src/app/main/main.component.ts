@@ -13,9 +13,9 @@ export class MainComponent implements OnInit {
 	ngOnInit() {
 		this.router.events
 			.subscribe((data) => {
-				this.path = this.router.url
+				this.path = this.router.url;
 				console.log(this.router.url);
-			})
+			});
 	}
 
 }

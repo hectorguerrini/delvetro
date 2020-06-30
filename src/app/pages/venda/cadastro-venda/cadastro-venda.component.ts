@@ -26,14 +26,14 @@ class Calculo {
 })
 export class CadastroVendaComponent implements OnInit {
 	@ViewChild('imageInput') imageinput: ElementRef;
-	
+
 	submittedProduto = false;
 	// submittedPagamento = false;
 	submittedExtras = false;
 	submitted = false;
 	openExtra = -1;
 	openOBS = -1;
-	obs: string = '';
+	obs = '';
 	itensForm: FormGroup = this.fb.group({
 		ID_PRODUTO: [null],
 		TIPO: [''],
@@ -100,11 +100,11 @@ export class CadastroVendaComponent implements OnInit {
 	processFile(item: ItensVendidos) {
 		const file: File = this.imageinput.nativeElement.files[0];
 		console.log('file: ', file);
-	
+
 		this.vendasService.onUpload(file, this.vendaForm.get('ID_CLIENTE').value, item.ID_ITEM_VENDIDO)
 			.subscribe(data => {
 				console.log(data);
-				this.appService.popup('success','Arquivo salvo');
+				this.appService.popup('success', 'Arquivo salvo');
 			});
 	}
 	get getItensArray(): FormArray {
@@ -121,12 +121,12 @@ export class CadastroVendaComponent implements OnInit {
 	addObservacao(i: number): void {
 		const composicao = this.vendaForm.get('ITENS') as FormArray;
 		composicao.controls[i].get('OBS').setValue(this.obs);
-		console.log(this.vendaForm)
-		this.obs = '';		
+		console.log(this.vendaForm);
+		this.obs = '';
 		this.openOBS = -1;
 	}
-	calculoPrecoFinal(valor: number, soma: boolean): void {		
-		const preco = soma ? this.vendaForm.get('PRECO_FINAL').value + valor : this.vendaForm.get('PRECO_FINAL').value - valor;		
+	calculoPrecoFinal(valor: number, soma: boolean): void {
+		const preco = soma ? this.vendaForm.get('PRECO_FINAL').value + valor : this.vendaForm.get('PRECO_FINAL').value - valor;
 		this.vendaForm.get('PRECO_FINAL').setValue(preco);
 		this.vendaForm
 					.get('PRECO_FINAL')
@@ -224,7 +224,7 @@ export class CadastroVendaComponent implements OnInit {
 			OBS: '',
 			FILE: null
 		});
-		
+
 	}
 	onChangesCalc(): void {
 		this.itensForm.get('QTDE')
@@ -255,7 +255,7 @@ export class CadastroVendaComponent implements OnInit {
 					.updateValueAndValidity();
 			});
 	}
-	
+
 	// Validar mais tarde, falta 2 unidades
 	calculoCustoVenda(): Calculo {
 		const calculo = new Calculo();
@@ -286,7 +286,7 @@ export class CadastroVendaComponent implements OnInit {
 
 			// 	valor: ${calculo.valor}
 			// `);
-		} else if(unidade === 'Unitario') {
+		} else if (unidade === 'Unitario') {
 			calculo.qtde = this.itensForm.get('QTDE').value * 1;
 
 			calculo.valor = calculo.qtde * this.itensForm.get('PRECO_UNITARIO').value;

@@ -35,7 +35,7 @@ export class VendaService {
 	}
 	onUpload(file: File, id_cliente: number, id_item: number) {
 		const url = `${this.url}/itens/upload/${id_cliente}/${id_item}`;
-		const uploadData = new FormData();				
+		const uploadData = new FormData();
 		uploadData.append('file', file, file.name);
 		return this.http.post(url, uploadData);
 	}

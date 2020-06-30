@@ -40,7 +40,7 @@ export class PagamentosComponent implements OnInit, OnDestroy {
 	constructor(
 		private fb: FormBuilder,
 		private appService: AppService,
-		public dialogRef: MatDialogRef<PagamentosComponent>,		
+		public dialogRef: MatDialogRef<PagamentosComponent>,
 		private vendaService: VendaService,
 		@Inject(MAT_DIALOG_DATA) public data: Venda
 	) {
