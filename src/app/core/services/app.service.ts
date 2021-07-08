@@ -3,7 +3,7 @@ import { environment } from 'src/environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { MessageComponent } from '../dialogs/message/message.component';
-import { attQtdeEstoque } from 'src/app/shared/models/attQtdeEstoque';
+import { AttQtdeEstoque } from 'src/app/shared/models/attQtdeEstoque';
 @Injectable({
 	providedIn: 'root'
 })
@@ -25,7 +25,7 @@ export class AppService {
 			headers: new HttpHeaders().set('Content-Type', 'application/json')
 		});
 	}
-	updateQtdeEstoque(attQtde: attQtdeEstoque) {
+	updateQtdeEstoque(attQtde: AttQtdeEstoque) {
 		const url = `${this.url}/acompanhamento/estoque/qtde`;
 
 		return this.http.post(url, attQtde, {

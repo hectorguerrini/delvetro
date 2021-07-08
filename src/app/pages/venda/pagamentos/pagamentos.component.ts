@@ -10,7 +10,7 @@ import { Subject } from 'rxjs';
 import * as moment from 'moment';
 import { VendaService } from '../venda.service';
 import { Pagamento } from 'src/app/shared/models/pagamento';
-import { detalheVenda } from 'src/app/shared/models/detalhe-venda';
+import { DetalheVenda } from 'src/app/shared/models/detalhe-venda';
 
 @Component({
 	selector: 'app-pagamentos',
@@ -56,7 +56,7 @@ export class PagamentosComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this.vendaService.getVendaCliente(this.data.ID_CLIENTE, this.data.ID_VENDA)
-			.subscribe((data: { query: string; json: Array<detalheVenda> }) => {
+			.subscribe((data: { query: string; json: Array<DetalheVenda> }) => {
 				if (data.json.length > 0 ) {
 					this.pagamentoForm.get('CREDITO_CONSUMO').setValue(data.json[0].CREDITO_CONSUMO);
 					this.pagamentoForm.get('VL_TOTAL').setValue(data.json[0].VL_TOTAL);

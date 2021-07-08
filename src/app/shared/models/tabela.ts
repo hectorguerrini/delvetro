@@ -38,12 +38,12 @@ export interface filtro {
 	filter?: boolean;
 }
 export interface filtroItens {
-	ID: filtro;
-	Cliente: filtro;
-	Descricao: filtro;
-	Dt_venda: filtro;
-	Status: filtro;
-	Financeiro: filtro;
+	id: filtro;
+	cliente: filtro;
+	descricao: filtro;
+	dtVenda: filtro;
+	status: filtro;
+	financeiro: filtro;
 }
 export interface filtroEstoque {
 	ID: filtro;

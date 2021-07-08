@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { AppService } from '../../services/app.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ControleEstoque } from 'src/app/shared/models/estoque';
-import { attQtdeEstoque, logEstoque } from 'src/app/shared/models/attQtdeEstoque';
+import { AttQtdeEstoque, LogEstoque } from 'src/app/shared/models/attQtdeEstoque';
 
 @Component({
 	selector: 'app-detalhes-estoque',
@@ -10,8 +10,8 @@ import { attQtdeEstoque, logEstoque } from 'src/app/shared/models/attQtdeEstoque
 	styleUrls: ['./detalhes-estoque.component.scss']
 })
 export class DetalhesEstoqueComponent implements OnInit {
-	formAtt: attQtdeEstoque;
-	logEstoque: Array<logEstoque>;
+	formAtt: AttQtdeEstoque;
+	logEstoque: Array<LogEstoque>;
 	constructor(
 		public dialogRef: MatDialogRef<DetalhesEstoqueComponent>,
 		private appService: AppService,
@@ -48,7 +48,7 @@ export class DetalhesEstoqueComponent implements OnInit {
 	}
 	getTracking(): void {
 		this.appService.getLogEstoque(this.data.ID_ESTOQUE)
-			.subscribe((data: { query: string; json: Array<logEstoque>}) => {
+			.subscribe((data: { query: string; json: Array<LogEstoque>}) => {
 				if (data.json.length > 0) {
 					this.logEstoque = data.json;
 				}
